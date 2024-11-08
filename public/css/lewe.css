@@ -1,0 +1,26 @@
+/**
+ * ----------------------------------------------------------------------------
+ * Lewe CI colors
+ * ----------------------------------------------------------------------------
+ */
+:root {
+  --lewe-primary: #0060b0;
+  --lewe-primary-dark: #003a6b;
+  --lewe-primary-medium-dark: #004c8b;
+  --lewe-primary-medium-light: #0087f8;
+  --lewe-primary-light: #0f90fb;
+
+  --lewe-secondary: #0400bc;
+  --lewe-secondary-dark: #020074;
+  --lewe-secondary-medium-dark: #030096;
+  --lewe-secondary-medium-light: #0500f9;
+  --lewe-secondary-light: #2420fc;
+
+  --lewe-primary-complementary: #ff9400;
+  --lewe-primary-complementary-medium: #d77c00;
+  --lewe-primary-complementary-dark: #a66000;
+
+  --lewe-secondary-complementary: #ffc000;
+  --lewe-secondary-complementary-medium: #d7a200;
+  --lewe-secondary-complementary-dark: #a67e00;
+}

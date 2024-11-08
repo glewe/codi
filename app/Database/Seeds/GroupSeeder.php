@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Database\Seeds;
+
+use CodeIgniter\Database\Seeder;
+
+class GroupSeeder extends Seeder {
+  //---------------------------------------------------------------------------
+  /**
+   * Seed the 'groups' table.
+   */
+  public function run() {
+    $records = array(
+      [ 'name' => 'Admins', 'description' => 'Application administrators' ],
+      [ 'name' => 'Disney', 'description' => 'Disney characters' ],
+      [ 'name' => 'Looney', 'description' => 'Looney characters' ],
+      [ 'name' => 'Marvel', 'description' => 'Marvel characters' ],
+      [ 'name' => 'Pixar', 'description' => 'Pixar characters' ],
+    );
+
+    //
+    // Simple Queries
+    //
+    // $this->db->query("INSERT INTO users (username, email) VALUES(:username:, :email:)", $data);
+
+    //
+    // Insert records
+    //
+    foreach ($records as $record) {
+      $this->db->table('auth_groups')->insert($record);
+    }
+  }
+}
