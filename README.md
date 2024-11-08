@@ -1,13 +1,15 @@
-<img width="80" height="80" style="margin-bottom: 12px;" src="https://github.com/glewe/leaf-ci4/blob/main/public/images/icons/app-icon-80.png">
+<img width="80" height="80" style="margin-bottom: 12px;" src="https://github.com/glewe/codi/blob/main/public/images/icons/app-icon-80.png">
 
-# LeAF CI4 - A CodeIgniter 4 Boilerplate
+# CODI - A PHP application boilerplate based on CodeIgniter 4
 
 [![CodeIgniter](https://img.shields.io/badge/Framework-CodeIgniter_4-c9340a.svg)](https://codeigniter.com/)
 [![PHP](https://img.shields.io/badge/Language-PHP-8892BF.svg)](https://www.php.net/)
 
-## What is LeAF CI4?
+## What is CODI?
 
-**LeAF** stands for Lewe Application Framework. CI4 indicates that it is based on CodeIgniter 4, enriched by several useful public web application modules. It is an "opinionated boilerplate" with Bootstrap 5 visuals offering user, group and role management as well as the integration of Lewe CI4-Auth for authenticaiton and authorizatrion and CI4-Lic for license management.
+**CODI** is a PHP application boilerplate based based on the CodeIgniter 4 framework, enriched by several useful public web application modules. 
+It is an "opinionated boilerplate" with Bootstrap 5 visuals offering user, group and role management as well as the integration of Lewe CI4-Auth 
+for authentication and authorization and Lewe CI4-Lic for license management. The separate repositories for that latter two will not be further meintained.
 
 ## Server Requirements
 
@@ -43,6 +45,7 @@ That will compile the files and overwrite the old ones in the `public/css` and `
 - Dark or light theme
 - Narrow or wide layout
 - Registration with email verification
+- Gravatar profile icons
 
 ## Modules
 - [Lewe CI4-Auth](https://github.com/glewe/ci4-auth)
