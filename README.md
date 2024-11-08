@@ -8,7 +8,7 @@
 ## What is CODI?
 
 **CODI** is a PHP application boilerplate based based on the CodeIgniter 4 framework, enriched by several useful public web application modules. 
-It is an "opinionated boilerplate" with Bootstrap 5 visuals offering user, group and role management as well as the integration of Lewe CI4-Auth 
+It is an "_opinionated boilerplate_" with Bootstrap 5 visuals offering user, group and role management as well as the integration of Lewe CI4-Auth 
 for authentication and authorization and Lewe CI4-Lic for license management. The separate repositories for that latter two will not be further meintained.
 
 ## Server Requirements
