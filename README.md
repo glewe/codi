@@ -14,9 +14,10 @@
 
 ## What is CODI?
 
-**CODI** is a PHP application boilerplate based based on the CodeIgniter 4 framework, enriched by several useful public web application modules. 
-It is an "_opinionated boilerplate_" with Bootstrap 5 visuals offering user, group and role management as well as the integration of Lewe CI4-Auth 
-for authentication and authorization and Lewe CI4-Lic for license management. The separate repositories for that latter two will not be further meintained.
+**CODI** is a PHP application boilerplate based on the CodeIgniter 4 framework, enriched by several useful public web application modules. 
+It is an "_opinionated boilerplate_" with Bootstrap 5 visuals offering user, group and role management as well as the integration of 
+Lewe CI4-Auth for authentication and authorization and Lewe CI4-Lic for license management. The separate repositories for that latter 
+two will not be further maintained.
 
 ## Server Requirements
 
@@ -44,7 +45,7 @@ That will compile and minimize the files and overwrite the old ones in the `publ
 ## Features
 - User, group and role management
 - Authentication and authorization
-- 2FA (Two Factor Authentication)
+- 2FA (Two-Factor Authentication)
 - Permission management
 - [Software License Manager](https://wordpress.org/plugins/software-license-manager/) support
 - Multi-language support
@@ -71,10 +72,12 @@ That will compile and minimize the files and overwrite the old ones in the `publ
 - ... see the About page for more details and versions
 
 ## License
-You can use and modify this boilerplate for your own projects. It is licensed under the MIT license. Please keep the original author information in the files and link to this repo in your application's footer..
+You can use and modify this boilerplate for your own projects. It is licensed under the MIT license. Please keep the original author 
+information in the files and link to this repo in your application's footer.
 
 ## Support
-Feel free to let me know if you have any questions or suggestions or if you encounter bugs. Open an [issue](https://github.com/glewe/codi/issues) here in the repository.
+Feel free to let me know if you have any questions or suggestions or if you encounter bugs. 
+Open an [issue](https://github.com/glewe/codi/issues) here in the repository.
 
 ## Enjoy
 Have fun with CODI !
