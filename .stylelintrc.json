@@ -1,0 +1,40 @@
+{
+  "extends": [
+    "stylelint-config-twbs-bootstrap"
+  ],
+  "reportInvalidScopeDisables": true,
+  "reportNeedlessDisables": true,
+  "overrides": [
+    {
+      "files": ["**/*.css"],
+      "rules": {
+        "color-hex-length": "long",
+        "color-named": "never",
+        "comment-empty-line-before": null,
+        "comment-whitespace-inside": null,
+        "declaration-no-important": null,
+        "declaration-property-value-disallowed-list": {
+          "border": "none",
+          "outline": "none"
+        },
+        "font-weight-notation": "named-where-possible",
+        "function-disallowed-list": [
+          "lighten",
+          "darken"
+        ],
+        "keyframes-name-pattern": null,
+        "property-disallowed-list": [
+        ],
+        "selector-class-pattern": "^[a-z0-9\\-]+$",
+        "selector-max-class": null,
+        "selector-max-combinators": null,
+        "selector-max-compound-selectors": null,
+        "selector-max-id": null,
+        "selector-max-specificity": null,
+        "selector-max-type": null,
+        "selector-no-qualifying-type": null,
+        "shorthand-property-no-redundant-values": null
+      }
+    }
+  ]
+}

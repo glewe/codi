@@ -1,0 +1,327 @@
+/*!
+ * Bootstrap CSS Tooltips
+ * Version: 1.0.0
+ * Copyright 2023-2024 George Lewe <https://www.lewe.com>
+ * Source: <https://github.com/glewe/bootstrap-css-tooltips>
+ * Licensed under MIT <https://github.com/glewe/bootstrap-css-tooltips/blob/master/LICENSE>
+ * Compiled: 2024-03-17 11:55:11 (UTC)
+ */
+/* ----------------------------------------------------------------------------
+ * Tooltip container
+ */
+.bsc-tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* ----------------------------------------------------------------------------
+ * Tooltip content block (default size 'small')
+ */
+.bsc-tooltip .bsc-tooltip-content {
+  position: absolute;
+  z-index: 10001;
+  min-width: 160px;
+  padding: 8px;
+  font-size: 14px;
+  color: #fff;
+  text-align: left;
+  visibility: hidden;
+  background-color: #212529;
+  filter: drop-shadow(0 5px 5px #212529);
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: translateY(-10px);
+}
+
+/* Adjust size to small */
+.bsc-tooltip .bsc-tooltip-content.small {
+  min-width: 160px;
+}
+
+/* Adjust size to medium */
+.bsc-tooltip .bsc-tooltip-content.medium {
+  min-width: 240px;
+}
+
+/* Adjust size to large */
+.bsc-tooltip .bsc-tooltip-content.large {
+  min-width: 320px;
+}
+
+/* Adjust size to xlarge */
+.bsc-tooltip .bsc-tooltip-content.xlarge {
+  min-width: 400px;
+}
+
+/* ----------------------------------------------------------------------------
+ * Tooltip placement - top
+ */
+.bsc-tooltip:hover .bsc-tooltip-content.top {
+  bottom: calc(100% + 8px);
+  left: 0;
+  margin-left: 0;
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(-8px);
+  transform-origin: center top;
+}
+
+/* ----------------------------------------------------------------------------
+ * Tooltip placement - right
+ */
+.bsc-tooltip:hover .bsc-tooltip-content.right {
+  top: 0;
+  left: calc(100% + 8px);
+  margin-top: 0;
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(8px);
+  transform-origin: left center;
+}
+
+/* ----------------------------------------------------------------------------
+ * Tooltip placement - bottom
+ */
+.bsc-tooltip:hover .bsc-tooltip-content.bottom {
+  top: calc(100% + 8px);
+  left: 0;
+  margin-left: 0;
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(8px);
+  transform-origin: center bottom;
+}
+
+/* ----------------------------------------------------------------------------
+ * Tooltip placement - left
+ */
+.bsc-tooltip:hover .bsc-tooltip-content.left {
+  top: 0;
+  right: calc(100% + 8px);
+  margin-top: 0;
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-8px);
+  transform-origin: right center;
+}
+
+/* ----------------------------------------------------------------------------
+ * Tooltip arrow
+ */
+.bsc-tooltip:hover .bsc-tooltip-content::before {
+  position: absolute;
+  width: 0;
+  height: 0;
+  content: "";
+  border-style: solid;
+}
+
+.bsc-tooltip:hover .bsc-tooltip-content.top::before {
+  bottom: -5px;
+  left: 20px;
+  border-color: #212529 transparent transparent transparent;
+  border-width: 6px 6px 0;
+  transform: translateX(-50%);
+}
+
+.bsc-tooltip:hover .bsc-tooltip-content.right::before {
+  top: 20px;
+  left: -5px;
+  border-color: transparent #212529 transparent transparent;
+  border-width: 6px 6px 6px 0;
+  transform: translateY(-50%);
+}
+
+.bsc-tooltip:hover .bsc-tooltip-content.bottom::before {
+  top: -5px;
+  left: 20px;
+  border-color: transparent transparent #212529 transparent;
+  border-width: 0 6px 6px;
+  transform: translateX(-50%);
+}
+
+.bsc-tooltip:hover .bsc-tooltip-content.left::before {
+  top: 20px;
+  right: -5px;
+  border-color: transparent transparent transparent #212529;
+  border-width: 6px 0 6px 6px;
+  transform: translateY(-50%);
+}
+
+/* ----------------------------------------------------------------------------
+ * Tooltip content block colors
+ */
+.bsc-tooltip .bsc-tooltip-content.primary {
+  color: #fff;
+  background-color: #0d6efd;
+}
+
+.bsc-tooltip .bsc-tooltip-content.secondary {
+  color: #fff;
+  background-color: #6c757d;
+}
+
+.bsc-tooltip .bsc-tooltip-content.success {
+  color: #fff;
+  background-color: #198754;
+}
+
+.bsc-tooltip .bsc-tooltip-content.info {
+  color: #000;
+  background-color: #0dcaf0;
+}
+
+.bsc-tooltip .bsc-tooltip-content.warning {
+  color: #000;
+  background-color: #ffc107;
+}
+
+.bsc-tooltip .bsc-tooltip-content.danger {
+  color: #fff;
+  background-color: #dc3545;
+}
+
+.bsc-tooltip .bsc-tooltip-content.light {
+  color: #000;
+  background-color: #f8f9fa;
+}
+
+.bsc-tooltip .bsc-tooltip-content.dark {
+  color: #fff;
+  background-color: #212529;
+}
+
+/* ----------------------------------------------------------------------------
+ * Tooltip arrow colors
+ */
+.bsc-tooltip .bsc-tooltip-content.top.primary:before {
+  border-color: #0d6efd transparent transparent transparent;
+}
+
+.bsc-tooltip:hover .bsc-tooltip-content.right.primary:before {
+  border-color: transparent #0d6efd transparent transparent;
+}
+
+.bsc-tooltip:hover .bsc-tooltip-content.bottom.primary:before {
+  border-color: transparent transparent #0d6efd transparent;
+}
+
+.bsc-tooltip:hover .bsc-tooltip-content.left.primary:before {
+  border-color: transparent transparent transparent #0d6efd;
+}
+
+.bsc-tooltip .bsc-tooltip-content.top.secondary:before {
+  border-color: #6c757d transparent transparent transparent;
+}
+
+.bsc-tooltip:hover .bsc-tooltip-content.right.secondary:before {
+  border-color: transparent #6c757d transparent transparent;
+}
+
+.bsc-tooltip:hover .bsc-tooltip-content.bottom.secondary:before {
+  border-color: transparent transparent #6c757d transparent;
+}
+
+.bsc-tooltip:hover .bsc-tooltip-content.left.secondary:before {
+  border-color: transparent transparent transparent #6c757d;
+}
+
+.bsc-tooltip .bsc-tooltip-content.top.success:before {
+  border-color: #198754 transparent transparent transparent;
+}
+
+.bsc-tooltip:hover .bsc-tooltip-content.right.success:before {
+  border-color: transparent #198754 transparent transparent;
+}
+
+.bsc-tooltip:hover .bsc-tooltip-content.bottom.success:before {
+  border-color: transparent transparent #198754 transparent;
+}
+
+.bsc-tooltip:hover .bsc-tooltip-content.left.success:before {
+  border-color: transparent transparent transparent #198754;
+}
+
+.bsc-tooltip .bsc-tooltip-content.top.info:before {
+  border-color: #0dcaf0 transparent transparent transparent;
+}
+
+.bsc-tooltip:hover .bsc-tooltip-content.right.info:before {
+  border-color: transparent #0dcaf0 transparent transparent;
+}
+
+.bsc-tooltip:hover .bsc-tooltip-content.bottom.info:before {
+  border-color: transparent transparent #0dcaf0 transparent;
+}
+
+.bsc-tooltip:hover .bsc-tooltip-content.left.info:before {
+  border-color: transparent transparent transparent #0dcaf0;
+}
+
+.bsc-tooltip .bsc-tooltip-content.top.warning:before {
+  border-color: #ffc107 transparent transparent transparent;
+}
+
+.bsc-tooltip:hover .bsc-tooltip-content.right.warning:before {
+  border-color: transparent #ffc107 transparent transparent;
+}
+
+.bsc-tooltip:hover .bsc-tooltip-content.bottom.warning:before {
+  border-color: transparent transparent #ffc107 transparent;
+}
+
+.bsc-tooltip:hover .bsc-tooltip-content.left.warning:before {
+  border-color: transparent transparent transparent #ffc107;
+}
+
+.bsc-tooltip .bsc-tooltip-content.top.danger:before {
+  border-color: #dc3545 transparent transparent transparent;
+}
+
+.bsc-tooltip:hover .bsc-tooltip-content.right.danger:before {
+  border-color: transparent #dc3545 transparent transparent;
+}
+
+.bsc-tooltip:hover .bsc-tooltip-content.bottom.danger:before {
+  border-color: transparent transparent #dc3545 transparent;
+}
+
+.bsc-tooltip:hover .bsc-tooltip-content.left.danger:before {
+  border-color: transparent transparent transparent #dc3545;
+}
+
+.bsc-tooltip .bsc-tooltip-content.top.light:before {
+  border-color: #f8f9fa transparent transparent transparent;
+}
+
+.bsc-tooltip:hover .bsc-tooltip-content.right.light:before {
+  border-color: transparent #f8f9fa transparent transparent;
+}
+
+.bsc-tooltip:hover .bsc-tooltip-content.bottom.light:before {
+  border-color: transparent transparent #f8f9fa transparent;
+}
+
+.bsc-tooltip:hover .bsc-tooltip-content.left.light:before {
+  border-color: transparent transparent transparent #f8f9fa;
+}
+
+.bsc-tooltip .bsc-tooltip-content.top.dark:before {
+  border-color: #212529 transparent transparent transparent;
+}
+
+.bsc-tooltip:hover .bsc-tooltip-content.right.dark:before {
+  border-color: transparent #212529 transparent transparent;
+}
+
+.bsc-tooltip:hover .bsc-tooltip-content.bottom.dark:before {
+  border-color: transparent transparent #212529 transparent;
+}
+
+.bsc-tooltip:hover .bsc-tooltip-content.left.dark:before {
+  border-color: transparent transparent transparent #212529;
+}
+
+/*# sourceMappingURL=bsc-tooltips.css.map */

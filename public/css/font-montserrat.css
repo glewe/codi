@@ -1,0 +1,49 @@
+/**
+ * @package TeamCal Neo
+ * @since 4.0.0
+ * @author George Lewe <george@lewe.com>
+ * @copyright Copyright (c) 2014-2024 by George Lewe
+ * @link https://www.lewe.com
+ *
+ * Local Google Font: Montserrat
+ */
+
+/* montserrat-regular - latin */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: local(''), url('../fonts/montserrat-v25-latin-regular.woff2') format('woff2'), url('../fonts/montserrat-v25-latin-regular.woff') format('woff');
+}
+
+/* montserrat-700 - latin */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src: local(''), url('../fonts/montserrat-v25-latin-700.woff2') format('woff2'), url('../fonts/montserrat-v25-latin-700.woff') format('woff');
+}
+
+/* montserrat-italic - latin */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: italic;
+  font-display: swap;
+  font-weight: 400;
+  src: local(''), url('../fonts/montserrat-v25-latin-italic.woff2') format('woff2'), url('../fonts/montserrat-v25-latin-italic.woff') format('woff');
+}
+
+/* montserrat-700italic - latin */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: italic;
+  font-display: swap;
+  font-weight: 700;
+  src: local(''), url('../fonts/montserrat-v25-latin-700italic.woff2') format('woff2'), url('../fonts/montserrat-v25-latin-700italic.woff') format('woff');
+}
+
+body {
+  font-family: "Montserrat", sans-serif !important;
+}
