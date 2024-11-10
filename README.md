@@ -21,7 +21,7 @@ two will not be further maintained.
 
 ## Server Requirements
 
-PHP version 8.1 or higher is required, More requirements can be fond here:
+PHP 8.1 or higher is required, More requirements can be found here:
 
 - [CodeIgniter 4 User Guide - Server Requirements](https://codeigniter.com/user_guide/intro/requirements.html)
 
