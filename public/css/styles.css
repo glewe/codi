@@ -235,6 +235,13 @@ div.checkbox input {
   width: 33%;
 }
 
+.vertical-center {
+  position: absolute;
+  top: 50%;
+  margin: 0;
+  transform: translateY(-50%);
+}
+
 .wrapper {
   display: flex;
   padding: 0;
@@ -422,7 +429,8 @@ li.nav-item {
   font-size: 1.1rem;
 }
 
-a.sidebar-link {
+a.sidebar-link,
+span.sidebar-link {
   display: block;
   padding: .625rem 1.625rem;
   font-size: .9rem;
@@ -431,7 +439,8 @@ a.sidebar-link {
   border-left: 3px solid transparent;
 }
 
-a.sidebar-link:hover {
+a.sidebar-link:hover,
+span.sidebar-link:hover {
   background-color: rgba(255, 255, 255, .075);
   border-left: 3px solid var(--lewe-primary-light);
 }

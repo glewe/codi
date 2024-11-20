@@ -147,16 +147,16 @@
         </a>
         <ul id="widthmode" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
           <li class="sidebar-item">
-            <a class="sidebar-link sidebar-sublink d-flex align-items-center" href="#" data-width-value="narrow">
+            <span class="sidebar-link sidebar-sublink d-flex align-items-center" data-width-value="narrow">
               <i class="bi bi-fullscreen-exit"></i>
               <?= lang('General.normal') ?>
-            </a>
+            </span>
           </li>
           <li class="sidebar-item">
-            <a class="sidebar-link sidebar-sublink d-flex align-items-center" href="#" data-width-value="wide">
+            <span class="sidebar-link sidebar-sublink d-flex align-items-center" data-width-value="wide">
               <i class="bi bi-fullscreen"></i>
               <?= lang('General.wide') ?>
-            </a>
+            </span>
           </li>
         </ul>
       </li>
@@ -169,22 +169,22 @@
         </a>
         <ul id="darkmode" class="sidebar-dropdown-bottom list-unstyled collapse" data-bs-parent="#sidebar">
           <li class="sidebar-item">
-            <a href="#" class="sidebar-link sidebar-sublink d-flex align-items-center" data-bs-theme-value="light">
+            <span class="sidebar-link sidebar-sublink d-flex align-items-center" data-bs-theme-value="light">
               <i class="bi bi-sun-fill"></i>
               <?= lang('General.light') ?>
-            </a>
+            </span>
           </li>
           <li class="sidebar-item">
-            <a href="#" type="button" class="sidebar-link sidebar-sublink d-flex align-items-center" data-bs-theme-value="dark">
+            <span type="button" class="sidebar-link sidebar-sublink d-flex align-items-center" data-bs-theme-value="dark">
               <i class="bi bi-moon-stars-fill"></i>
               <?= lang('General.dark') ?>
-            </a>
+            </span>
           </li>
           <li class="sidebar-item">
-            <a href="#" type="button" class="sidebar-link sidebar-sublink d-flex align-items-center active" data-bs-theme-value="auto">
+            <span type="button" class="sidebar-link sidebar-sublink d-flex align-items-center active" data-bs-theme-value="auto">
               <i class="bi bi-circle-half"></i>
               <?= lang('General.auto') ?>
-            </a>
+            </span>
           </li>
         </ul>
       </li>

@@ -66,8 +66,8 @@
             <i class="bi-fullscreen-exit width-icon-active"></i>
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="widthDropdown">
-            <li><a class="dropdown-item" href="#" data-width-value="narrow"><i class="bi-fullscreen-exit menu-icon"></i><?= lang('General.normal') ?></a></li>
-            <li><a class="dropdown-item" href="#" data-width-value="wide"><i class="bi-fullscreen menu-icon"></i><?= lang('General.wide') ?></a></li>
+            <li><button class="dropdown-item" data-width-value="narrow"><i class="bi-fullscreen-exit menu-icon"></i><?= lang('General.normal') ?></button></li>
+            <li><button class="dropdown-item" data-width-value="wide"><i class="bi-fullscreen menu-icon"></i><?= lang('General.wide') ?></button></li>
           </ul>
         </li>
 
@@ -77,9 +77,9 @@
             <i class="bi-circle-half theme-icon-active"></i>
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="themeDropdown">
-            <li><a href="#" class="dropdown-item" data-bs-theme-value="light"><i class="bi-sun-fill menu-icon"></i><?= lang('General.light') ?></a></li>
-            <li><a href="#" type="button" class="dropdown-item" data-bs-theme-value="dark"><i class="bi-moon-stars-fill menu-icon"></i><?= lang('General.dark') ?></a></li>
-            <li><a href="#" type="button" class="dropdown-item" data-bs-theme-value="auto"><i class="bi-circle-half menu-icon"></i><?= lang('General.auto') ?></a></li>
+            <li><button class="dropdown-item" data-bs-theme-value="light"><i class="bi-sun-fill menu-icon"></i><?= lang('General.light') ?></button></li>
+            <li><button type="button" class="dropdown-item" data-bs-theme-value="dark"><i class="bi-moon-stars-fill menu-icon"></i><?= lang('General.dark') ?></button></li>
+            <li><button type="button" class="dropdown-item" data-bs-theme-value="auto"><i class="bi-circle-half menu-icon"></i><?= lang('General.auto') ?></button></li>
           </ul>
         </li>
 
