@@ -288,8 +288,8 @@ class PermissionModel extends Model {
       // Get personal permissions
       //
       $permUsers = $this->db->table('auth_users_permissions')
-        ->select('id, users.username')
-        ->join('users', 'users.id = user_id', 'inner')
+        ->select('id, auth_users.username')
+        ->join('auth_users', 'auth_users.id = user_id', 'inner')
         ->where('permission_id', $permId)
         ->get()
         ->getResultObject();
