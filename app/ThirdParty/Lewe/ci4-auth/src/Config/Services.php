@@ -43,7 +43,7 @@ class Services extends BaseService {
    *
    * @return object The authentication service instance.
    */
-  public static function authentication(string $lib = 'local', Model $userModel = null, Model $loginModel = null, bool $getShared = true): object {
+  public static function authentication(string $lib = 'local', ?Model $userModel = null, ?Model $loginModel = null, bool $getShared = true): object {
     if ($getShared) {
       return self::getSharedInstance('authentication', $lib, $userModel, $loginModel);
     }
@@ -85,7 +85,7 @@ class Services extends BaseService {
    *
    * @return object The authorization service instance.
    */
-  public static function authorization(Model $roleModel = null, Model $permissionModel = null, Model $userModel = null, bool $getShared = true, Model $groupModel = null): object {
+  public static function authorization(?Model $roleModel = null, ?Model $permissionModel = null, ?Model $userModel = null, bool $getShared = true, ?Model $groupModel = null): object {
     if ($getShared) {
       return self::getSharedInstance('authorization', $roleModel, $permissionModel, $userModel);
     }
@@ -111,7 +111,7 @@ class Services extends BaseService {
    *
    * @return object
    */
-  public static function passwords(AuthConfig $config = null, bool $getShared = true): object {
+  public static function passwords(?AuthConfig $config = null, bool $getShared = true): object {
     if ($getShared) {
       return self::getSharedInstance('passwords', $config);
     }
@@ -131,7 +131,7 @@ class Services extends BaseService {
    *
    * @return object
    */
-  public static function activator(AuthConfig $config = null, bool $getShared = true): object {
+  public static function activator(?AuthConfig $config = null, bool $getShared = true): object {
     if ($getShared) {
       return self::getSharedInstance('activator', $config);
     }
@@ -154,7 +154,7 @@ class Services extends BaseService {
    *
    * @return object
    */
-  public static function resetter(AuthConfig $config = null, bool $getShared = true): object {
+  public static function resetter(?AuthConfig $config = null, bool $getShared = true): object {
     if ($getShared) {
       return self::getSharedInstance('resetter', $config);
     }
