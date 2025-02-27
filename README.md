@@ -7,7 +7,7 @@
 [![Bootstrap Icons](https://img.shields.io/badge/Design-Bootstrap_Icons-563d7c.svg)](https://icons.getbootstrap.com/)
 [![FontAwesome](https://img.shields.io/badge/Design-FontAwesome_6-339af0.svg)](https://fontawesome.com/)
 
-[![PHP](https://img.shields.io/badge/PHP-8.2-8892BF.svg)](https://www.php.net/)
+[![PHP](https://img.shields.io/badge/PHP-8.4-8892BF.svg)](https://www.php.net/)
 [![JS](https://img.shields.io/badge/JS-ES6-f1e05a.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![HTML](https://img.shields.io/badge/HTML-5-e34c26.svg)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![CSS](https://img.shields.io/badge/CSS-3-563d7c.svg)](https://developer.mozilla.org/en-US/docs/Web/CSS)
@@ -22,7 +22,7 @@ two will not be further maintained.
 
 ## Server Requirements
 
-PHP 8.1 / 8.2 is required. ***PHP 8.4 is not supported yet***.
+PHP 8.1 / 8.2 / 8.4 is required.
 
 More requirements can be found here:
 
