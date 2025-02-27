@@ -281,6 +281,21 @@
             echo $bs->formRow($data);
             ?>
 
+            <h3>TinyMCE</h3>
+            <?php
+            $data = array(
+              'type' => 'tinymce',
+              'name' => 'mytinymce',
+              'value' => loremIpsum(true),
+              'disabled' => 0,
+              'title' => 'My TinyMCE Editor',
+              'desc' => 'This is a sample TinyMCE editor field over the whole width.',
+              'rows' => 6,
+              'darkmode' => true,
+            );
+            echo $bs->formRow($data);
+            ?>
+
           </div>
         </div>
       </div>

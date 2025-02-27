@@ -131,6 +131,9 @@
   <link rel="stylesheet" href="addons/lightbox2-2.11.5/css/lightbox.min.css" type="text/css">
   <script src="addons/lightbox2-2.11.5/js/lightbox.min.js"></script>
 
+  <!-- TinyMCE -->
+  <script src="<?= base_url('addons/tinymce/tinymce.min.js'); ?>"></script>
+
   <?php if ($settings['cookieConsent']) { ?><!-- Cookie Consent -->
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.1/cookieconsent.min.css"/>
   <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.1/cookieconsent.min.js"></script>

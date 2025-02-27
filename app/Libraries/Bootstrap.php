@@ -490,11 +490,15 @@ class Bootstrap {
         break;
 
       case 'textarea':
-        $html = $formRowTop . $this->textarea($data) . $formRowBottom;
+        $html = $formRowTop . $this->inputTextarea($data) . $formRowBottom;
         break;
 
       case 'textareawide':
-        $html = $formRowTopWide . $this->textarea($data) . $formRowBottomWide;
+        $html = $formRowTopWide . $this->inputTextarea($data) . $formRowBottomWide;
+        break;
+
+      case 'tinymce':
+        $html = $formRowTopWide . $this->inputTinyMCE($data) . $formRowBottomWide;
         break;
 
       default:
@@ -1222,6 +1226,76 @@ class Bootstrap {
 
   /**
    * --------------------------------------------------------------------------
+   * Textarea
+   * --------------------------------------------------------------------------
+   *
+   * Generates a textarea HTML element with the specified data.
+   *
+   * This function creates a textarea input field with various attributes based on the provided data.
+   * It includes error handling and optional disabling of the textarea.
+   *
+   * @param array $data An associative array containing the textarea data:
+   *                    - 'name': The name attribute for the textarea.
+   *                    - 'id': The id attribute for the textarea.
+   *                    - 'rows': The number of rows for the textarea.
+   *                    - 'value': The initial value of the textarea.
+   *                    - 'errors' (optional): Any validation errors to display.
+   *                    - 'disabled' (optional): A boolean indicating if the textarea should be disabled.
+   *
+   * @return string The HTML string for the textarea element.
+   */
+  public function inputTextarea($data): string {
+    return '
+    <textarea
+      class="form-control' . (isset($data['errors']) ? ' is-invalid' : '') . '"
+      name="' . $data['name'] . '"
+      id="' . $data['name'] . '"
+      rows="' . $data['rows'] . '"' . ($data['disabled'] ? ' disabled' : '') . '
+    >' . $data['value'] . '</textarea>';
+  }
+
+  /**
+   * --------------------------------------------------------------------------
+   * TinyMCE
+   * --------------------------------------------------------------------------
+   *
+   * Generates a wisywig text editor based on TinyMCE.
+   *
+   * This function creates a textarea input field with various attributes based on the provided data.
+   * It includes error handling and optional disabling of the textarea.
+   *
+   * @param array $data An associative array containing the textarea data:
+   *                    - 'name': The name attribute for the textarea.
+   *                    - 'id': The id attribute for the textarea.
+   *                    - 'rows': The number of rows for the textarea.
+   *                    - 'value': The initial value of the textarea.
+   *                    - 'errors' (optional): Any validation errors to display.
+   *                    - 'disabled' (optional): A boolean indicating if the textarea should be disabled.
+   *                    - 'darkmode' (optional): A boolean indicating dark mode or not.
+   *
+   * @return string The HTML string for the textarea element.
+   */
+  public function inputTinyMCE($data): string {
+    return '
+    <textarea
+      class="form-control' . (isset($data['errors']) ? ' is-invalid' : '') . '"
+      name="' . $data['name'] . '"
+      id="' . $data['name'] . '"
+      rows="' . $data['rows'] . '"' . ($data['disabled'] ? ' disabled' : '') . '
+    >' . $data['value'] . '</textarea>
+    <script>
+    tinymce.init({
+      selector: \'#' . $data['name'] . '\', // Only applies to this textarea
+      ' . (isset($data['darkmode']) && $data['darkmode'] ? 'skin: \'oxide-dark\', content_css: \'dark\',' : '') . '
+      menubar: false,
+      plugins: \'lists link image\',
+      toolbar: \'undo redo | bold italic | bullist numlist | link image\'
+    });
+    </script>';
+  }
+
+  /**
+   * --------------------------------------------------------------------------
    * Modal Dialog
    * --------------------------------------------------------------------------
    *
@@ -1761,36 +1835,6 @@ class Bootstrap {
     <li class="sidebar-item">
       <a href="' . $data['url'] . '" class="sidebar-link sidebar-sublink"><i class="' . $data['icon'] . ' menu-icon"></i>' . $data['label'] . '</a>
     </li>';
-  }
-
-  /**
-   * --------------------------------------------------------------------------
-   * Textarea
-   * --------------------------------------------------------------------------
-   *
-   * Generates a textarea HTML element with the specified data.
-   *
-   * This function creates a textarea input field with various attributes based on the provided data.
-   * It includes error handling and optional disabling of the textarea.
-   *
-   * @param array $data An associative array containing the textarea data:
-   *                    - 'name': The name attribute for the textarea.
-   *                    - 'id': The id attribute for the textarea.
-   *                    - 'rows': The number of rows for the textarea.
-   *                    - 'value': The initial value of the textarea.
-   *                    - 'errors' (optional): Any validation errors to display.
-   *                    - 'disabled' (optional): A boolean indicating if the textarea should be disabled.
-   *
-   * @return string The HTML string for the textarea element.
-   */
-  public function textarea($data): string {
-    return '
-    <textarea
-      class="form-control' . (isset($data['errors']) ? ' is-invalid' : '') . '"
-      name="' . $data['name'] . '"
-      id="' . $data['name'] . '"
-      rows="' . $data['rows'] . '"' . ($data['disabled'] ? ' disabled' : '') . '
-    >' . $data['value'] . '</textarea>';
   }
 
   /**
