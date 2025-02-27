@@ -13,6 +13,7 @@ use App\Models\LogModel;
 use Exception;
 use InvalidArgumentException;
 use RobThree\Auth\TwoFactorAuth;
+use RobThree\Auth\Providers\Qr\EndroidQrCodeProvider;
 
 use App\Controllers\BaseController;
 
@@ -75,7 +76,7 @@ class AuthController extends BaseController {
     $this->authConfig = config('Auth');
     $this->auth = service('authentication');
     $this->authorize = service('authorization');
-    $this->tfa = new TwoFactorAuth($this->authConfig->authenticatorTitle);
+    $this->tfa = new TwoFactorAuth(new EndroidQrCodeProvider(), $this->authConfig->authenticatorTitle);
     $this->passphrase = hex2bin('8849523a8e0e1ff45f440da048428b2554d2660c80957fcedbeb9575c079d7eb');
   }
 
