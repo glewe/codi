@@ -22,7 +22,9 @@ two will not be further maintained.
 
 ## Server Requirements
 
-PHP 8.1 / 8.2 is required, More requirements can be found here:
+PHP 8.1 / 8.2 is required. ***PHP 8.4 is not supported yet***.
+
+More requirements can be found here:
 
 - [CodeIgniter 4 User Guide - Server Requirements](https://codeigniter.com/user_guide/intro/requirements.html)
 
