@@ -33,10 +33,11 @@ More requirements can be found here:
 2. Run `composer install`
 3. Create a new database
 4. Edit the `app/Config/Database.php` file and add your database information
-5. Run `php spark migrate`
-6. Run `php spark db:seed CODISeeder`
-7. Navigate to your application in a browser, e.g. `http://localhost/codi/public`
-8. The home page provides login information
+5. Edit the `app/Config/App.php` file and change `$baseUrl` to your localhost path, e.g. `http://localhost/codi/public`
+6. Run `php spark migrate`
+7. Run `php spark db:seed CODISeeder`
+8. Navigate to your application in a browser, e.g. `http://localhost/codi/public`
+9. The home page provides login information
 
 ## Making Changes ##
 Should you make changes to the CSS or JavaScript files, you will need to run the following commands to compile them:
