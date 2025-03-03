@@ -45,8 +45,8 @@ class Autoload extends AutoloadConfig {
   public $psr4 = [
     APP_NAMESPACE => APPPATH, // For custom app namespace
     'Config' => APPPATH . 'Config',
-    'CI4\Auth' => APPPATH . 'ThirdParty/lewe/ci4-auth/src',
-    'CI4\Lic' => APPPATH . 'ThirdParty/lewe/ci4-lic/src',
+    'CI4\Auth' => APPPATH . 'ThirdParty/Lewe/ci4-auth/src',
+    'CI4\Lic' => APPPATH . 'ThirdParty/Lewe/ci4-lic/src',
   ];
 
   /**

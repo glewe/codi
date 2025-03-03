@@ -39,7 +39,7 @@ Download the CI4-Lic archive from this repo here.
 
 *Note: CI4-Lic is not available as a Composer package yet. It works from your ThirdParty folder.*
 
-Unzip the CI4-Lic archive and copy the 'lewe' directory to your **\app\ThirdParty** folder in your Codeigniter project.
+Unzip the CI4-Lic archive and copy the 'Lewe' directory to your **\app\ThirdParty** folder in your Codeigniter project.
 You should see this tree section then:
 ```
 project-root

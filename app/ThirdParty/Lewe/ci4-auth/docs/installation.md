@@ -48,7 +48,7 @@ project-root
 public $psr4 = [
     APP_NAMESPACE  => APPPATH, // For custom app namespace
     'Config'       => APPPATH . 'Config',
-    'CI4\Auth'     => APPPATH . 'ThirdParty/lewe/ci4-auth/src',
+    'CI4\Auth'     => APPPATH . 'ThirdParty/Lewe/ci4-auth/src',
 ];
 ```
 
@@ -65,14 +65,14 @@ public $ruleSets = [
 ```
 
 3. The "Remember Me" functionality is turned off by default. It can be turned on by setting the
-   `$allowRemembering` variable to `true` in **lewe/ci4-auth/src/Config/Auth.php**.
+   `$allowRemembering` variable to `true` in **Lewe/ci4-auth/src/Config/Auth.php**.
 
 4. Edit **app/Config/Email.php** and verify that `fromName` and `fromEmail` are set as they are used when sending
    emails for password resets, etc.
 
 ### Routes
 
-The CI4-Auth routes are defined in **lewe/ci4-auth/src/Config/Routes.php**. Copy the routes group from there to your
+The CI4-Auth routes are defined in **Lewe/ci4-auth/src/Config/Routes.php**. Copy the routes group from there to your
 **app/Config/Routes.php** file, right after the 'Route Definitions' header comment.
 
 ```php

@@ -1,7 +1,7 @@
 <?php
 
 //
-// Lewe Auth
+// Lewe CI4 Auth
 //
 $routes->group('', [ 'namespace' => 'CI4\Auth\Controllers' ], function ($routes) {
 
