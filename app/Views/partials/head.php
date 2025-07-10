@@ -5,8 +5,8 @@
 
   <meta http-equiv="Content-type" content="text/html;charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta charset="utf-8"/>
-  <base href="<?= base_url() ?>"/>
+  <meta charset="utf-8" />
+  <base href="<?= base_url() ?>" />
 
   <!-- App Info -->
   <title><?= (isset($settings['applicationName'])) ? $settings['applicationName'] : '' ?> <?= (isset($page)) ? ' | ' . $page : '' ?></title>
@@ -22,12 +22,12 @@
 
   <?php if (isset($settings['noCaching']) && $settings['noCaching']) { ?>
     <!-- Disable Caching -->
-    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate"/>
-    <meta http-equiv="expires" content="0"/>
-    <meta http-equiv="pragma" content="no-cache"/>
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="expires" content="0" />
+    <meta http-equiv="pragma" content="no-cache" />
   <?php } ?>
   <!-- Robots -->
-  <meta name="robots" content="<?= (isset($settings['robots'])) ? $settings['robots'] : 'noindex' ?>"/>
+  <meta name="robots" content="<?= (isset($settings['robots'])) ? $settings['robots'] : 'noindex' ?>" />
 
   <!-- Social Media, Icons -->
   <link rel="canonical" href="<?= base_url() ?>">
@@ -72,33 +72,31 @@
   <script src="js/width-modes.min.js"></script>
 
   <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
 
   <!-- Bootstrap Icons -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" integrity="sha384-tViUnnbYAV00FLIhhi3v/dWt3Jxw4gZQcNoSCxCIFNJVCx7/D55/wXsrNIRANwdD" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
   <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="fonts/fontawesome-free-6.6.0-web/css/all.min.css">
+  <link rel="stylesheet" href="fonts/fontawesome-free-6.7.2-web/css/all.min.css">
 
   <!-- Fonts (served locally due to GDPR constraints) -->
   <link rel="stylesheet" href="css/font-<?= $settings['font'] ?>.min.css">
 
   <!-- jQuery UI CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css" integrity="sha512-ELV+xyi8IhEApPS/pSj66+Jiw+sOT1Mqkzlh8ExXihe4zfqbWkxPRi8wptXIO9g73FSlhmquFlUOuMSoXz5IRw==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css" integrity="sha512-ELV+xyi8IhEApPS/pSj66+Jiw+sOT1Mqkzlh8ExXihe4zfqbWkxPRi8wptXIO9g73FSlhmquFlUOuMSoXz5IRw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <!-- Cookie Consent -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent/3.1.1/cookieconsent.min.css" integrity="sha512-LQ97camar/lOliT/MqjcQs5kWgy6Qz/cCRzzRzUCfv0fotsCTC9ZHXaPQmJV8Xu/PVALfJZ7BDezl5lW3/qBxg==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent/3.1.1/cookieconsent.min.css" integrity="sha512-LQ97camar/lOliT/MqjcQs5kWgy6Qz/cCRzzRzUCfv0fotsCTC9ZHXaPQmJV8Xu/PVALfJZ7BDezl5lW3/qBxg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <!-- Datatables CSS -->
-  <link href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-  <link href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.bootstrap5.min.css" rel="stylesheet">
-  <link href="https://cdn.datatables.net/responsive/3.0.3/css/responsive.bootstrap5.min.css" rel="stylesheet">
+  <link href="https://cdn.datatables.net/v/bs5/jszip-3.10.1/dt-2.3.2/b-3.2.4/b-colvis-3.2.4/b-html5-3.2.4/b-print-3.2.4/r-3.0.5/datatables.min.css" rel="stylesheet" integrity="sha384-ZjEDUJp1nW8KqHTQvJzZt+epElsOCgauH1k+/LwE6jZybUl8FoQWtY5wPXQXeWML" crossorigin="anonymous">
 
   <!-- Application CSS -->
-  <link href="css/styles.min.css" rel="stylesheet" type="text/css"/>
+  <link href="css/styles.min.css" rel="stylesheet" type="text/css" />
 
   <!-- Custom CSS-->
-  <link href="css/custom.min.css" rel="stylesheet" type="text/css"/>
+  <link href="css/custom.min.css" rel="stylesheet" type="text/css" />
 
   <!-- jQuery JS -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
@@ -106,7 +104,7 @@
   <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
 
   <!-- Coloris picker -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.css" />
   <script src="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.js"></script>
 
   <!-- Date Time Picker -->
@@ -118,9 +116,9 @@
 
   <!-- HighlightJs -->
   <?php if (isset($settings['highlightJsTheme']) && $settings['highlightJsTheme'] === 'light') { ?>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/default.min.css" integrity="sha512-hasIneQUHlh06VNBe7f6ZcHmeRTLIaQWFd43YriJ0UND19bvYRauxthDg8E4eVNPm9bRUhr5JGeqH7FRFXQu5g==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/default.min.css" integrity="sha512-hasIneQUHlh06VNBe7f6ZcHmeRTLIaQWFd43YriJ0UND19bvYRauxthDg8E4eVNPm9bRUhr5JGeqH7FRFXQu5g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <?php } else { ?>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/dark.min.css" integrity="sha512-bfLTSZK4qMP/TWeS1XJAR/VDX0Uhe84nN5YmpKk5x8lMkV0D+LwbuxaJMYTPIV13FzEv4CUOhHoc+xZBDgG9QA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/dark.min.css" integrity="sha512-bfLTSZK4qMP/TWeS1XJAR/VDX0Uhe84nN5YmpKk5x8lMkV0D+LwbuxaJMYTPIV13FzEv4CUOhHoc+xZBDgG9QA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <?php } ?>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/highlight.min.js" integrity="sha512-6yoqbrcLAHDWAdQmiRlHG4+m0g/CT/V9AGyxabG8j7Jk8j3r3K6due7oqpiRMZqcYe9WM2gPcaNNxnl2ux+3tA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/languages/javascript.min.js" integrity="sha512-XrpvbK+zc0wErJG1VptH0H4w4zyiniHOBR35DJ1VISA+cqYxhksvqFwZk0M8lX9ylaIjTXoMYolOPb93zdrGpg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -135,11 +133,11 @@
   <script src="<?= base_url('addons/tinymce/tinymce.min.js'); ?>"></script>
 
   <?php if ($settings['cookieConsent']) { ?><!-- Cookie Consent -->
-<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.1/cookieconsent.min.css"/>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.1/cookieconsent.min.js"></script>
-<?php } ?>
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.1/cookieconsent.min.css" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.1/cookieconsent.min.js"></script>
+  <?php } ?>
   <script>
-    window.addEventListener("load", function () {
+    window.addEventListener("load", function() {
       window.cookieconsent.initialise({
         "cookie": {
           "name": "leweteamcal_cookieconsent"
@@ -164,48 +162,48 @@
   </script>
 
   <?php if ($settings['googleAnalytics'] && strlen($settings['googleAnalyticsId'])) { ?><!--Begin: Google Analytics GA4-->
-  <script>
-    // Define dataLayer and the gtag function.
-    window.dataLayer = window.dataLayer || [];
+    <script>
+      // Define dataLayer and the gtag function.
+      window.dataLayer = window.dataLayer || [];
 
-    function gtag() {
-      dataLayer.push(arguments);
-    }
+      function gtag() {
+        dataLayer.push(arguments);
+      }
 
-    // Set default consents to 'denied'
-    // Set analytic consent to 'granted' (see Imprint page for opt-out option)
-    gtag('consent', 'default', {
-      'ad_storage': 'denied',
-      'ad_user_data': 'denied',
-      'ad_personalization': 'denied',
-      'analytics_storage': 'granted'
-    });
-  </script>
-<!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=<?= $settings['googleAnalyticsId'] ?>"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-
-    gtag('js', new Date());
-    gtag('config', '<?= $settings['googleAnalyticsId'] ?>');
-
-    // Opt out to GA
-    function gaOptout() {
-      gtag('consent', 'update', {
-        'analytics_storage': 'denied'
+      // Set default consents to 'denied'
+      // Set analytic consent to 'granted' (see Imprint page for opt-out option)
+      gtag('consent', 'default', {
+        'ad_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied',
+        'analytics_storage': 'granted'
       });
-    }
-  </script>
-  <!--End: Google Analytics GA4-->
-<?php } ?>
+    </script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=<?= $settings['googleAnalyticsId'] ?>"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+
+      gtag('js', new Date());
+      gtag('config', '<?= $settings['googleAnalyticsId'] ?>');
+
+      // Opt out to GA
+      function gaOptout() {
+        gtag('consent', 'update', {
+          'analytics_storage': 'denied'
+        });
+      }
+    </script>
+    <!--End: Google Analytics GA4-->
+  <?php } ?>
 
 </head>
 
 <body>
 
-<!-- Back to Top -->
-<a id="top-link-block"><i class="fas fa-chevron-up fa-2x text-white p-2"></i></a>
+  <!-- Back to Top -->
+  <a id="top-link-block"><i class="fas fa-chevron-up fa-2x text-white p-2"></i></a>

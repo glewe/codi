@@ -39,7 +39,7 @@ class AppInfo extends BaseConfig {
    *
    * @var string
    */
-  public $version = '5.1.0';
+  public $version = '5.2.0';
 
   /**
    * ------------------------------------------------------------------------
@@ -48,7 +48,7 @@ class AppInfo extends BaseConfig {
    *
    * @var string
    */
-  public $releaseDate = '2025-02-28';
+  public $releaseDate = '2025-07-10';
 
   /**
    * ------------------------------------------------------------------------
@@ -197,37 +197,37 @@ class AppInfo extends BaseConfig {
     'bootstrap' => [
       'author' => 'Bootstrap Team',
       'product' => 'Bootstrap Framework',
-      'version' => '5.3.3',
+      'version' => '5.3.7',
       'url' => 'https://getbootstrap.com/',
     ],
     'bootstrap-icons' => [
       'author' => 'Bootstrap Team',
       'product' => 'Bootstrap Icons',
-      'version' => '1.11.3',
+      'version' => '1.13.1',
       'url' => 'https://icons.getbootstrap.com/',
     ],
     'chartjs' => [
       'author' => 'Chart.js Team',
       'product' => 'Chart.js',
-      'version' => '4.4.5',
+      'version' => '4.5.0',
       'url' => 'https://www.chartjs.org/',
     ],
     'codeigniter' => [
       'author' => 'CodeIgniter Team',
       'product' => 'CodeIgniter Framework',
-      'version' => '4.6.0',
+      'version' => '4.6.1',
       'url' => 'https://codeigniter.com/',
     ],
     'datatables' => [
       'author' => 'DataTables Team',
       'product' => 'DataTables',
-      'version' => '2.1.8',
+      'version' => '2.3.2',
       'url' => 'https://datatables.net/',
     ],
     'fontawesome' => [
       'author' => 'Font Awesome Team',
       'product' => 'Font Awesome Icons',
-      'version' => '6.6.0',
+      'version' => '6.7.2',
       'url' => 'https://fontawesome.com/',
     ],
     'freepik' => [
