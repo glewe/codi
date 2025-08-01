@@ -158,7 +158,7 @@
     });
   </script>
 
-  <?php if ($settings['googleAnalytics'] && strlen($settings['googleAnalyticsId'])) { ?><!--Begin: Google Analytics GA4-->
+  <?php if ($settings['googleAnalytics'] && strlen($settings['googleAnalyticsId'])) { ?><!--Begin: Google Analytics-->
     <script>
       // Define dataLayer and the gtag function.
       window.dataLayer = window.dataLayer || [];
@@ -196,6 +196,23 @@
       }
     </script>
     <!--End: Google Analytics GA4-->
+  <?php } ?>
+
+  <?php if ($settings['matomoAnalytics'] && strlen($settings['matomoAnalyticsUrl']) && strlen($settings['matomoAnalyticsId'])) { ?><!--Begin: Matomo Analytics-->
+    <script>
+    var _paq = window._paq = window._paq || [];
+    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function () {
+      var u = "<?= $settings['matomoAnalyticsUrl'] ?>";
+      _paq.push(['setTrackerUrl', u + 'matomo.php']);
+      _paq.push(['setSiteId', '<?= $settings['matomoAnalyticsId'] ?>']);
+      var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+      g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
+    })();
+    </script>
+    <!--End: Matomo Analytics-->
   <?php } ?>
 
 </head>

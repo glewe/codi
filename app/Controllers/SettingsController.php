@@ -100,6 +100,9 @@ class SettingsController extends BaseController {
         'swi_versionCheck' => [ 'type' => 'switch', 'mandatory' => false, 'value' => '', 'items' => [] ],
         'swi_googleAnalytics' => [ 'type' => 'switch', 'mandatory' => false, 'value' => '', 'items' => [] ],
         'txt_googleAnalyticsId' => [ 'type' => 'text', 'mandatory' => false, 'value' => '', 'items' => [] ],
+        'swi_matomoAnalytics' => [ 'type' => 'switch', 'mandatory' => false, 'value' => '', 'items' => [] ],
+        'txt_matomoAnalyticsUrl' => [ 'type' => 'text', 'mandatory' => false, 'value' => '', 'items' => [] ],
+        'txt_matomoAnalyticsId' => [ 'type' => 'text', 'mandatory' => false, 'value' => '', 'items' => [] ],
         'swi_underMaintenance' => [ 'type' => 'switch', 'mandatory' => false, 'value' => '', 'items' => [] ],
       ],
       'theme' => [
@@ -260,6 +263,7 @@ class SettingsController extends BaseController {
       'txt_footerCopyrightUrl' => [ 'label' => lang('Settings.footerCopyrightUrl'), 'rules' => 'permit_empty|valid_url' ],
       'txt_welcomeText' => [ 'label' => lang('Settings.email.welcomeText'), 'rules' => 'permit_empty' ],
       'txt_googleAnalyticsId' => [ 'label' => lang('Settings.googleAnalyticsId'), 'rules' => 'permit_empty|valid_ga4' ],
+      'txt_matomoAnalyticsUrl' => [ 'label' => lang('Settings.matomoAnalyticsUrl'), 'rules' => 'valid_url' ],
     ];
 
     //
