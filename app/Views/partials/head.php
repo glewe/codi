@@ -10,12 +10,12 @@
 
   <!-- App Info -->
   <title><?= (isset($settings['applicationName'])) ? $settings['applicationName'] : '' ?> <?= (isset($page)) ? ' | ' . $page : '' ?></title>
-  <meta name="title" content="<?= config('AppInfo')->name; ?>">
-  <meta name="description" content="<?= config('AppInfo')->description ?>">
-  <meta name="keywords" content="<?= config('AppInfo')->keywords ?>">
-  <meta name="author" content="<?= config('AppInfo')->author ?>">
-  <meta name="version" content="<?= config('AppInfo')->version ?>">
-  <meta name="date" content="<?= config('AppInfo')->releaseDate ?>">
+  <meta name="title" content="<?= config('Config\AppInfo')->name; ?>">
+  <meta name="description" content="<?= config('Config\AppInfo')->description ?>">
+  <meta name="keywords" content="<?= config('Config\AppInfo')->keywords ?>">
+  <meta name="author" content="<?= config('Config\AppInfo')->author ?>">
+  <meta name="version" content="<?= config('Config\AppInfo')->version ?>">
+  <meta name="date" content="<?= config('Config\AppInfo')->releaseDate ?>">
 
   <!-- Favicon -->
   <link rel="shortcut icon" href="<?= base_url('images/icons/app-icon-32.png') ?>">
@@ -50,10 +50,10 @@
   <meta name="msapplication-TileImage" content="<?= base_url('images/icons/app-icon-144.png') ?>">
   <meta property="og:locale" content="en_US">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="<?= config('AppInfo')->name ?>">
-  <meta property="og:description" content="<?= config('AppInfo')->description ?>">
+  <meta property="og:title" content="<?= config('Config\AppInfo')->name ?>">
+  <meta property="og:description" content="<?= config('Config\AppInfo')->description ?>">
   <meta property="og:url" content="<?= base_url() ?>">
-  <meta property="og:site_name" content="<?= config('AppInfo')->name ?>">
+  <meta property="og:site_name" content="<?= config('Config\AppInfo')->name ?>">
   <meta property="og:image" content="<?= base_url('images/og-image.png') ?>">
   <meta property="og:image:secure_url" content="<?= base_url('images/og-image.png') ?>">
   <meta property="og:image:width" content="1200">
@@ -61,8 +61,8 @@
   <meta property="og:locale" content="en_US">
   <meta property="og:updated_time" content="<?= date('Y-m-d H:i:s') ?>">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:description" content="<?= config('AppInfo')->description ?>">
-  <meta name="twitter:title" content="<?= config('AppInfo')->name ?>">
+  <meta name="twitter:description" content="<?= config('Config\AppInfo')->description ?>">
+  <meta name="twitter:title" content="<?= config('Config\AppInfo')->name ?>">
   <meta name="twitter:image" content="<?= base_url('images/twitter-image.png') ?>">
 
   <!-- Bootstrap Color Mode Switcher -->
@@ -82,9 +82,6 @@
 
   <!-- Fonts (served locally due to GDPR constraints) -->
   <link rel="stylesheet" href="css/font-<?= $settings['font'] ?>.min.css">
-
-  <!-- jQuery UI CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css" integrity="sha512-ELV+xyi8IhEApPS/pSj66+Jiw+sOT1Mqkzlh8ExXihe4zfqbWkxPRi8wptXIO9g73FSlhmquFlUOuMSoXz5IRw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <!-- Cookie Consent -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent/3.1.1/cookieconsent.min.css" integrity="sha512-LQ97camar/lOliT/MqjcQs5kWgy6Qz/cCRzzRzUCfv0fotsCTC9ZHXaPQmJV8Xu/PVALfJZ7BDezl5lW3/qBxg==" crossorigin="anonymous" referrerpolicy="no-referrer" />

@@ -39,7 +39,7 @@ class AppInfo extends BaseConfig {
    *
    * @var string
    */
-  public $version = '5.2.0';
+  public $version = '6.0.0';
 
   /**
    * ------------------------------------------------------------------------
@@ -48,7 +48,7 @@ class AppInfo extends BaseConfig {
    *
    * @var string
    */
-  public $releaseDate = '2025-07-10';
+  public $releaseDate = '2025-08-01';
 
   /**
    * ------------------------------------------------------------------------
@@ -149,7 +149,7 @@ class AppInfo extends BaseConfig {
    *
    * @var string
    */
-  public $firstYear = '2014';
+  public $firstYear = '2024';
 
   /**
    * ------------------------------------------------------------------------

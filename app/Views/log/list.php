@@ -1,4 +1,4 @@
-<?= $this->extend(config('App')->viewLayout) ?>
+<?= $this->extend('layout') ?>
 <?= $this->section('main') ?>
 
 <div class="container">
@@ -45,7 +45,7 @@
                 <button class="nav-link active" id="log-tab" data-bs-toggle="tab" data-bs-target="#log-tab-pane" type="button" role="tab" aria-controls="log-tab-pane" aria-selected="true"><?= lang('Log.tab.log') ?></button>
               </li>
               <li class="nav-item" role="presentation">
-                <button class="nav-link" id="logsettings-tab" data-bs-toggle="tab" data-bs-target="#logsettings-tab-pane" type="button" role="tab" aria-controls="logsettings-tab-pane" aria-selected="true"><?= lang('Log.tab.filters') ?></button>
+                <button class="nav-link" id="logsettings-tab" data-bs-toggle="tab" data-bs-target="#logsettings-tab-pane" type="button" role="tab" aria-controls="logsettings-tab-pane" aria-selected="true"><?= lang('Log.tab.settings') ?></button>
               </li>
               <li class="nav-item" role="presentation">
                 <button class="nav-link" id="logcolors-tab" data-bs-toggle="tab" data-bs-target="#logcolors-tab-pane" type="button" role="tab" aria-controls="logcolors-tab-pane" aria-selected="true"><?= lang('Log.tab.colors') ?></button>
@@ -120,7 +120,8 @@
                           'mandatory' => $setting['mandatory'],
                           'name' => $key,
                           'title' => lang('Log.' . $fieldName),
-                          'desc' => lang('Log.' . $fieldName . '_desc'),
+                          // 'desc' => lang('Log.' . $fieldName . '_desc'),
+                          'desc' => '',
                           'errors' => session('errors.' . $key),
                           'value' => array_key_exists($fieldName, $settings) ? $settings[$fieldName] : '',
                         ]);

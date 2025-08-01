@@ -3,8 +3,8 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use CI4\Auth\Models\UserOptionModel;
-use CI4\Auth\Models\UserModel;
+use App\Models\UserOptionModel;
+use App\Models\UserModel;
 
 /**
  * ----------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-<?= $this->extend(config('App')->viewLayout) ?>
+<?= $this->extend('layout') ?>
 <?= $this->section('main') ?>
 
 <div class="container">
@@ -39,7 +39,7 @@
             <tr>
               <td class="align-top"><?= $i++ ?></td>
               <td class="align-top"><?= $role->id ?></td>
-              <td class="align-top"><i class="bi bi-person-circle text-<?= $role->bscolor ?> me-1"></i><?= $role->name ?></td>
+              <td class="align-top"><i class="bi bi-person-circle text-<?= $role->bscolor ?> me-2"></i><?= $role->name ?></td>
               <td class="align-top"><?= $role->description ?></td>
               <?php if (has_permissions([ 'role.edit', 'role.delete' ])) { ?>
                 <td class="align-top">

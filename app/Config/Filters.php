@@ -9,11 +9,11 @@ use CodeIgniter\Filters\Honeypot;
 use CodeIgniter\Filters\InvalidChars;
 use CodeIgniter\Filters\SecureHeaders;
 
-use CI4\Auth\Filters\GroupFilter;
-use CI4\Auth\Filters\LoginFilter;
-use CI4\Auth\Filters\PermissionFilter;
-use CI4\Auth\Filters\RoleFilter;
-use CI4\Lic\Filters\LicFilter;
+use App\Filters\GroupFilter;
+use App\Filters\LoginFilter;
+use App\Filters\PermissionFilter;
+use App\Filters\RoleFilter;
+use App\Filters\LicFilter;
 
 use App\Filters\UnderMaintenanceFilter;
 

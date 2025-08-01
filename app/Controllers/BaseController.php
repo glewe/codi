@@ -5,8 +5,8 @@ namespace App\Controllers;
 use App\Libraries\Bootstrap;
 use App\Libraries\Gravatar;
 use App\Models\SettingsModel;
-use CI4\Auth\Models\UserModel;
-use CI4\Auth\Models\UserOptionModel;
+use App\Models\UserModel;
+use App\Models\UserOptionModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\IncomingRequest;
@@ -66,6 +66,11 @@ abstract class BaseController extends Controller {
    * @var array
    */
   protected $helpers = [ 'auth', 'session', 'url' ];
+
+  /**
+   * @var LogModel
+   */
+  protected $LOG;
 
   /**
    * Instance of the Bootstrap Library

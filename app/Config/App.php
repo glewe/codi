@@ -72,13 +72,12 @@ class App extends BaseConfig {
 
   /**
    * --------------------------------------------------------------------------
-   * Views used by Auth Controllers
+   * Views used by Application Controllers
    * --------------------------------------------------------------------------
    *
    * @var array
    */
   public $views = [
-    // Settings page
     'database' => 'settings\database',
     'log' => 'log\list',
     'options' => 'settings\options',

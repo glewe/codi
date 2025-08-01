@@ -25,9 +25,14 @@ class OptionsController extends BaseController {
   protected $formFields = [];
 
   /**
-   * @var Validation
+   * @var \CodeIgniter\Validation\ValidationInterface
    */
   protected $validation;
+
+  /**
+   * @var string
+   */
+  protected string $pageTitle;
 
   /**
    * ----------------------------------------------------------------------------
@@ -41,6 +46,7 @@ class OptionsController extends BaseController {
     $this->LOG = model(LogModel::class);
     $this->validation = service('validation');
     $this->logType = 'Options';
+    $this->pageTitle = lang('Page.options') ?? 'Options';
 
     $this->formFields = [
       'display' => [
@@ -58,7 +64,7 @@ class OptionsController extends BaseController {
    *
    * @return string
    */
-  public function optionsEdit(): string {
+  public function edit(): string {
 
     $settings = $this->checkDefaults();
 
@@ -80,7 +86,7 @@ class OptionsController extends BaseController {
     return $this->_render(
       $this->config->views['options'],
       [
-        'page' => lang('Options.pageTitle'),
+        'page' => $this->pageTitle,
         'config' => $this->config,
         'settings' => $settings,
         'formFields' => $this->formFields,
@@ -99,7 +105,7 @@ class OptionsController extends BaseController {
    *
    * @return \CodeIgniter\HTTP\RedirectResponse
    */
-  public function optionsEditDo($id = null): \CodeIgniter\HTTP\RedirectResponse {
+  public function editDo($id = null): \CodeIgniter\HTTP\RedirectResponse {
     $form = array();
 
     //

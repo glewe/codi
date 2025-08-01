@@ -2,7 +2,7 @@
 <aside id="sidebar">
   <div class="d-flex">
     <button class="sidebar-toggle" type="button">
-      <i class="<?= config('AppInfo')->icon ?> navbar-logo logo-gradient"></i>
+      <i class="<?= config('Config\AppInfo')->icon ?> navbar-logo logo-gradient"></i>
     </button>
     <div class="sidebar-logo">
       <a href="<?= base_url() ?>home"><?= config('Config\AppInfo')->name ?></a>
@@ -48,12 +48,20 @@
     }
 
     if (has_permissions([
-      'options.manage'
+      'options.manage',
+      'label.view',
+      'priority.view',
+      'product.view',
+      'statuscategory.view'
     ])) {
       $optionsMenu = [
         'link' => [ 'target' => 'options', 'icon' => 'bi bi-sliders', 'label' => lang('Navbar.options.title'), ],
         'dropdown' => [
-          [ 'url' => base_url() . 'options', 'icon' => 'bi bi-sliders2', 'label' => lang('Navbar.options.title'), 'permitted' => has_permissions('options.manage') ],
+          [ 'url' => base_url() . 'options', 'icon' => 'bi bi-sliders2', 'label' => lang('Navbar.options.options'), 'permitted' => has_permissions('options.manage') ],
+          [ 'url' => base_url() . 'labels', 'icon' => 'bi bi-tag-fill', 'label' => lang('Navbar.options.labels'), 'permitted' => has_permissions('label.view') ],
+          [ 'url' => base_url() . 'priorities', 'icon' => 'bi bi-bell-fill', 'label' => lang('Navbar.options.priorities'), 'permitted' => has_permissions('priority.view') ],
+          [ 'url' => base_url() . 'products', 'icon' => 'bi bi-box', 'label' => lang('Navbar.options.products'), 'permitted' => has_permissions('product.view') ],
+          [ 'url' => base_url() . 'statuscategories', 'icon' => 'bi bi-circle-fill', 'label' => lang('Navbar.options.statuscategories'), 'permitted' => has_permissions('statuscategory.view') ],
         ]
       ];
       echo '<!--Options-->' . $bs->sidebarItem($optionsMenu);
@@ -98,13 +106,13 @@
       echo '<!--UserAdmin-->' . $bs->sidebarItem($useradminMenu);
     } ?>
 
-    <?php if (config('App')->showHelpMenu) {
+    <?php if (config('Config\App')->showHelpMenu) {
       $helpMenu = [
         'link' => [ 'target' => 'help', 'icon' => 'bi bi-question-circle-fill', 'label' => lang('Navbar.help.title'), ],
         'dropdown' => [
           [ 'url' => base_url() . 'dataprivacy', 'icon' => 'bi bi-shield-shaded', 'label' => lang('Navbar.help.dataprivacy'), 'permitted' => $settings['dataPrivacyPolicy'] ],
           [ 'url' => base_url() . 'imprint', 'icon' => 'bi bi-vector-pen', 'label' => lang('Navbar.help.imprint'), 'permitted' => $settings['imprint'] ],
-          [ 'url' => base_url() . 'about', 'icon' => config('AppInfo')->icon . ' logo-gradient', 'label' => lang('Navbar.help.about'), 'permitted' => true ],
+          [ 'url' => base_url() . 'about', 'icon' => config('Config\AppInfo')->icon . ' logo-gradient', 'label' => lang('Navbar.help.about'), 'permitted' => true ],
         ]
       ];
       echo '<!--Help-->' . $bs->sidebarItem($helpMenu);

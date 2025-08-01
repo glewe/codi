@@ -152,7 +152,7 @@ class LogController extends BaseController {
     //
     // Check defaults and save if not exist
     //
-    foreach (config('App')->logTypes as $logType) {
+    foreach (config('Config\App')->logTypes as $logType) {
       if (!array_key_exists('log' . $logType, $settings)) {
         $this->settings->saveSetting([ 'key' => 'log' . $logType, 'value' => '1' ]);
       }

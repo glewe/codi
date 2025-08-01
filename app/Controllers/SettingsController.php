@@ -15,6 +15,11 @@ class SettingsController extends BaseController {
    */
 
   /**
+   * @var LogModel
+   */
+  protected $LOG;
+
+  /**
    * @var string Log type used in log entries from this controller.
    */
   protected $logType;
@@ -25,10 +30,9 @@ class SettingsController extends BaseController {
   protected $formFields = [];
 
   /**
-   * @var Validation
+   * @var @var \CodeIgniter\Validation\ValidationInterface
    */
   protected $validation;
-
 
   /**
    * --------------------------------------------------------------------------
@@ -116,7 +120,10 @@ class SettingsController extends BaseController {
    *
    * @return string
    */
-  public function settingsEdit(): string {
+  public function edit(): string {
+
+    /** @var \Config\App $appConfig */
+    $appConfig = config('App');
 
     $settings = $this->checkDefaults();
 
@@ -180,7 +187,7 @@ class SettingsController extends BaseController {
     //
     // Add options for sel_font
     //
-    $supportedFonts = config('App')->supportedFonts;
+    $supportedFonts = $appConfig->supportedFonts;
     $fontOptions = [];
     foreach ($supportedFonts as $font) {
       $fontOptions[] = [ 'title' => $font['name'], 'value' => $font['id'], 'selected' => (array_key_exists('font', $settings) && $settings['font'] === $font['id'] ? true : false) ];
@@ -190,7 +197,7 @@ class SettingsController extends BaseController {
     //
     // Add options for sel_defaultLanguage
     //
-    $supportedLanguages = config('App')->supportedLocales;
+    $supportedLanguages = $appConfig->supportedLocales;
     $languageOptions = [];
     foreach ($supportedLanguages as $lang) {
       $languageOptions[] = [ 'title' => lang('App.locales.' . $lang), 'value' => $lang, 'selected' => (array_key_exists('defaultLanguage', $settings) && $settings['defaultLanguage'] === $lang ? true : false) ];
@@ -237,7 +244,7 @@ class SettingsController extends BaseController {
    *
    * @return \CodeIgniter\HTTP\RedirectResponse
    */
-  public function settingsEditDo($id = null): \CodeIgniter\HTTP\RedirectResponse {
+  public function editDo($id = null): \CodeIgniter\HTTP\RedirectResponse {
     $form = array();
 
     //

@@ -21,7 +21,11 @@ return [
 
   'options' => [
     'title' => 'Applikationsoptionen',
+    'labels' => 'Label',
     'options' => 'Applikationsoptionen',
+    'priorities' => 'Prioritäten',
+    'products' => 'Produkte',
+    'statuscategories' => 'Status Kategorien',
   ],
 
   'edit' => [

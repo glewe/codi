@@ -2,12 +2,12 @@
 
 namespace App\Controllers;
 
-use CI4\Auth\Authorization\GroupModel;
-use CI4\Auth\Authorization\PermissionModel;
-use CI4\Auth\Authorization\RoleModel;
-use CI4\Auth\Models\UserModel;
-use CI4\Auth\Models\UserOptionModel;
-use CI4\Auth\Config\Services;
+use App\Models\GroupModel;
+use App\Models\PermissionModel;
+use App\Models\RoleModel;
+use App\Models\UserModel;
+use App\Models\UserOptionModel;
+use App\Config\Services;
 
 use CodeIgniter\Database\Forge;
 use CodeIgniter\Database\Seeder;
@@ -212,20 +212,20 @@ class DatabaseController extends BaseController {
     //
     // Drop tables
     //
-    $this->forge->dropTable('auth_users', true);
+    $this->forge->dropTable('users', true);
     $this->forge->dropTable('users_options', true);
-    $this->forge->dropTable('auth_logins', true);
-    $this->forge->dropTable('auth_tokens', true);
-    $this->forge->dropTable('auth_reset_attempts', true);
-    $this->forge->dropTable('auth_activation_attempts', true);
-    $this->forge->dropTable('auth_roles', true);
-    $this->forge->dropTable('auth_permissions', true);
-    $this->forge->dropTable('auth_roles_permissions', true);
-    $this->forge->dropTable('auth_roles_users', true);
-    $this->forge->dropTable('auth_users_permissions', true);
-    $this->forge->dropTable('auth_groups', true);
-    $this->forge->dropTable('auth_groups_users', true);
-    $this->forge->dropTable('auth_groups_permissions', true);
+    $this->forge->dropTable('logins', true);
+    $this->forge->dropTable('tokens', true);
+    $this->forge->dropTable('reset_attempts', true);
+    $this->forge->dropTable('activation_attempts', true);
+    $this->forge->dropTable('roles', true);
+    $this->forge->dropTable('permissions', true);
+    $this->forge->dropTable('roles_permissions', true);
+    $this->forge->dropTable('roles_users', true);
+    $this->forge->dropTable('users_permissions', true);
+    $this->forge->dropTable('groups', true);
+    $this->forge->dropTable('groups_users', true);
+    $this->forge->dropTable('groups_permissions', true);
     $this->forge->dropTable('settings', true);
     $this->forge->dropTable('log', true);
     $this->forge->dropTable('migrations', true);
@@ -270,7 +270,7 @@ class DatabaseController extends BaseController {
     $this->forge->addKey('id', true);
     $this->forge->addUniqueKey('email');
     $this->forge->addUniqueKey('username');
-    $this->forge->createTable('auth_users', true);
+    $this->forge->createTable('users', true);
 
     //
     // Logins Table
@@ -288,7 +288,7 @@ class DatabaseController extends BaseController {
     $this->forge->addKey('email');
     $this->forge->addKey('user_id');
     // NOTE: Do NOT delete the user_id or email when the user is deleted for security audits
-    $this->forge->createTable('auth_logins', true);
+    $this->forge->createTable('logins', true);
 
     //
     // Tokens Table
@@ -305,8 +305,8 @@ class DatabaseController extends BaseController {
     ]);
     $this->forge->addKey('id', true);
     $this->forge->addKey('selector');
-    $this->forge->addForeignKey('user_id', 'auth_users', 'id', '', 'CASCADE');
-    $this->forge->createTable('auth_tokens', true);
+    $this->forge->addForeignKey('user_id', 'users', 'id', '', 'CASCADE');
+    $this->forge->createTable('tokens', true);
 
     //
     // Reset Attempts Table
@@ -321,7 +321,7 @@ class DatabaseController extends BaseController {
       'updated_at' => [ 'type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false ],
     ]);
     $this->forge->addKey('id', true);
-    $this->forge->createTable('auth_reset_attempts', true);
+    $this->forge->createTable('reset_attempts', true);
 
     //
     // Activation Attempts Table
@@ -335,7 +335,7 @@ class DatabaseController extends BaseController {
       'updated_at' => [ 'type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false ],
     ]);
     $this->forge->addKey('id', true);
-    $this->forge->createTable('auth_activation_attempts', true);
+    $this->forge->createTable('activation_attempts', true);
 
     //
     // Roles Table
@@ -350,7 +350,7 @@ class DatabaseController extends BaseController {
     ]);
 
     $this->forge->addKey('id', true);
-    $this->forge->createTable('auth_roles', true);
+    $this->forge->createTable('roles', true);
 
     //
     // Permissions Table
@@ -364,7 +364,7 @@ class DatabaseController extends BaseController {
     ]);
 
     $this->forge->addKey('id', true);
-    $this->forge->createTable('auth_permissions', true);
+    $this->forge->createTable('permissions', true);
 
     //
     // Roles_Permissions Table
@@ -377,9 +377,9 @@ class DatabaseController extends BaseController {
     ]);
 
     $this->forge->addKey([ 'role_id', 'permission_id' ]);
-    $this->forge->addForeignKey('role_id', 'auth_roles', 'id', '', 'CASCADE');
-    $this->forge->addForeignKey('permission_id', 'auth_permissions', 'id', '', 'CASCADE');
-    $this->forge->createTable('auth_roles_permissions', true);
+    $this->forge->addForeignKey('role_id', 'roles', 'id', '', 'CASCADE');
+    $this->forge->addForeignKey('permission_id', 'permissions', 'id', '', 'CASCADE');
+    $this->forge->createTable('roles_permissions', true);
 
     //
     // Roles_Users Table
@@ -392,9 +392,9 @@ class DatabaseController extends BaseController {
     ]);
 
     $this->forge->addKey([ 'role_id', 'user_id' ]);
-    $this->forge->addForeignKey('role_id', 'auth_roles', 'id', '', 'CASCADE');
-    $this->forge->addForeignKey('user_id', 'auth_users', 'id', '', 'CASCADE');
-    $this->forge->createTable('auth_roles_users', true);
+    $this->forge->addForeignKey('role_id', 'roles', 'id', '', 'CASCADE');
+    $this->forge->addForeignKey('user_id', 'users', 'id', '', 'CASCADE');
+    $this->forge->createTable('roles_users', true);
 
     //
     // Users_Permissions Table
@@ -407,9 +407,9 @@ class DatabaseController extends BaseController {
     ]);
 
     $this->forge->addKey([ 'user_id', 'permission_id' ]);
-    $this->forge->addForeignKey('user_id', 'auth_users', 'id', '', 'CASCADE');
-    $this->forge->addForeignKey('permission_id', 'auth_permissions', 'id', '', 'CASCADE');
-    $this->forge->createTable('auth_users_permissions', true);
+    $this->forge->addForeignKey('user_id', 'users', 'id', '', 'CASCADE');
+    $this->forge->addForeignKey('permission_id', 'permissions', 'id', '', 'CASCADE');
+    $this->forge->createTable('users_permissions', true);
 
     //
     // Groups Table
@@ -423,7 +423,7 @@ class DatabaseController extends BaseController {
     ]);
 
     $this->forge->addKey('id', true);
-    $this->forge->createTable('auth_groups', true);
+    $this->forge->createTable('groups', true);
 
     //
     // Groups_Users Table
@@ -436,9 +436,9 @@ class DatabaseController extends BaseController {
     ]);
 
     $this->forge->addKey([ 'group_id', 'user_id' ]);
-    $this->forge->addForeignKey('group_id', 'auth_groups', 'id', '', 'CASCADE');
-    $this->forge->addForeignKey('user_id', 'auth_users', 'id', '', 'CASCADE');
-    $this->forge->createTable('auth_groups_users', true);
+    $this->forge->addForeignKey('group_id', 'groups', 'id', '', 'CASCADE');
+    $this->forge->addForeignKey('user_id', 'users', 'id', '', 'CASCADE');
+    $this->forge->createTable('groups_users', true);
 
     //
     // Groups_Permissions Table
@@ -451,9 +451,9 @@ class DatabaseController extends BaseController {
     ]);
 
     $this->forge->addKey([ 'group_id', 'permission_id' ]);
-    $this->forge->addForeignKey('group_id', 'auth_groups', 'id', '', 'CASCADE');
-    $this->forge->addForeignKey('permission_id', 'auth_permissions', 'id', '', 'CASCADE');
-    $this->forge->createTable('auth_groups_permissions', true);
+    $this->forge->addForeignKey('group_id', 'groups', 'id', '', 'CASCADE');
+    $this->forge->addForeignKey('permission_id', 'permissions', 'id', '', 'CASCADE');
+    $this->forge->createTable('groups_permissions', true);
 
     //
     // Settings Table
@@ -484,7 +484,7 @@ class DatabaseController extends BaseController {
 
     $this->forge->addKey('id', true);
     $this->forge->addUniqueKey([ 'user_id', 'option' ]);
-    $this->forge->addForeignKey('user_id', 'auth_users', 'id', '', 'CASCADE');
+    $this->forge->addForeignKey('user_id', 'users', 'id', '', 'CASCADE');
     $this->forge->createTable('users_options', true);
 
     //

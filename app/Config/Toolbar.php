@@ -11,7 +11,7 @@ use CodeIgniter\Debug\Toolbar\Collectors\Routes;
 use CodeIgniter\Debug\Toolbar\Collectors\Timers;
 use CodeIgniter\Debug\Toolbar\Collectors\Views;
 
-use CI4\Auth\Collectors\Auth;
+use App\Collectors\Auth;
 
 /**
  * --------------------------------------------------------------------------

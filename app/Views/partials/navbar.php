@@ -85,11 +85,16 @@
 
         <?php if (has_permissions([
           'application.manage',
+          'priority.view',
+          'statuscategory.view',
           'database.edit',
+          'label.view',
           'log.view',
           'group.view',
           'options.manage',
           'permission.view',
+          'priority.view',
+          'product.view',
           'region.view',
           'role.view',
           'user.view'
@@ -98,6 +103,10 @@
             'link' => [ 'target' => 'adminDropdown', 'icon' => 'bi bi-gear-fill', 'label' => lang('Navbar.administration.title'), ],
             'dropdown' => [
               [ 'url' => base_url() . 'options', 'icon' => 'bi bi-sliders', 'label' => lang('Navbar.administration.options'), 'permitted' => has_permissions('options.manage') ],
+              [ 'url' => base_url() . 'labels', 'icon' => 'bi bi-tag-fill', 'label' => lang('Navbar.options.labels'), 'permitted' => has_permissions('label.view') ],
+              [ 'url' => base_url() . 'priorities', 'icon' => 'bi bi-bell-fill', 'label' => lang('Navbar.options.priorities'), 'permitted' => has_permissions('priority.view') ],
+              [ 'url' => base_url() . 'products', 'icon' => 'bi bi-box', 'label' => lang('Navbar.options.products'), 'permitted' => has_permissions('product.view') ],
+              [ 'url' => base_url() . 'statuscategories', 'icon' => 'bi bi-circle-fill', 'label' => lang('Navbar.options.statuscategories'), 'permitted' => has_permissions('statuscategory.view') ],
               [ 'url' => 'divider', 'permitted' => true ],
               [ 'url' => base_url() . 'groups', 'icon' => 'bi bi-people-fill', 'label' => lang('Navbar.useradmin.groups'), 'permitted' => has_permissions('group.view') ],
               [ 'url' => base_url() . 'permissions', 'icon' => 'bi bi-key-fill', 'label' => lang('Navbar.useradmin.permissions'), 'permitted' => has_permissions('permission.view') ],
@@ -122,7 +131,7 @@
             [ 'url' => base_url() . 'dataprivacy', 'icon' => 'bi bi-shield-shaded', 'label' => lang('Navbar.help.dataprivacy'), 'permitted' => $settings['dataPrivacyPolicy'] ],
             [ 'url' => base_url() . 'imprint', 'icon' => 'bi bi-vector-pen', 'label' => lang('Navbar.help.imprint'), 'permitted' => $settings['imprint'] ],
             [ 'url' => 'divider', 'permitted' => true ],
-            [ 'url' => base_url() . 'about', 'icon' => config('AppInfo')->icon . ' logo-gradient', 'label' => lang('Navbar.help.about') . ' ' . config('AppInfo')->name, 'permitted' => true ],
+            [ 'url' => base_url() . 'about', 'icon' => config('Config\AppInfo')->icon . ' logo-gradient', 'label' => lang('Navbar.help.about') . ' ' . config('Config\AppInfo')->name, 'permitted' => true ],
           ]
         ];
         echo '<!--Help-->' . $bs->navbarItem($helpMenu, true);

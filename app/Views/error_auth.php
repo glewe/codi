@@ -1,9 +1,9 @@
-<?= $this->extend(config('App')->viewLayout) ?>
+<?= $this->extend('layout') ?>
 <?= $this->section('main') ?>
 
   <div class="container mb-4">
 
-    <?= view('CI4\Auth\Views\_alert') ?>
+    <?= view('Views\alert') ?>
 
   </div>
 

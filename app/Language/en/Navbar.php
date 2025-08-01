@@ -22,7 +22,11 @@ return [
 
   'options' => [
     'title' => 'Application Options',
+    'labels' => 'Labels',
     'options' => 'Application Options',
+    'priorities' => 'Priorities',
+    'products' => 'Products',
+    'statuscategories' => 'Status Categories',
   ],
 
   'edit' => [

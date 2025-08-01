@@ -24,6 +24,10 @@
 
           <div class="tab-pane fade show active" id="tab-general">
 
+            <h3>Application Icon: <i><?= config('AppInfo')->icon ?></i></h3>
+            <i class="<?= config('AppInfo')->icon ?> logo-gradient" style="font-size: 10rem; line-height: 120px;"></i>
+            <div class="spacer-40"></div>
+
             <h3>Lightbox2</h3>
             <a href="images/og-image.png" data-lightbox="og-image" data-title="My OG Pic"><img src="<?= base_url() ?>images/og-image.png" class="img-fluid" alt="Pic Popup" style="width: 240px;"></a>
             <div class="spacer-40"></div>

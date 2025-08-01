@@ -27,7 +27,7 @@ class Validation extends BaseConfig {
     FormatRules::class,
     FileRules::class,
     CreditCardRules::class,
-    \CI4\Auth\Authentication\Passwords\ValidationRules::class,
+    \App\Authentication\Passwords\ValidationRules::class,
     PhoneNumberRules::class,
     CustomRules::class
   ];
