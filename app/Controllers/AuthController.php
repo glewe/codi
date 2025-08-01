@@ -19,6 +19,11 @@ use App\Controllers\BaseController;
 
 class AuthController extends BaseController {
   /**
+   * @var \App\Models\LogModel
+   */
+  protected $LOG;
+
+  /**
    * @var string Log type used in log entries from this controller.
    */
   protected $logType;
