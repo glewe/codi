@@ -27,7 +27,7 @@ class GroupSeeder extends Seeder {
     // Insert records
     //
     foreach ($records as $record) {
-      $this->db->table('auth_groups')->insert($record);
+      $this->db->table('groups')->insert($record);
     }
   }
 }

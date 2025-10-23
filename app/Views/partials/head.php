@@ -72,13 +72,13 @@
   <script src="js/width-modes.min.js"></script>
 
   <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
 
   <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
   <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="fonts/fontawesome-free-6.7.2-web/css/all.min.css">
+  <link rel="stylesheet" href="fonts/fontawesome-free-7.1.0-web/css/all.min.css">
 
   <!-- Fonts (served locally due to GDPR constraints) -->
   <link rel="stylesheet" href="css/font-<?= $settings['font'] ?>.min.css">

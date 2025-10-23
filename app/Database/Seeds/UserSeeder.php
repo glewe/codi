@@ -31,7 +31,7 @@ class UserSeeder extends Seeder {
     // Insert records
     //
     foreach ($records as $record) {
-      $this->db->table('auth_users')->insert($record);
+      $this->db->table('users')->insert($record);
     }
   }
 }

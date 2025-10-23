@@ -31,7 +31,7 @@ class GroupsUsersSeeder extends Seeder {
     // Insert records
     //
     foreach ($records as $record) {
-      $this->db->table('auth_groups_users')->insert($record);
+      $this->db->table('groups_users')->insert($record);
     }
   }
 }

@@ -44,7 +44,7 @@ class PermissionSeeder extends Seeder {
     // Insert records
     //
     foreach ($records as $record) {
-      $this->db->table('auth_permissions')->insert($record);
+      $this->db->table('permissions')->insert($record);
     }
   }
 }

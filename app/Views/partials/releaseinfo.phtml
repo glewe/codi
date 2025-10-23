@@ -2,6 +2,25 @@
 $releases = [
   //---------------------------------------------------------------------------
   [
+    'version' => '6.1.0',
+    'date' => '2025-10-23',
+    'info' => 'This is a minor update and bugfix release.',
+    'bugfixes' => [
+      [ 'summary' => 'Fixed Table \'codi.auth_users\' doesn\'t exist', 'issue' => 'https://github.com/glewe/codi/issues/4' ],
+    ],
+    'features' => [
+      [ 'summary' => 'Added Matomo analytics support', 'issue' => '' ],
+    ],
+    'improvements' => [
+      [ 'summary' => 'Updated Bootstrap to 5.3.8', 'issue' => '' ],
+      [ 'summary' => 'Updated CodeIgniter to 4.6.3', 'issue' => '' ],
+      [ 'summary' => 'Updated Font Awesome to 7.1.0', 'issue' => '' ],
+    ],
+    'removals' => [
+    ],
+  ],
+  //---------------------------------------------------------------------------
+  [
     'version' => '6.0.0',
     'date' => '2025-08-01',
     'info' => 'This is a new major release integrating the ThirdParty modules CI4-Auth and CI4-Lic into the root application. This makes it easier to maintain and update the application, as all modules are now part of the main codebase.',

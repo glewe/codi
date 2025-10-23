@@ -26,7 +26,7 @@ class RoleSeeder extends Seeder {
     // Insert records
     //
     foreach ($records as $record) {
-      $this->db->table('auth_roles')->insert($record);
+      $this->db->table('roles')->insert($record);
     }
   }
 }

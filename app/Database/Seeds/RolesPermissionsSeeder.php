@@ -44,7 +44,7 @@ class RolesPermissionsSeeder extends Seeder {
     // Insert records
     //
     foreach ($records as $record) {
-      $this->db->table('auth_roles_permissions')->insert($record);
+      $this->db->table('roles_permissions')->insert($record);
     }
   }
 }

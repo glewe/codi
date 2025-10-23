@@ -39,7 +39,7 @@ class AppInfo extends BaseConfig {
    *
    * @var string
    */
-  public $version = '6.0.0';
+  public $version = '6.1.0';
 
   /**
    * ------------------------------------------------------------------------
@@ -197,7 +197,7 @@ class AppInfo extends BaseConfig {
     'bootstrap' => [
       'author' => 'Bootstrap Team',
       'product' => 'Bootstrap Framework',
-      'version' => '5.3.7',
+      'version' => '5.3.8',
       'url' => 'https://getbootstrap.com/',
     ],
     'bootstrap-icons' => [
@@ -215,7 +215,7 @@ class AppInfo extends BaseConfig {
     'codeigniter' => [
       'author' => 'CodeIgniter Team',
       'product' => 'CodeIgniter Framework',
-      'version' => '4.6.1',
+      'version' => '4.6.3',
       'url' => 'https://codeigniter.com/',
     ],
     'datatables' => [
@@ -227,7 +227,7 @@ class AppInfo extends BaseConfig {
     'fontawesome' => [
       'author' => 'Font Awesome Team',
       'product' => 'Font Awesome Icons',
-      'version' => '6.7.2',
+      'version' => '7.1.0',
       'url' => 'https://fontawesome.com/',
     ],
     'freepik' => [

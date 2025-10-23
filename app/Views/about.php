@@ -33,7 +33,7 @@
   <?php if ($settings['versionCheck']) { ?>
     <script src="<?= config('AppInfo')->versionScript ?>"></script>
     <script>
-      var running_version = parseVersionString('<?= config('AppInfo')->version ?>');
+      const running_version = parseVersionString('<?= config('AppInfo')->version ?>');
       if (running_version.major < latest_version.major) {
         //
         // Major version smaller
