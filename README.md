@@ -29,15 +29,16 @@ More requirements can be found here:
 - [CodeIgniter 4 User Guide - Server Requirements](https://codeigniter.com/user_guide/intro/requirements.html)
 
 ## Installation ##
-1. Clone the repository: `git clone https://github.com/glewe/codi.git`
-2. Run `composer install`
-3. Create a new database
-4. Edit the `app/Config/Database.php` file and add your database information
-5. Edit the `app/Config/App.php` file and change `$baseUrl` to your localhost path, e.g. `http://localhost/codi/public`
-6. Run `php spark migrate`
-7. Run `php spark db:seed CODISeeder`
-8. Navigate to your application in a browser, e.g. `http://localhost/codi/public`
-9. The home page provides login information
+1. Download the latest release from here: [CODI Releases](https://github.com/glewe/codi/releases)
+2. Unzip code to a folder reachable by your local webserver
+3. Go to the folder and run `composer install`
+4. Create a new database
+5. Edit the `app/Config/Database.php` file and add your database information
+6. Edit the `app/Config/App.php` file and change `$baseUrl` to your localhost path, e.g. `http://localhost/codi/public`
+7. Run `php spark migrate`
+8. Run `php spark db:seed CODISeeder`
+9. Navigate to your application in a browser, e.g. `http://localhost/codi/public`
+10. The home page provides login information
 
 ## Making Changes ##
 Should you make changes to the CSS or JavaScript files, you will need to run the following commands to compile them:
@@ -60,8 +61,8 @@ That will compile and minimize the files and overwrite the old ones in the `publ
 - Gravatar profile icons
 
 ## Modules
-- [Lewe CI4-Auth](https://github.com/glewe/ci4-auth)
-- [Lewe CI4-Lic](https://github.com/glewe/ci4-lic)
+- [Lewe CI4-Auth](https://github.com/glewe/ci4-auth) (integrated in CODI since 6.0.0)
+- [Lewe CI4-Lic](https://github.com/glewe/ci4-lic) (integrated in CODI since 6.0.0)
 - Bootstrap
 - Bootstrap Icons
 - Chart.js
