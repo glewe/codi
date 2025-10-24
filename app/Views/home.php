@@ -3,7 +3,7 @@
 
 <div class="container">
 
-  <?= view('partials\alert') ?>
+  <?= view('partials/alert') ?>
 
   <div class="card mb-3">
     <?= $bs->cardHeader([

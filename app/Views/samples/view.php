@@ -5,7 +5,7 @@
 
   <div class="col-lg-12">
 
-    <?= view('partials\alert') ?>
+    <?= view('partials/alert') ?>
 
     <div class="card mb-3">
       <?= $bs->cardHeader([

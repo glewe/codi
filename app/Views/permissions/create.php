@@ -3,7 +3,7 @@
 
 <div class="container">
 
-  <?= view('partials\alert') ?>
+  <?= view('partials/alert') ?>
 
   <form action="<?= base_url() ?>/permissions/create" method="post">
     <?= csrf_field() ?>

@@ -3,7 +3,7 @@
 
 <div class="container">
 
-  <?= view('partials\alert') ?>
+  <?= view('partials/alert') ?>
   <?= auth_display() ?>
 
 </div>

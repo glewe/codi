@@ -3,7 +3,7 @@
 
 <div class="container">
 
-  <?= view('partials\alert') ?>
+  <?= view('partials/alert') ?>
 
   <form action="<?= base_url() ?>/roles/edit/<?= $role->id ?>" method="post">
     <?= csrf_field() ?>

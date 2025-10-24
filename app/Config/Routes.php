@@ -45,37 +45,37 @@ $routes->post('login2fa', 'AuthController::login2faDo');
 $routes->get('whoami', 'AuthController::whoami', ['filter' => 'login']);
 
 // Database
-$routes->match(['get', 'post'], 'database', 'DatabaseController::database', ['as' => 'database', 'filter' => 'permission:database.edit']);
+$routes->match(['GET', 'POST'], 'database', 'DatabaseController::database', ['as' => 'database', 'filter' => 'permission:database.edit']);
 
 // Groups
-$routes->match(['get', 'post'], 'groups', 'GroupController::groups', ['as' => 'groups', 'filter' => 'permission:group.view']);
+$routes->match(['GET', 'POST'], 'groups', 'GroupController::groups', ['as' => 'groups', 'filter' => 'permission:group.view']);
 $routes->get('groups/create', 'GroupController::groupsCreate', ['as' => 'groupsCreate', 'filter' => 'permission:group.create']);
 $routes->post('groups/create', 'GroupController::groupsCreateDo', ['filter' => 'permission:group.create']);
 $routes->get('groups/edit/(:num)', 'GroupController::groupsEdit/$1', ['as' => 'groupsEdit', 'filter' => 'permission:group.edit']);
 $routes->post('groups/edit/(:num)', 'GroupController::groupsEditDo/$1', ['filter' => 'permission:group.edit']);
 
 // License
-$routes->match(['get', 'post'], 'license', 'LicController::index', ['as' => 'license']);
+$routes->match(['GET', 'POST'], 'license', 'LicController::index', ['as' => 'license']);
 
 // Log
-$routes->match(['get', 'post'], 'log', 'LogController::log', ['as' => 'log', 'filter' => ['permission:log.view', 'license:active']]);
+$routes->match(['GET', 'POST'], 'log', 'LogController::log', ['as' => 'log', 'filter' => ['permission:log.view', 'license:active']]);
 
 // Options
 $routes->get('options', 'OptionsController::edit', ['as' => 'optionsEdit', 'filter' => 'permission:options.manage']);
 $routes->post('options', 'OptionsController::editDo', ['filter' => 'permission:options.manage']);
 
 // Permissions
-$routes->match(['get', 'post'], 'permissions', 'PermissionController::permissions', ['as' => 'permissions', 'filter' => 'permission:permission.view']);
+$routes->match(['GET', 'POST'], 'permissions', 'PermissionController::permissions', ['as' => 'permissions', 'filter' => 'permission:permission.view']);
 $routes->get('permissions/create', 'PermissionController::permissionsCreate', ['as' => 'permissionsCreate', 'filter' => 'permission:permission.create']);
 $routes->post('permissions/create', 'PermissionController::permissionsCreateDo', ['filter' => 'permission:permission.create']);
 $routes->get('permissions/edit/(:num)', 'PermissionController::permissionsEdit/$1', ['as' => 'permissionsEdit', 'filter' => 'permission:permission.edit']);
 $routes->post('permissions/edit/(:num)', 'PermissionController::permissionsEditDo/$1', ['filter' => 'permission:permission.edit']);
 
 // PHPInfo
-$routes->match(['get', 'post'], 'phpinformation', 'PhpInformationController::phpinfo', ['as' => 'phpinformation', 'filter' => 'permission:application.manage']);
+$routes->match(['GET', 'POST'], 'phpinformation', 'PhpInformationController::phpinfo', ['as' => 'phpinformation', 'filter' => 'permission:application.manage']);
 
 // Roles
-$routes->match(['get', 'post'], 'roles', 'RoleController::roles', ['as' => 'roles', 'filter' => 'permission:role.view']);
+$routes->match(['GET', 'POST'], 'roles', 'RoleController::roles', ['as' => 'roles', 'filter' => 'permission:role.view']);
 $routes->get('roles/create', 'RoleController::rolesCreate', ['as' => 'rolesCreate', 'filter' => 'permission:role.create']);
 $routes->post('roles/create', 'RoleController::rolesCreateDo', ['filter' => 'permission:role.create']);
 $routes->get('roles/edit/(:num)', 'RoleController::rolesEdit/$1', ['as' => 'rolesEdit', 'filter' => 'permission:role.edit']);
@@ -86,7 +86,7 @@ $routes->get('settings', 'SettingsController::edit', ['as' => 'settingsEdit', 'f
 $routes->post('settings', 'SettingsController::editDo', ['filter' => 'permission:application.manage']);
 
 // Users
-$routes->match(['get', 'post'], 'users', 'UserController::users', ['as' => 'users', 'filter' => 'permission:user.view']);
+$routes->match(['GET', 'POST'], 'users', 'UserController::users', ['as' => 'users', 'filter' => 'permission:user.view']);
 $routes->get('users/create', 'UserController::usersCreate', ['as' => 'usersCreate', 'filter' => 'permission:user.create']);
 $routes->post('users/create', 'UserController::usersCreateDo', ['filter' => 'permission:user.create']);
 $routes->get('users/edit/(:num)', 'UserController::usersEdit/$1', ['as' => 'usersEdit', 'filter' => 'permission:user.edit']);

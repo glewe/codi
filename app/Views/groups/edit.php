@@ -3,7 +3,7 @@
 
 <div class="container">
 
-  <?= view('partials\alert') ?>
+  <?= view('partials/alert') ?>
 
   <form action="<?= base_url() ?>/groups/edit/<?= $group->id ?>" method="post">
     <?= csrf_field() ?>

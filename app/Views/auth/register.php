@@ -4,7 +4,7 @@
 
 <div class="container">
 
-  <?= view('partials\alert') ?>
+  <?= view('partials/alert') ?>
 
   <div class="row d-flex justify-content-center align-middle">
     <div class="col-md-6">

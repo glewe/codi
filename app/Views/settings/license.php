@@ -3,7 +3,7 @@
 
 <div class="container">
 
-  <?= view('partials\alert') ?>
+  <?= view('partials/alert') ?>
 
   <div class="card mb-3">
     <?= $bs->cardHeader([ 'icon' => 'bi-vector-pen', 'title' => config('AppInfo')->name . ' ' . lang('Lic.license'), 'help' => getPageHelpUrl(uri_string()) ]) ?>

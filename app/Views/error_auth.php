@@ -3,7 +3,7 @@
 
   <div class="container mb-4">
 
-    <?= view('Views\alert') ?>
+    <?= view('partials/alert') ?>
 
   </div>
 
