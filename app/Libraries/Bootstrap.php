@@ -1410,7 +1410,7 @@ class Bootstrap {
     if (strlen($buttonID)) {
       $modalbottom .= '        <button type="submit" class="btn btn-' . $buttonColor . '" name="' . $buttonID . '" style="margin-top: 4px;">' . $buttonText . '</button>';
     }
-    $modalbottom .= '        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">' . t('btn_cancel') . '</button>
+    $modalbottom .= '        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">' . lang('Auth.btn.cancel') . '</button>
         </div>
       </div>
       </div>
@@ -1729,7 +1729,7 @@ class Bootstrap {
    *
    * @return string
    */
-  public function spinner($type, $style, $label = '', $small = false): string {
+  public function spinner($type, $style, $small = false): string {
     if (strlen($type) && in_array($type, array( 'border', 'grow' ))) {
       $stype = 'spinner-' . $type;
     } else {
@@ -1745,16 +1745,9 @@ class Bootstrap {
     } else {
       $ssmall = '';
     }
-    if (strlen($label)) {
-      $slabel = $label;
-    } else {
-      $slabel = '';
-    }
 
     return '
-        <i class="' . $stype . ' ' . $ssmall . ' ' . $sstyle . '" role="status">
-            <span class="sr-only">' . $slabel . '</span>
-        </i>';
+      <i class="' . $stype . ' ' . $ssmall . ' ' . $sstyle . '" role="status"></i>';
   }
 
   /**

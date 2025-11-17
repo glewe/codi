@@ -76,7 +76,7 @@
             <div class="spacer-40"></div>
 
             <h3>Spinner</h3>
-            <?php echo $bs->spinner('grow', 'warning', 'Loading...'); ?>
+            <?php echo $bs->spinner('border', 'warning'); ?>
             <div class="spacer-40"></div>
 
             <h3>Hightlight.js</h3>
