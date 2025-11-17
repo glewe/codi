@@ -149,3 +149,4 @@ _*.*
 _files/
 _images/
 .htaccess.ionos
+public/.htaccess.ionos
