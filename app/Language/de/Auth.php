@@ -152,6 +152,7 @@ return [
     'name' => 'Gruppenname',
     'name_desc' => 'Gib einen Namen f&uuml;r diese Gruppe ein.',
     'none_found' => 'Keine Gruppen gefunden.',
+    'no_permissions' => 'Keine Berechtigungen zugewiesen.',
     'not_found' => 'Die Gruppe konnte nicht gefunden werden: {0}.',
     'not_unique' => 'Der Gruppenname "{0}" existiert bereits. Gruppennamen m&uuml;ssen eindeutig sein.',
     'permissions' => 'Gruppenrechte',
