@@ -43,27 +43,33 @@
               <td class="align-top"><?= $role->description ?></td>
               <?php if (has_permissions([ 'role.edit', 'role.delete' ])) { ?>
                 <td class="align-top">
-                  <button class="btn btn-light btn-sm" data-bs-toggle="collapse" data-bs-target="#collapsePermissions<?= $role->id ?>" aria-expanded="false" aria-controls="collapsePermissions<?= $role->id ?>">
-                    <?= lang('Auth.role.show_permissions') ?><i class="bi-caret-down-fill ms-2"></i>
-                  </button>
-                  <div class="collapse" id="collapsePermissions<?= $role->id ?>">
-                    <?php
-                    $perms = $rolePermissions[$role->id];
-                    foreach ($perms[0] as $perm) :
-                      echo $perm->name . '<br>';
-                    endforeach;
-                    ?>
-                  </div>
-                  <script>
-                    var collapseElement<?= $role->id ?> = document.getElementById('collapsePermissions<?= $role->id ?>');
-                    var buttonElement<?= $role->id ?> = document.querySelector('button[data-bs-target="#collapsePermissions<?= $role->id ?>"]');
-                    collapseElement<?= $role->id ?>.addEventListener('shown.bs.collapse', () => {
-                      buttonElement<?= $role->id ?>.innerHTML = '<?= lang("Auth.role.hide_permissions") ?><i class="bi-caret-up-fill ms-2">';
-                    });
-                    collapseElement<?= $role->id ?>.addEventListener('hidden.bs.collapse', () => {
-                      buttonElement<?= $role->id ?>.innerHTML = '<?= lang("Auth.role.show_permissions") ?><i class="bi-caret-down-fill ms-2">';
-                    });
-                  </script>
+                  <?php $perms = $rolePermissions[$role->id]; ?>
+                  <?php if (!empty($perms[0])): ?>
+                    <button class="btn btn-light btn-sm" data-bs-toggle="collapse" data-bs-target="#collapsePermissions<?= $role->id ?>" aria-expanded="false" aria-controls="collapsePermissions<?= $role->id ?>">
+                      <?= lang('Auth.role.show_permissions') ?><i class="bi-caret-down-fill ms-2"></i>
+                    </button>
+                    <div class="collapse" id="collapsePermissions<?= $role->id ?>">
+                      <?php
+                      foreach ($perms[0] as $perm) :
+                        echo $perm->name . '<br>';
+                      endforeach;
+                      ?>
+                    </div>
+                    <script>
+                      (function() {
+                        var collapseElement = document.getElementById('collapsePermissions<?= $role->id ?>');
+                        var buttonElement = document.querySelector('button[data-bs-target="#collapsePermissions<?= $role->id ?>"]');
+                        collapseElement.addEventListener('shown.bs.collapse', () => {
+                          buttonElement.innerHTML = '<?= lang("Auth.role.hide_permissions") ?><i class="bi-caret-up-fill ms-2">';
+                        });
+                        collapseElement.addEventListener('hidden.bs.collapse', () => {
+                          buttonElement.innerHTML = '<?= lang("Auth.role.show_permissions") ?><i class="bi-caret-down-fill ms-2">';
+                        });
+                      })();
+                    </script>
+                    <?php else: 
+                      echo lang("Auth.role.no_permissions");
+                    endif; ?>
                 </td>
                 <td class="text-center align-top">
                   <form name="form_<?= $role->id ?>" action="<?= base_url() ?>/roles" method="post">

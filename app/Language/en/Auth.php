@@ -312,6 +312,7 @@ return [
     'name' => 'Role Name',
     'name_desc' => 'Enter a name for this role.',
     'none_found' => 'No roles found.',
+    'no_permissions' => 'No permissions assigned.',
     'not_found' => 'Unable to find role: {0}.',
     'not_unique' => 'The role name "{0}" already exists. Role names must be unique.',
     'permissions' => 'Role Permissions',

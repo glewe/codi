@@ -310,6 +310,7 @@ return [
     'hide_permissions' => 'Berechtigungen verbergen',
     'name' => 'Rollenname',
     'name_desc' => 'Gib einen Namen f&uuml;r diese Rolle ein.',
+    'no_permissions' => 'Keine Berechtigungen zugewiesen.',
     'none_found' => 'Keine Rollen gefunden.',
     'not_found' => 'Die Rolle wurde nicht gefunden: {0}.',
     'not_unique' => 'Der Rollenname "{0}" existiert bereits. Rollennamen m&uuml;ssen eindeutig sein.',
