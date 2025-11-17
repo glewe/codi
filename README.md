@@ -20,6 +20,8 @@ It is an "_opinionated boilerplate_" with Bootstrap 5 visuals offering user, gro
 Lewe CI4-Auth for authentication and authorization and Lewe CI4-Lic for license management. The separate repositories for that latter 
 two will not be further maintained.
 
+[Demo](https://codi.lewe.com)
+
 ## Server Requirements
 
 PHP 8.1 / 8.2 / 8.4 is required.
