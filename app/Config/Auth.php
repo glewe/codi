@@ -35,50 +35,6 @@ class Auth extends BaseConfig {
    *
    * @var array
    */
-//  public $views = [
-//
-//    // Welcome page
-//    'welcome' => 'App\Views\welcome',
-//
-//    // Error page
-//    'error_auth' => 'App\Views\error_auth',
-//
-//    // About page
-//    'about' => 'App\Views\about',
-//
-//    // Auth
-//    'login' => 'App\Views\auth\login',
-//    'register' => 'App\Views\auth\register',
-//    'forgot' => 'App\Views\auth\forgot',
-//    'reset' => 'App\Views\auth\reset',
-//    'setup2fa' => 'App\Views\auth\setup2fa',
-//    'login2fa' => 'App\Views\auth\login2fa',
-//    'whoami' => 'App\Views\auth\whoami',
-//
-//    // Groups
-//    'groups' => 'App\Views\groups\list',
-//    'groupsCreate' => 'App\Views\groups\create',
-//    'groupsEdit' => 'App\Views\groups\edit',
-//
-//    // Permissions
-//    'permissions' => 'App\Views\permissions\list',
-//    'permissionsCreate' => 'App\Views\permissions\create',
-//    'permissionsEdit' => 'App\Views\permissions\edit',
-//
-//    // Roles
-//    'roles' => 'App\Views\roles\list',
-//    'rolesCreate' => 'App\Views\roles\create',
-//    'rolesEdit' => 'App\Views\roles\edit',
-//
-//    // Users
-//    'users' => 'App\Views\users\list',
-//    'usersCreate' => 'App\Views\users\create',
-//    'usersEdit' => 'App\Views\users\edit',
-//
-//    // Emails
-//    'emailForgot' => 'App\Views\emails\forgot',
-//    'emailActivation' => 'App\Views\emails\activation',
-//  ];
   public $views = [
 
     // Welcome page
@@ -91,38 +47,38 @@ class Auth extends BaseConfig {
     'about' => 'about',
 
     // Auth
-    'login' => 'auth\login',
-    'register' => 'auth\register',
-    'forgot' => 'auth\forgot',
-    'reset' => 'auth\reset',
-    'setup2fa' => 'auth\setup2fa',
-    'login2fa' => 'auth\login2fa',
-    'whoami' => 'auth\whoami',
+    'login' => 'auth/login',
+    'register' => 'auth/register',
+    'forgot' => 'auth/forgot',
+    'reset' => 'auth/reset',
+    'setup2fa' => 'auth/setup2fa',
+    'login2fa' => 'auth/login2fa',
+    'whoami' => 'auth/whoami',
 
     // Groups
-    'groups' => 'groups\list',
-    'groupsCreate' => 'groups\create',
-    'groupsEdit' => 'groups\edit',
+    'groups' => 'groups/list',
+    'groupsCreate' => 'groups/create',
+    'groupsEdit' => 'groups/edit',
 
     // Permissions
-    'permissions' => 'permissions\list',
-    'permissionsCreate' => 'permissions\create',
-    'permissionsEdit' => 'permissions\edit',
+    'permissions' => 'permissions/list',
+    'permissionsCreate' => 'permissions/create',
+    'permissionsEdit' => 'permissions/edit',
 
     // Roles
-    'roles' => 'roles\list',
-    'rolesCreate' => 'roles\create',
-    'rolesEdit' => 'roles\edit',
+    'roles' => 'roles/list',
+    'rolesCreate' => 'roles/create',
+    'rolesEdit' => 'roles/edit',
 
     // Users
-    'users' => 'users\list',
-    'usersCreate' => 'users\create',
-    'usersEdit' => 'users\edit',
-    'profilesEdit' => 'users\profile',
+    'users' => 'users/list',
+    'usersCreate' => 'users/create',
+    'usersEdit' => 'users/edit',
+    'profilesEdit' => 'users/profile',
 
     // Emails
-    'emailForgot' => 'emails\forgot',
-    'emailActivation' => 'emails\activation',
+    'emailForgot' => 'emails/forgot',
+    'emailActivation' => 'emails/activation',
   ];
 
   /**

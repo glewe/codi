@@ -148,4 +148,4 @@ sonar-project.properties
 _*.*
 _files/
 _images/
-beforepushing.txt
+.htaccess.ionos
