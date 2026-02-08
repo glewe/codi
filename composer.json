@@ -10,8 +10,8 @@
   },
   "require": {
     "php": "^8.1 || ^8.2 || ^8.3 || ^8.4",
-    "endroid/qr-code": "^6.0",
-    "codeigniter4/framework": "^4.6",
+    "endroid/qr-code": "^6.1",
+    "codeigniter4/framework": "^4.7",
     "robthree/twofactorauth": "^3.0",
     "ext-json": "*",
     "ext-curl": "*",
@@ -23,7 +23,8 @@
     "fakerphp/faker": "^1.24",
     "matthiasmullie/minify": "^1.3",
     "mikey179/vfsstream": "^1.6",
-    "phpunit/phpunit": "^12.4"
+    "phpunit/phpunit": "^13.0",
+    "phpstan/phpstan": "^2.1"
   },
   "autoload": {
     "exclude-from-classmap": [
@@ -41,12 +42,7 @@
     "sort-packages": true
   },
   "scripts": {
-    "test": "phpunit",
-    "lint:css": [
-      "stylelint --quiet-deprecation-warnings \"public/css/lewe.css\"",
-      "stylelint --quiet-deprecation-warnings \"public/css/styles.css\"",
-      "stylelint --quiet-deprecation-warnings \"public/css/custom.css\""
-    ],
+    "analyze": "phpstan analyze",
     "build": [
       "composer run lint:css",
       "php minify.php"
@@ -55,6 +51,12 @@
       "composer run lint:css",
       "php minify.php",
       "composer install --no-dev --optimize-autoloader"
-    ]
+    ],
+    "lint:css": [
+      "stylelint --quiet-deprecation-warnings \"public/css/lewe.css\"",
+      "stylelint --quiet-deprecation-warnings \"public/css/styles.css\"",
+      "stylelint --quiet-deprecation-warnings \"public/css/custom.css\""
+    ],
+    "test": "phpunit"
   }
 }

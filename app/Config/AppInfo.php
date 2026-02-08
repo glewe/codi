@@ -39,7 +39,7 @@ class AppInfo extends BaseConfig {
    *
    * @var string
    */
-  public $version = '6.2.0';
+  public $version = '6.3.0';
 
   /**
    * ------------------------------------------------------------------------
@@ -48,7 +48,7 @@ class AppInfo extends BaseConfig {
    *
    * @var string
    */
-  public $releaseDate = '2025-11-17';
+  public $releaseDate = '2026-02-09';
 
   /**
    * ------------------------------------------------------------------------
@@ -215,7 +215,7 @@ class AppInfo extends BaseConfig {
     'codeigniter' => [
       'author' => 'CodeIgniter Team',
       'product' => 'CodeIgniter Framework',
-      'version' => '4.6.3',
+      'version' => '4.7.0',
       'url' => 'https://codeigniter.com/',
     ],
     'datatables' => [

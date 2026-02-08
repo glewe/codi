@@ -30,7 +30,7 @@ class SettingsController extends BaseController {
   protected $formFields = [];
 
   /**
-   * @var @var \CodeIgniter\Validation\ValidationInterface
+   * @var \CodeIgniter\Validation\ValidationInterface
    */
   protected $validation;
 
@@ -263,8 +263,16 @@ class SettingsController extends BaseController {
       'txt_footerCopyrightUrl' => [ 'label' => lang('Settings.footerCopyrightUrl'), 'rules' => 'permit_empty|valid_url' ],
       'txt_welcomeText' => [ 'label' => lang('Settings.email.welcomeText'), 'rules' => 'permit_empty' ],
       'txt_googleAnalyticsId' => [ 'label' => lang('Settings.googleAnalyticsId'), 'rules' => 'permit_empty|valid_ga4' ],
-      'txt_matomoAnalyticsUrl' => [ 'label' => lang('Settings.matomoAnalyticsUrl'), 'rules' => 'valid_url' ],
+      'txt_matomoAnalyticsUrl' => [ 'label' => lang('Settings.matomoAnalyticsUrl'), 'rules' => 'permit_empty|valid_url' ],
     ];
+
+    //
+    // Matomo Analytics must have a valid URL if the switch is on
+    //
+    if ($this->request->getPost('swi_matomoAnalytics')) {
+      $validationRules['txt_matomoAnalyticsUrl']['rules'] = 'required|valid_url';
+      $validationRules['txt_matomoAnalyticsId'] = [ 'label' => lang('Settings.matomoAnalyticsId'), 'rules' => 'required|integer' ];
+    }
 
     //
     // Get form fields for validation
