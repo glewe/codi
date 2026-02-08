@@ -209,7 +209,7 @@ class AppInfo extends BaseConfig {
     'chartjs' => [
       'author' => 'Chart.js Team',
       'product' => 'Chart.js',
-      'version' => '4.5.0',
+      'version' => '4.5.1',
       'url' => 'https://www.chartjs.org/',
     ],
     'codeigniter' => [

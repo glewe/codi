@@ -111,7 +111,7 @@
   <script src="addons/datetimepicker/jquery.datetimepicker.full.min.js"></script>
 
   <!-- ChartJs -->
-  <script src="addons/chartjs-4.4.5/chart.umd.min.js"></script>
+  <script src="addons/chartjs-4.5.1/chart.umd.min.js"></script>
 
   <!-- HighlightJs -->
   <?php if (isset($settings['highlightJsTheme']) && $settings['highlightJsTheme'] === 'light') { ?>
