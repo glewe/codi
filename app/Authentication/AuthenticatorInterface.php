@@ -46,4 +46,18 @@ interface AuthenticatorInterface
    * @return User|null
    */
   public function user(): ?User;
+
+  /**
+   * Returns the User ID for the current logged in user.
+   *
+   * @return int|null
+   */
+  public function id(): ?int;
+
+  /**
+   * Returns the current error, if any.
+   *
+   * @return string
+   */
+  public function error(): string;
 }

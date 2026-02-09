@@ -90,7 +90,7 @@ class Database extends Config
     // Ensure that we always set the database group to 'tests' if we are
     // currently running an automated test suite, so thatwe don't
     // overwrite live data on accident.
-    if (ENVIRONMENT === 'testing') {
+    if (ENVIRONMENT === 'testing') { // @phpstan-ignore-line
       $this->defaultGroup = 'tests';
     }
   }

@@ -80,7 +80,7 @@ if (!function_exists('dnd')) {
    * @return void
    */
   function dnd(mixed $a, bool $die = true): void {
-    echo highlight_string("<?php\n\$data =\n" . var_export($a, true) . ";\n?>");
+    highlight_string("<?php\n\$data =\n" . var_export($a, true) . ";\n?>");
 
     if ($die) {
       die();

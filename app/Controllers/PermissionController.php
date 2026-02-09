@@ -63,7 +63,7 @@ class PermissionController extends BaseController
       'permissions' => $permissions->orderBy('name', 'asc')->findAll(),
     ];
 
-    if ($this->request->withMethod('POST')) {
+    if ($this->request->is('post')) {
       //
       // A form was submitted. Let's see what it was...
       //

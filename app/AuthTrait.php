@@ -2,20 +2,20 @@
 
 namespace App;
 
-use CodeIgniter\Router\Exceptions\RedirectException;
+use CodeIgniter\HTTP\Exceptions\RedirectException;
 
-trait AuthTrait {
+trait AuthTrait { // @phpstan-ignore trait.unused
   /**
    * Instance of Authentication Class
    *
-   * @var null
+   * @var \App\Authentication\AuthenticatorInterface|null
    */
   public $authenticate = null;
 
   /**
    * Instance of Authorization class
    *
-   * @var null
+   * @var \App\Authorization\FlatAuthorization|null
    */
   public $authorize = null;
   /**
@@ -44,7 +44,7 @@ trait AuthTrait {
    * @return bool
    * @throws RedirectException
    */
-  public function restrict(string $uri = null, bool $returnOnly = false): bool {
+  public function restrict(?string $uri = null, bool $returnOnly = false): bool {
     $this->setupAuthClasses();
     if ($this->authenticate->check()) {
       return true;

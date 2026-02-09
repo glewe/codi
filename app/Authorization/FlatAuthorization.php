@@ -173,7 +173,7 @@ class FlatAuthorization implements AuthorizeInterface
    * @return bool
    */
   public function addUserToGroup(int $userid, $group): bool {
-    if (empty($userid) || !is_numeric($userid)) {
+    if ($userid === 0) {
       return false;
     }
 
@@ -211,7 +211,7 @@ class FlatAuthorization implements AuthorizeInterface
    * @return bool
    */
   public function addUserToRole(int $userid, $role): bool {
-    if (empty($userid) || !is_numeric($userid)) {
+    if ($userid === 0) {
       return false;
     }
 
@@ -588,11 +588,11 @@ class FlatAuthorization implements AuthorizeInterface
    * @return bool
    */
   public function hasPermission($permission, int $userId): bool {
-    if (empty($permission) || (!is_string($permission) && !is_numeric($permission))) {
+    if (empty($permission)) {
       return false;
     }
 
-    if (empty($userId) || !is_numeric($userId)) {
+    if ($userId === 0) {
       return false;
     }
 
@@ -627,7 +627,7 @@ class FlatAuthorization implements AuthorizeInterface
    * @return bool|null
    */
   public function hasPermissions($permissions, int $userId): ?bool {
-    if (empty($userId) || !is_numeric($userId)) {
+    if ($userId === 0) {
       return null;
     }
 
@@ -639,18 +639,11 @@ class FlatAuthorization implements AuthorizeInterface
     }
 
     foreach ($permissions as $permission) {
-      // Get the Permission ID
-      $permissionId = $this->getPermissionID($permission);
-      if (!is_numeric($permissionId)) {
-        return false;
-      }
-      // First check the permission model. If that exists, then we're golden.
-      if ($this->permissionModel->doesUserHavePermission($userId, (int)$permissionId)) {
+      if ($this->hasPermission($permission, $userId)) {
         return true;
       }
-      // Still here? Then we have one last check to make - any user private permissions.
-      return (bool)$this->doesUserHavePermission($userId, (int)$permissionId);
     }
+
     return false;
   }
 
@@ -836,10 +829,9 @@ class FlatAuthorization implements AuthorizeInterface
    * @return bool|null
    */
   public function removeAllPermissionsFromUser(int $userId): ?bool {
-    if (empty($userId) || !is_numeric($userId)) {
+    if ($userId === 0) {
       return null;
     }
-    $userId = (int)$userId;
     if (!Events::trigger('beforeRemoveAllPermissionsFromUser', $userId)) {
       return false;
     }
@@ -863,10 +855,9 @@ class FlatAuthorization implements AuthorizeInterface
     if (!is_numeric($permissionId)) {
       return false;
     }
-    if (empty($userId) || !is_numeric($userId)) {
+    if ($userId === 0) {
       return null;
     }
-    $userId = (int)$userId;
     if (!Events::trigger('beforeRemovePermissionFromUser', $userId, $permissionId)) {
       return false;
     }
@@ -883,7 +874,7 @@ class FlatAuthorization implements AuthorizeInterface
    * @return bool
    */
   public function removeUserFromGroup(int $userId, $group): bool {
-    if (empty($userId) || !is_numeric($userId)) {
+    if ($userId === 0) {
       return false;
     }
 
@@ -921,7 +912,7 @@ class FlatAuthorization implements AuthorizeInterface
    * @return bool
    */
   public function removeUserFromRole(int $userId, $role): bool {
-    if (empty($userId) || !is_numeric($userId)) {
+    if ($userId === 0) {
       return false;
     }
 
@@ -958,11 +949,9 @@ class FlatAuthorization implements AuthorizeInterface
    * @return bool|null
    */
   public function removeUserFromAllGroups(int $userId): ?bool {
-    if (empty($userId) || !is_numeric($userId)) {
+    if ($userId === 0) {
       return null;
     }
-
-    $userId = (int)$userId;
 
     if (!Events::trigger('beforeRemoveUserFromAllGroups', $userId)) {
       return false;
@@ -980,11 +969,9 @@ class FlatAuthorization implements AuthorizeInterface
    * @return bool|null
    */
   public function removeUserFromAllRoles(int $userId): ?bool {
-    if (empty($userId) || !is_numeric($userId)) {
+    if ($userId === 0) {
       return null;
     }
-
-    $userId = (int)$userId;
 
     if (!Events::trigger('beforeRemoveUserFromAllRoles', $userId)) {
       return false;
@@ -1178,10 +1165,7 @@ class FlatAuthorization implements AuthorizeInterface
    * @return array|bool
    */
   public function userGroups($userId): array|bool {
-    if (is_numeric($userId)) {
-      return $this->groupModel->getGroupsForUser((int)$userId);
-    }
-    return false;
+    return $this->groupModel->getGroupsForUser((int)$userId);
   }
 
   //---------------------------------------------------------------------------
@@ -1193,10 +1177,7 @@ class FlatAuthorization implements AuthorizeInterface
    * @return array|bool
    */
   public function userRoles($userId): array|bool {
-    if (is_numeric($userId)) {
-      return $this->roleModel->getRolesForUser((int)$userId);
-    }
-    return false;
+    return $this->roleModel->getRolesForUser((int)$userId);
   }
 }
 

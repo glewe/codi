@@ -14,7 +14,7 @@ use App\Test\Fakers\UserFaker;
  * Provides additional utilities for authentication and authorization
  * during testing.
  */
-trait AuthTestTrait
+trait AuthTestTrait // @phpstan-ignore trait.unused
 {
   /**
    * Creates a new faked User, optionally logging them in.

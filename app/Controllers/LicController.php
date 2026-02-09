@@ -31,9 +31,9 @@ class LicController extends BaseController
    * The license details.
    * JSON response from the license server.
    *
-   * @var object
+   * @var object|null
    */
-  public $details;
+  public ?object $details = null;
 
   /**
    * The client domain.
@@ -164,14 +164,14 @@ class LicController extends BaseController
 
     switch (strtoupper($method)) {
       case "POST":
-        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POST, true);
         if ($data) {
           curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
         }
         break;
 
       case "PUT":
-        curl_setopt($curl, CURLOPT_PUT, 1);
+        curl_setopt($curl, CURLOPT_PUT, true);
         break;
 
       default:
@@ -189,7 +189,7 @@ class LicController extends BaseController
     // dnd($query)
 
     curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     $result = curl_exec($curl);
     curl_close($curl);
 

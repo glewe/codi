@@ -75,7 +75,7 @@ class GroupController extends BaseController
     }
     $data['groupPermissions'] = $groupPermissions;
 
-    if ($this->request->withMethod('POST')) {
+    if ($this->request->is('post')) {
       //
       // A form was submitted. Let's see what it was...
       //

@@ -40,7 +40,7 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
       // User banned
       //
       $ipAddress = service('request')->getIPAddress();
-      $this->recordLoginAttempt($credentials['email'] ?? $credentials['username'], false, 'User banned', $ipAddress, $this->user?->id ?? null);
+      $this->recordLoginAttempt($credentials['email'] ?? $credentials['username'], false, 'User banned', $ipAddress, $this->user->id);
       $this->error = lang('Auth.user.is_banned');
       $this->user = null;
       return false;
@@ -51,7 +51,7 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
       // User inactive
       //
       $ipAddress = service('request')->getIPAddress();
-      $this->recordLoginAttempt($credentials['email'] ?? $credentials['username'], false, 'User inactive', $ipAddress, $this->user?->id ?? null);
+      $this->recordLoginAttempt($credentials['email'] ?? $credentials['username'], false, 'User inactive', $ipAddress, $this->user->id);
       $param = http_build_query(['login' => urlencode($credentials['email'] ?? $credentials['username'])]);
       $this->error = lang('Auth.activation.not_activated') . '<br>' . anchor(route_to('resend-activate-account') . '?' . $param, lang('Auth.activation.resend'));
       $this->user = null;

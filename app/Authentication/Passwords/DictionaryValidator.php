@@ -17,12 +17,12 @@ class DictionaryValidator extends BaseValidator implements ValidatorInterface
   /**
    * @var string
    */
-  protected $error;
+  protected $error = '';
 
   /**
    * @var string
    */
-  protected $suggestion;
+  protected $suggestion = '';
 
   //---------------------------------------------------------------------------
   /**
@@ -63,7 +63,7 @@ class DictionaryValidator extends BaseValidator implements ValidatorInterface
    * @return string
    */
   public function error(): string {
-    return $this->error ?? '';
+    return $this->error;
   }
 
   //---------------------------------------------------------------------------
@@ -75,6 +75,6 @@ class DictionaryValidator extends BaseValidator implements ValidatorInterface
    * @return string
    */
   public function suggestion(): string {
-    return $this->suggestion ?? '';
+    return $this->suggestion;
   }
 }

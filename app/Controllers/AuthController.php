@@ -270,7 +270,7 @@ class AuthController extends BaseController
     //
     // Set a return URL if none is specified
     //
-    $this->session->set('redirect_url', $this->session->get('redirect_url') ?? previous_url() ?? site_url('/'));
+    $this->session->set('redirect_url', $this->session->get('redirect_url') ?? previous_url());
 
     return $this->_render($this->authConfig->views['login'], ['authConfig' => $this->authConfig]);
   }
@@ -311,12 +311,12 @@ class AuthController extends BaseController
       logEvent(
         [
           'type'  => $this->logType,
-          'event' => $this->auth->error() ?? lang('Auth.login.bad_attempt'),
+          'event' => $this->auth->error() ?: lang('Auth.login.bad_attempt'),
           'user'  => $login,
           'ip'    => $this->request->getIPAddress(),
         ]
       );
-      return redirect()->back()->withInput()->with('error', $this->auth->error() ?? lang('Auth.login.bad_attempt'));
+      return redirect()->back()->withInput()->with('error', $this->auth->error() ?: lang('Auth.login.bad_attempt'));
     }
     //
     // Is the user being forced to reset their password?

@@ -16,12 +16,12 @@ class NothingPersonalValidator extends BaseValidator implements ValidatorInterfa
   /**
    * @var string
    */
-  protected $error;
+  protected $error = '';
 
   /**
    * @var string
    */
-  protected $suggestion;
+  protected $suggestion = '';
 
   //---------------------------------------------------------------------------
   /**
@@ -217,7 +217,7 @@ class NothingPersonalValidator extends BaseValidator implements ValidatorInterfa
    * @return string
    */
   public function error(): string {
-    return $this->error ?? '';
+    return $this->error;
   }
 
   //---------------------------------------------------------------------------
@@ -229,6 +229,6 @@ class NothingPersonalValidator extends BaseValidator implements ValidatorInterfa
    * @return string
    */
   public function suggestion(): string {
-    return $this->suggestion ?? '';
+    return $this->suggestion;
   }
 }

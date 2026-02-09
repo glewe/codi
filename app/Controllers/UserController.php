@@ -72,7 +72,7 @@ class UserController extends BaseController
       'users'  => $users->orderBy('username', 'asc')->findAll(),
     ];
 
-    if ($this->request->withMethod('POST')) {
+    if ($this->request->is('post')) {
       //
       // A form was submitted. Let's see what it was...
       //

@@ -37,9 +37,7 @@ if (!function_exists('sendEmail')) {
     $settings = model(SettingsModel::class);
     $email    = initializeEmail();
 
-    if ($email === false) {
-      return false;
-    }
+
 
     if (!strlen($to)) {
       return false;
@@ -97,9 +95,7 @@ if (!function_exists('sendActivationEmail')) {
     $settings = model(SettingsModel::class);
     $email    = initializeEmail();
 
-    if ($email === false) {
-      return false;
-    }
+
 
     $email->setTo($user->email);
     $email->setSubject(lang('Auth.activation.subject'));
@@ -146,9 +142,7 @@ if (!function_exists('sendResetEmail')) {
     $settings = model(SettingsModel::class);
     $email    = initializeEmail();
 
-    if ($email === false) {
-      return false;
-    }
+
 
     $email->setTo($user->email);
     $email->setSubject(lang('Auth.forgot.subject'));
@@ -225,9 +219,9 @@ if (!function_exists('initializeEmail')) {
   /**
    * Initializes the email service.
    *
-   * @return \CodeIgniter\Email\Email|false Returns the result true or false.
+   * @return \CodeIgniter\Email\Email The initialized email service.
    */
-  function initializeEmail(): \CodeIgniter\Email\Email|false {
+  function initializeEmail(): \CodeIgniter\Email\Email {
     $settings = model(SettingsModel::class);
     $email    = \Config\Services::email();
 
@@ -246,9 +240,7 @@ if (!function_exists('initializeEmail')) {
       $config['SMTPCrypto'] = ($settings->getSetting('emailSMTPCrypto') !== 'none') ? $settings->getSetting('emailSMTPCrypto') : '';
     }
 
-    if (!$email->initialize($config)) {
-      return false;
-    }
+    $email->initialize($config);
 
     $email->setFrom($settings->getSetting('emailReply'), $settings->getSetting('emailFrom'));
     $email->setReplyTo($settings->getSetting('emailReply'), $settings->getSetting('emailReply'));

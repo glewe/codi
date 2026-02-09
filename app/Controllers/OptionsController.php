@@ -39,7 +39,7 @@ class OptionsController extends BaseController
   public function __construct() {
     $this->validation = service('validation');
     $this->logType    = 'Options';
-    $this->pageTitle  = lang('Page.options') ?? 'Options';
+    $this->pageTitle  = lang('Page.options');
 
     $this->formFields = [
       'display' => [

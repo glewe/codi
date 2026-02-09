@@ -191,6 +191,16 @@ Search.appendIndex(
             "summary": "Returns\u0020the\u0020User\u0020instance\u0020for\u0020the\u0020current\u0020logged\u0020in\u0020user.",
             "url": "classes/App-Authentication-AuthenticatorInterface.html#method_user"
         },                {
+            "fqsen": "\\App\\Authentication\\AuthenticatorInterface\u003A\u003Aid\u0028\u0029",
+            "name": "id",
+            "summary": "Returns\u0020the\u0020User\u0020ID\u0020for\u0020the\u0020current\u0020logged\u0020in\u0020user.",
+            "url": "classes/App-Authentication-AuthenticatorInterface.html#method_id"
+        },                {
+            "fqsen": "\\App\\Authentication\\AuthenticatorInterface\u003A\u003Aerror\u0028\u0029",
+            "name": "error",
+            "summary": "Returns\u0020the\u0020current\u0020error,\u0020if\u0020any.",
+            "url": "classes/App-Authentication-AuthenticatorInterface.html#method_error"
+        },                {
             "fqsen": "\\App\\Authentication\\LocalAuthenticator",
             "name": "LocalAuthenticator",
             "summary": "",

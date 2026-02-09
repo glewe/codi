@@ -75,15 +75,15 @@ class Services extends BaseService
    * If a shared instance is not requested, it creates a new instance of the FlatAuthorization with the provided role model, permission model, and group model.
    * The user model is then set to the created instance.
    *
-   * @param Model $roleModel       The role model to use. Defaults to RoleModel.
-   * @param Model $permissionModel The permission model to use. Defaults to PermissionModel.
-   * @param Model $userModel       The user model to use. Defaults to UserModel.
-   * @param bool  $getShared       Whether to get a shared instance. Defaults to true.
-   * @param Model $groupModel      The group model to use. Defaults to GroupModel.
+   * @param RoleModel|null       $roleModel       The role model to use. Defaults to RoleModel.
+   * @param PermissionModel|null $permissionModel The permission model to use. Defaults to PermissionModel.
+   * @param UserModel|null       $userModel       The user model to use. Defaults to UserModel.
+   * @param bool                 $getShared       Whether to get a shared instance. Defaults to true.
+   * @param GroupModel|null      $groupModel      The group model to use. Defaults to GroupModel.
    *
    * @return object The authorization service instance.
    */
-  public static function authorization(?Model $roleModel = null, ?Model $permissionModel = null, ?Model $userModel = null, bool $getShared = true, ?Model $groupModel = null): object {
+  public static function authorization(?RoleModel $roleModel = null, ?PermissionModel $permissionModel = null, ?UserModel $userModel = null, bool $getShared = true, ?GroupModel $groupModel = null): object {
     if ($getShared) {
       return self::getSharedInstance('authorization', $roleModel, $permissionModel, $userModel);
     }

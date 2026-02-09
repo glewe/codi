@@ -72,7 +72,7 @@ class RoleController extends BaseController
     }
     $data['rolePermissions'] = $rolePermissions;
 
-    if ($this->request->withMethod('POST')) {
+    if ($this->request->is('post')) {
       //
       // A form was submitted. Let's see what it was...
       //

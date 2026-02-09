@@ -95,7 +95,7 @@ class AuthenticationBase
     //
     // Regenerate the session ID to help protect against session fixation
     //
-    if (ENVIRONMENT !== 'testing') {
+    if (ENVIRONMENT !== 'testing') { // @phpstan-ignore-line
       session()->regenerate();
     }
 
@@ -343,7 +343,7 @@ class AuthenticationBase
    * @return int|null
    */
   public function id(): ?int {
-    return $this->user?->id ?? null;
+    return $this->user?->id;
   }
 
   //---------------------------------------------------------------------------
@@ -365,7 +365,7 @@ class AuthenticationBase
    * @return array|null|object
    */
   public function retrieveUser(array $wheres): array|null|object {
-    if (!$this->userModel instanceof Model) {
+    if (!$this->userModel instanceof Model) { // @phpstan-ignore-line
       throw AuthException::forInvalidModel('User');
     }
     return $this->userModel->where($wheres)->first();

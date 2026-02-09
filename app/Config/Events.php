@@ -26,7 +26,7 @@ use CodeIgniter\HotReloader\HotReloader;
  */
 
 Events::on('pre_system', static function () {
-  if (ENVIRONMENT !== 'testing') {
+  if (ENVIRONMENT !== 'testing') { // @phpstan-ignore-line
     if (ini_get('zlib.output_compression')) {
       throw FrameworkException::forEnabledZlibOutputCompression();
     }
@@ -44,11 +44,11 @@ Events::on('pre_system', static function () {
    * --------------------------------------------------------------------
    * If you delete, they will no longer be collected.
    */
-  if (CI_DEBUG && !is_cli()) {
+  if (CI_DEBUG && !is_cli()) { // @phpstan-ignore-line
     Events::on('DBQuery', 'CodeIgniter\Debug\Toolbar\Collectors\Database::collect');
     Services::toolbar()->respond();
     // Hot Reload route - for framework use on the hot reloader.
-    if (ENVIRONMENT === 'development') {
+    if (ENVIRONMENT === 'development') { // @phpstan-ignore-line
       Services::routes()->get('__hot-reload', static function () {
         (new HotReloader())->run();
       });
