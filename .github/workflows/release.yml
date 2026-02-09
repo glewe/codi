@@ -22,14 +22,26 @@ jobs:
           php-version: '8.4'
           extensions: mbstring, intl, gd, json, curl
 
-      - name: Install dependencies
+      - name: Install PHP dependencies
         run: composer install --no-dev --optimize-autoloader
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install stylelint
+        run: npm install -g stylelint stylelint-config-twbs-bootstrap
 
       - name: Build assets
         run: |
-          # Use the build:prod script defined in composer.json
-          # Note: this requires tools/update_version.php and tools/minify.php to be present
-          composer run build:prod
+          # We manually run the build steps because composer build:prod
+          # fails without stylelint or tries to run composer install again
+          php tools/update_version.php
+          stylelint --quiet-deprecation-warnings "public/css/lewe.css"
+          stylelint --quiet-deprecation-warnings "public/css/styles.css"
+          stylelint --quiet-deprecation-warnings "public/css/custom.css"
+          php tools/minify.php
 
       - name: Extract release notes
         id: release_notes
