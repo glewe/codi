@@ -13,7 +13,7 @@
 [![FontAwesome](https://img.shields.io/badge/Design-FontAwesome_6-339af0.svg)](https://fontawesome.com/)
 
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=glewe_codi&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=glewe_codi)
-[![PHPStAn](https://img.shields.io/badge/phpstan-Level_5-green.svg)](https://phpstan.org/)
+[![PHPStAn](https://img.shields.io/badge/phpstan-Level_5-029B02.svg)](https://phpstan.org/)
 
 ## What is CODI?
 
