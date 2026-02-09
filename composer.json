@@ -1,5 +1,6 @@
 {
   "name": "lewe/codi",
+  "version": "6.3.0",
   "description": "CODI - Application boilerplate based on CodeIgniter 4",
   "license": "MIT",
   "type": "project",
@@ -44,12 +45,14 @@
   "scripts": {
     "analyze": "phpstan analyze",
     "build": [
+      "php tools/update_version.php",
       "composer run lint:css",
       "php tools/minify.php"
     ],
     "build:prod": [
+      "php tools/update_version.php",
       "composer run lint:css",
-      "php minify.php",
+      "php tools/minify.php",
       "composer install --no-dev --optimize-autoloader"
     ],
     "docs": "php tools/phpDocumentor.phar -d app -t php_doc --title=\"CODI\" -s template.color=blue && php tools/apply_dark_mode.php",
