@@ -68,7 +68,7 @@ abstract class BaseController extends Controller {
   protected $helpers = [ 'auth', 'session', 'url' ];
 
   /**
-   * @var LogModel
+   * @var \App\Models\LogModel
    */
   protected $LOG;
 
@@ -135,7 +135,7 @@ abstract class BaseController extends Controller {
    * @param ResponseInterface $response The response object.
    * @param LoggerInterface $logger The logger object.
    *
-   * @return \CodeIgniter\HTTP\RedirectResponse|void
+   * @return void
    */
   public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger): void {
     // Do Not Edit This Line
@@ -155,10 +155,10 @@ abstract class BaseController extends Controller {
     //
     // Get language from session or set default language
     //
-    if (!isset($session->lang)) {
-      $session->lang = $this->settings->getSetting('defaultLanguage');
+    if (!$session->has('lang')) {
+      $session->set('lang', $this->settings->getSetting('defaultLanguage'));
     }
-    $language->setLocale($session->lang);
+    $language->setLocale($session->get('lang'));
     //
     // Se theme, menu and avatar defaults
     //

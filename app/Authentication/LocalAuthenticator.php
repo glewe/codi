@@ -22,14 +22,16 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
    * @return bool
    */
   public function attempt(array $credentials, ?bool $remember = null): bool {
-    $this->user = $this->validate($credentials, true);
+    /** @var User|null $user */
+    $user = $this->validate($credentials, true);
+    $this->user = $user;
 
     if (empty($this->user)) {
       //
       // User empty or unknown
       //
       $ipAddress = service('request')->getIPAddress();
-      $this->recordLoginAttempt($credentials['email'] ?? $credentials['username'], false, 'User unknown', $ipAddress, $this->user->id ?? null);
+      $this->recordLoginAttempt($credentials['email'] ?? $credentials['username'], false, 'User unknown', $ipAddress, null);
       $this->user = null;
       return false;
     }
@@ -39,7 +41,7 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
       // User banned
       //
       $ipAddress = service('request')->getIPAddress();
-      $this->recordLoginAttempt($credentials['email'] ?? $credentials['username'], false, 'User banned', $ipAddress, $this->user->id ?? null);
+      $this->recordLoginAttempt($credentials['email'] ?? $credentials['username'], false, 'User banned', $ipAddress, $this->user?->id ?? null);
       $this->error = lang('Auth.user.is_banned');
       $this->user = null;
       return false;
@@ -50,7 +52,7 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
       // User inactive
       //
       $ipAddress = service('request')->getIPAddress();
-      $this->recordLoginAttempt($credentials['email'] ?? $credentials['username'], false, 'User inactive', $ipAddress, $this->user->id ?? null);
+      $this->recordLoginAttempt($credentials['email'] ?? $credentials['username'], false, 'User inactive', $ipAddress, $this->user?->id ?? null);
       $param = http_build_query([ 'login' => urlencode($credentials['email'] ?? $credentials['username']) ]);
       $this->error = lang('Auth.activation.not_activated') . '<br>' . anchor(route_to('resend-activate-account') . '?' . $param, lang('Auth.activation.resend'));
       $this->user = null;
@@ -112,6 +114,7 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
     //
     // Yay! We were remembered!
     //
+    /** @var User|null $user */
     $user = $this->userModel->find($token->user_id);
 
     if (empty($user)) {
@@ -141,7 +144,7 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
    *
    * @return bool|\App\Entities\User|array
    */
-  public function validate(array $credentials, bool $returnUser = false): bool|\App\Entities\User|array {
+  public function validate(array $credentials, bool $returnUser = false): bool|\App\Entities\User|array|null {
     //
     // Can't validate without a password.
     //
@@ -169,6 +172,7 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
     //
     // Can we find a user with those credentials?
     //
+    /** @var User|null $user */
     $user = $this->userModel->where($credentials)->first();
 
     if (!$user) {
@@ -190,6 +194,7 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
     // a user logged in.
     //
     if (Password::needsRehash($user->password_hash, $this->config->hashAlgorithm)) {
+      /** @var \App\Entities\User $user */
       $user->password = $password;
       $this->userModel->save($user);
     }

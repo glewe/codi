@@ -24,10 +24,8 @@ class Bootstrap {
    * Constructor
    * --------------------------------------------------------------------------
    *
-   * This function initializes the Bootstrap library with the provided configuration model.
+   * This function initializes the Bootstrap library.
    * It sets up various color properties required for the library to function correctly.
-   *
-   * @param object $configModel The configuration model for initializing the Bootstrap library.
    */
   public function __construct() {
     $this->color = array(
@@ -306,7 +304,7 @@ class Bootstrap {
    *
    * @param string $style  The type of the badge ('danger', 'dark', 'info', 'light', 'primary', 'secondary', 'success', 'warning').
    * @param string $text   The text to display in the badge.
-   * @param bool   $rounde A boolean indicating if the badge should be rounded.
+   * @param bool   $rounded A boolean indicating if the badge should be rounded.
    *
    * @return string
    *
@@ -572,7 +570,6 @@ class Bootstrap {
    *                              - 'name' (string): Name of the element to access it by in the controller
    *                              - 'title' (string): Title of the element on the form
    *                              - 'value' (string): Information to display in the form row
-   * @param int   $leftColumnSize The size of the left column in the form row
    *
    * @return string The HTML for the form row with informational text
    */
@@ -1398,7 +1395,9 @@ class Bootstrap {
    *
    * Creates the bottom part of a modal dialog
    *
-   * @param array $data Array of parameters defining the form-group type and content
+   * @param string $buttonID    ID of the button
+   * @param string $buttonColor Color of the button
+   * @param string $buttonText  Text of the button
    *
    * @return string
    */
@@ -1678,7 +1677,7 @@ class Bootstrap {
    *
    * Returns a random Bootstrap color array object.
    *
-   * @return array
+   * @return string
    */
   public function randomColor(): string {
     return array_rand($this->color);
@@ -1729,7 +1728,7 @@ class Bootstrap {
    *
    * @return string
    */
-  public function spinner($type, $style, $small = false): string {
+  public function spinner($type, $style, $small = false, $label = ''): string {
     if (strlen($type) && in_array($type, array( 'border', 'grow' ))) {
       $stype = 'spinner-' . $type;
     } else {

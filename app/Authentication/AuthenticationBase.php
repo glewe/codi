@@ -367,7 +367,7 @@ class AuthenticationBase {
    * @return int|null
    */
   public function id(): ?int {
-    return $this->user->id ?? null;
+    return $this->user?->id ?? null;
   }
 
   /**

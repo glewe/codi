@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use CodeIgniter\Session\Session;
 
-use App\Config\Auth as AuthConfig;
+use Config\Auth as AuthConfig;
 use App\Entities\User;
 use App\Models\UserModel;
 use App\Models\UserOptionModel;
@@ -44,7 +44,7 @@ class UserController extends BaseController {
   protected $UOP;
 
   /**
-   * @var Validation
+   * @var \CodeIgniter\Validation\Validation
    */
   protected $validation;
 
@@ -93,7 +93,9 @@ class UserController extends BaseController {
         // [Delete]
         //
         $recId = $this->request->getPost('hidden_id');
-        if (!$user = $users->where('id', $recId)->first()) {
+        $user = $users->where('id', $recId)->first();
+        /** @var User|null $user */
+        if (!$user) {
           return redirect()->route('users')->with('errors', lang('Auth.user.not_found', [ $recId ]));
         } else {
           if (!$users->deleteUser($recId)) {
@@ -115,7 +117,9 @@ class UserController extends BaseController {
         // [Remove Secret]
         //
         $recId = $this->request->getPost('hidden_id');
-        if (!$user = $users->where('id', $recId)->first()) {
+        $user = $users->where('id', $recId)->first();
+        /** @var User|null $user */
+        if (!$user) {
           return redirect()->route('users')->with('errors', lang('Auth.user.not_found', [ $recId ]));
         } else {
           $user->removeSecret();
@@ -248,6 +252,7 @@ class UserController extends BaseController {
     //
     // Set default options
     //
+    /** @var User|null $newUser */
     $newUser = $users->getByUsername($this->request->getPost('username'));
     $this->UOP->saveOption([ 'user_id' => $newUser->id, 'option' => 'avatar', 'value' => 'default_male.png' ]);
     $this->UOP->saveOption([ 'user_id' => $newUser->id, 'option' => 'theme', 'value' => 'default' ]);
@@ -294,7 +299,9 @@ class UserController extends BaseController {
   public function usersEdit($id = null): \CodeIgniter\HTTP\RedirectResponse|string {
     $users = model(UserModel::class);
 
-    if (!$user = $users->where('id', $id)->first()) {
+    $user = $users->where('id', $id)->first();
+    /** @var User|null $user */
+    if (!$user) {
       return redirect()->to('users');
     }
 
@@ -339,7 +346,9 @@ class UserController extends BaseController {
     //
     // Get the user to edit. If not found, return to users list page.
     //
-    if (!$user = $users->where('id', $id)->first()) {
+    $user = $users->where('id', $id)->first();
+    /** @var User|null $user */
+    if (!$user) {
       return redirect()->to('users');
     }
 
@@ -565,7 +574,9 @@ class UserController extends BaseController {
     //
     // Read user record and user option records
     //
-    if (!$user = $users->where('id', $id)->first()) {
+    $user = $users->where('id', $id)->first();
+    /** @var User|null $user */
+    if (!$user) {
       return redirect()->back()->with('errors', lang('Auth.user.not_found', [ $id ]));
     }
     $profile = $userOptions->getOptionsForUser($id);
@@ -641,7 +652,9 @@ class UserController extends BaseController {
     //
     // Get the user for this profile. If not found, return to groups list page.
     //
-    if (!$user = $users->where('id', $id)->first()) {
+    $user = $users->where('id', $id)->first();
+    /** @var User|null $user */
+    if (!$user) {
       return redirect()->back()->with('errors', lang('Auth.user.not_found', [ $id ]));
     }
 
@@ -727,6 +740,7 @@ class UserController extends BaseController {
       //
       if (array_key_exists('btn_remove_secret',$this->request->getPost())) {
         $users = model(UserModel::class);
+        /** @var User|null $user */
         if ($user = $users->where('id', $id)->first()) {
           $user->removeSecret();
           $users->update($id, $user);

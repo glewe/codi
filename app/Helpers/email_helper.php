@@ -16,11 +16,11 @@ if (!function_exists('sendEmail')) {
    *
    * Sends an email with the provided parameters.
    *
-   * @param string $to      The recipient's email address. If not provided, defaults to 'george.lewe@gmail.com'.
-   * @param string $cc      The CC recipient's email address. If not provided, defaults to an empty string.
-   * @param string $bcc     The BCC recipient's email address. If not provided, defaults to an empty string.
-   * @param string $subject The subject of the email. If not provided, defaults to 'Email Test'.
-   * @param string $body    The body of the email. If not provided, defaults to 'Testing the email class.'.
+   * @param string $to        The recipient's email address. If not provided, defaults to 'george.lewe@gmail.com'.
+   * @param string $cc        The CC recipient's email address. If not provided, defaults to an empty string.
+   * @param string $bcc       The BCC recipient's email address. If not provided, defaults to an empty string.
+   * @param string $subject   The subject of the email. If not provided, defaults to 'Email Test'.
+   * @param string $message   The body of the email. If not provided, defaults to 'Testing the email class.'.
    *
    * @return bool Returns true if the email was successfully sent, false otherwise.
    */
@@ -89,6 +89,7 @@ if (!function_exists('sendActivationEmail')) {
    * @return bool Returns true if the email was successfully sent, false otherwise.
    */
   function sendActivationEmail($user, $onScreen = false): bool {
+    /** @var \App\Entities\User $user */
 
     $settings = model(SettingsModel::class);
     $email = initializeEmail();
@@ -135,6 +136,7 @@ if (!function_exists('sendResetEmail')) {
    * @return bool Returns true if the email was successfully sent, false otherwise.
    */
   function sendResetEmail($user, $onScreen = false): bool {
+    /** @var \App\Entities\User $user */
 
     $settings = model(SettingsModel::class);
     $email = initializeEmail();
@@ -190,7 +192,7 @@ if (!function_exists('buildEmailBody')) {
    * - %button_text% - The text of the button
    * - %footer_message% - The footer message of the email
    *
-   * @param string $date Array with variables to put into the body template.
+   * @param array $data Array with variables to put into the body template.
    *
    * @return string The email message body.
    */

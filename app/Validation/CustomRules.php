@@ -53,7 +53,7 @@ class CustomRules {
    *
    * Validation of an exact value
    *
-   * @param string|null $str
+   * @param string $str
    *
    * @return bool
    */
@@ -78,7 +78,7 @@ class CustomRules {
    *
    * Validation of a Google Analytics 4 ID
    *
-   * @param string|null $str
+   * @param string $str
    *
    * @return bool
    */

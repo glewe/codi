@@ -3,6 +3,7 @@
 namespace App\Authentication\Passwords;
 
 use CodeIgniter\Entity\Entity;
+use App\Entities\User;
 
 /**
  * Class NothingPersonalValidator
@@ -33,7 +34,7 @@ class NothingPersonalValidator extends BaseValidator implements ValidatorInterfa
    * If false is returned the validation process will be immediately stopped.
    *
    * @param string $password
-   * @param Entity $user
+   * @param User $user
    *
    * @return bool
    */
@@ -59,7 +60,7 @@ class NothingPersonalValidator extends BaseValidator implements ValidatorInterfa
    * For instance, a project might require adding `firstname` and `lastname` properties
    * to an extended version of the User class.
    * The new fields can be included in personal information testing in by setting
-   * the `$personalFields` property in App\Config\Auth, e.g.
+   * the `$personalFields` property in Config\Auth, e.g.
    *
    *   public $personalFields = ['firstname', 'lastname'];
    *
@@ -67,7 +68,7 @@ class NothingPersonalValidator extends BaseValidator implements ValidatorInterfa
    * if such info is found.
    *
    * @param string $password
-   * @param Entity $user
+   * @param User $user
    *
    * @return boolean
    */
@@ -154,7 +155,7 @@ class NothingPersonalValidator extends BaseValidator implements ValidatorInterfa
    * --------------------------------------------------------------------------
    *
    * notSimilar() uses $password and $userName to calculate a similarity value.
-   * Similarity values equal to, or greater than App\Config::maxSimilarity
+   * Similarity values equal to, or greater than Config\Auth::$maxSimilarity
    * are rejected for being too much alike and false is returned.
    * Otherwise, true is returned,
    *
@@ -162,7 +163,7 @@ class NothingPersonalValidator extends BaseValidator implements ValidatorInterfa
    * In other words, 0 (zero) turns off similarity testing.
    *
    * @param string $password
-   * @param Entity $user
+   * @param User $user
    *
    * @return bool
    */

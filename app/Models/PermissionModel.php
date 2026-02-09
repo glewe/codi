@@ -316,9 +316,11 @@ class PermissionModel extends Model {
    * @param int $permissionId
    * @param int $userId
    */
-  public function removePermissionFromUser(int $permissionId, int $userId): void {
-    $this->db->table('users_permissions')->where([ 'user_id' => $userId, 'permission_id' => $permissionId ])->delete();
+  public function removePermissionFromUser(int $permissionId, int $userId): bool {
+    $res = $this->db->table('users_permissions')->where([ 'user_id' => $userId, 'permission_id' => $permissionId ])->delete();
     cache()->delete("{$userId}_permissions");
+
+    return (bool)$res;
   }
 
   /**
@@ -330,8 +332,10 @@ class PermissionModel extends Model {
    *
    * @param int $userId
    */
-  public function removeAllPermissionsFromUser(int $userId): void {
-    $this->db->table('users_permissions')->where([ 'user_id' => $userId ])->delete();
+  public function removeAllPermissionsFromUser(int $userId): bool {
+    $res = $this->db->table('users_permissions')->where([ 'user_id' => $userId ])->delete();
     cache()->delete("{$userId}_permissions");
+
+    return (bool)$res;
   }
 }

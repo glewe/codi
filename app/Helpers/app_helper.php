@@ -18,10 +18,11 @@ if (!function_exists("consoleLog")) {
    * module name, variable name, and content. The generated JavaScript code can
    * optionally be wrapped in script tags.
    *
-   * @param string $module The name of the module where the log is coming from.
+   * @param string $module       The name of the module where the log is coming from.
+   * @param string $function     The name of the function where the log is coming from.
    * @param string $variableName The name of the variable to be logged.
-   * @param mixed $content The content to be logged. This can be any data type that can be JSON encoded.
-   * @param bool $with_script_tags Optional. Whether to wrap the JavaScript code in script tags. Default is true.
+   * @param mixed  $content      The content to be logged. This can be any data type that can be JSON encoded.
+   * @param bool   $with_script_tags Optional. Whether to wrap the JavaScript code in script tags. Default is true.
    *
    * @return void This function does not return a value. It echoes the generated JavaScript code.
    */
@@ -112,7 +113,6 @@ if (!function_exists('sanitizeWithAllowedTags')) {
    * Sanitizes input while allowing certain HTML tags.
    *
    * @param string $input The input string to sanitize.
-   * @param array $allowedTags Array of allowed HTML tags.
    *
    * @return string Sanitized string.
    */

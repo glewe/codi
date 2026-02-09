@@ -106,6 +106,7 @@ class RoleModel extends Model {
 
     $found = [];
     foreach ($fromRole as $permission) {
+      /** @var object $permission */
       $found[$permission->id] = $permission;
     }
 
@@ -172,7 +173,7 @@ class RoleModel extends Model {
    *
    * @param int $roleId
    *
-   * @return mixed
+   * @return bool
    */
   public function removeAllPermissionsFromRole(int $roleId): bool {
     return $this->db->table('roles_permissions')->where([ 'role_id' => $roleId ])->delete();
@@ -188,7 +189,7 @@ class RoleModel extends Model {
    * @param int $permissionId
    * @param int $roleId
    *
-   * @return mixed
+   * @return bool
    */
   public function removePermissionFromRole(int $permissionId, int $roleId): bool {
     return $this->db->table('roles_permissions')
@@ -207,7 +208,7 @@ class RoleModel extends Model {
    *
    * @param int $permissionId
    *
-   * @return mixed
+   * @return bool
    */
   public function removePermissionFromAllRoles(int $permissionId): bool {
     return $this->db->table('roles_permissions')->where('permission_id', $permissionId)->delete();

@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use CodeIgniter\Session\Session;
 
-use App\Config\Auth as AuthConfig;
+use Config\Auth as AuthConfig;
 use App\Models\GroupModel;
 
 use App\Controllers\BaseController;
@@ -30,7 +30,7 @@ class GroupController extends BaseController {
   protected $session;
 
   /**
-   * @var Validation
+   * @var \CodeIgniter\Validation\Validation
    */
   protected $validation;
 
@@ -61,7 +61,7 @@ class GroupController extends BaseController {
    *
    * @return \CodeIgniter\HTTP\RedirectResponse | string
    */
-  public function groups(): string {
+  public function groups(): \CodeIgniter\HTTP\RedirectResponse|string {
     $groups = model(GroupModel::class);
     $allGroups = $groups->orderBy('name', 'asc')->findAll();
 
@@ -73,6 +73,7 @@ class GroupController extends BaseController {
     $groupPermissions = [];
 
     foreach ($allGroups as $group) {
+      /** @var object $group */
       $groupPermissions[$group->id][] = $groups->getPermissionsForGroup($group->id);
     }
     $data['groupPermissions'] = $groupPermissions;
@@ -86,6 +87,7 @@ class GroupController extends BaseController {
         // [Delete]
         //
         $recId = $this->request->getPost('hidden_id');
+        /** @var object|null $group */
         if (!$group = $groups->where('id', $recId)->first()) {
           return redirect()->route('groups')->with('errors', lang('Auth.group.not_found', [ $recId ]));
         } else {
@@ -215,7 +217,9 @@ class GroupController extends BaseController {
   public function groupsEdit($id = null): mixed {
     $groups = model(GroupModel::class);
 
-    if (!$group = $groups->where('id', $id)->first()) {
+    $group = $groups->where('id', $id)->first();
+    /** @var object|null $group */
+    if (!$group) {
       return redirect()->to('groups');
     }
 
@@ -248,7 +252,9 @@ class GroupController extends BaseController {
     //
     // Get the group to edit. If not found, return to groups list page.
     //
-    if (!$group = $groups->where('id', $id)->first()) {
+    $group = $groups->where('id', $id)->first();
+    /** @var object|null $group */
+    if (!$group) {
       return redirect()->to('groups');
     }
 

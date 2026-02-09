@@ -18,7 +18,7 @@ class SettingsModel extends Model {
    *
    * Deletes a given setting record.
    *
-   * @param string $setting
+   * @param string $key
    *
    * @return bool
    */

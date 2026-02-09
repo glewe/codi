@@ -90,7 +90,7 @@ class FlatAuthorization implements AuthorizeInterface {
       return false;
     }
 
-    if (!$this->groupModel->addPermissionToRole($permissionId, $groupId)) {
+    if (!$this->groupModel->addPermissionToGroup($permissionId, $groupId)) {
       $this->error = $this->groupModel->errors();
       return false;
     }
@@ -523,6 +523,7 @@ class FlatAuthorization implements AuthorizeInterface {
       return false;
     }
 
+    /** @var object $g */
     return (int)$g->id;
   }
 
@@ -552,6 +553,7 @@ class FlatAuthorization implements AuthorizeInterface {
       return false;
     }
 
+    /** @var object $p */
     return (int)$p->id;
   }
 
@@ -576,6 +578,7 @@ class FlatAuthorization implements AuthorizeInterface {
       $this->error = lang('Auth.role.not_found', [ $role ]);
       return false;
     }
+    /** @var object $r */
     return (int)$r->id;
   }
 
@@ -627,6 +630,7 @@ class FlatAuthorization implements AuthorizeInterface {
       return $this->groupModel->getPermissionsForGroup($group);
     } else {
       $g = $this->groupModel->where('name', $group)->first();
+      /** @var object $g */
       return $this->groupModel->getPermissionsForGroup($g->id);
     }
   }
@@ -939,7 +943,7 @@ class FlatAuthorization implements AuthorizeInterface {
    * @param int|string $permission
    * @param int        $userId
    *
-   * @return bool|mixed|null
+   * @return bool|null
    */
   public function removePermissionFromUser($permission, int $userId): bool|null {
     $permissionId = $this->getPermissionID($permission);
@@ -1047,7 +1051,7 @@ class FlatAuthorization implements AuthorizeInterface {
    *
    * @param int $userId
    *
-   * @return bool|mixed|null
+   * @return bool|null
    */
   public function removeUserFromAllGroups(int $userId): bool|null {
     if (empty($userId) || !is_numeric($userId)) {
@@ -1072,7 +1076,7 @@ class FlatAuthorization implements AuthorizeInterface {
    *
    * @param int $userId
    *
-   * @return bool|mixed|null
+   * @return bool|null
    */
   public function removeUserFromAllRoles(int $userId): bool|null {
     if (empty($userId) || !is_numeric($userId)) {
@@ -1136,6 +1140,7 @@ class FlatAuthorization implements AuthorizeInterface {
       return $this->roleModel->getPermissionsForRole($role);
     } else {
       $r = $this->roleModel->where('name', $role)->first();
+      /** @var object $r */
       return $this->roleModel->getPermissionsForRole($r->id);
     }
   }
@@ -1264,6 +1269,7 @@ class FlatAuthorization implements AuthorizeInterface {
       return $this->groupModel->getUsersForGroup($group);
     } else {
       $g = $this->groupModel->where('name', $group)->first();
+      /** @var object $g */
       return $this->groupModel->getUsersForGroup($g->id);
     }
   }
@@ -1285,6 +1291,7 @@ class FlatAuthorization implements AuthorizeInterface {
       return $this->roleModel->getUsersForRole($role);
     } else {
       $g = $this->roleModel->where('name', $role)->first();
+      /** @var object $g */
       return $this->roleModel->getUsersForRole($g->id);
     }
   }

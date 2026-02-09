@@ -225,7 +225,7 @@ class Gravatar {
    * @link https://docs.gravatar.com/profiles/php/
    *
    * @param string $email A registered email.
-   * @return  array/null                  Received profile data.
+   * @return  array|null                  Received profile data.
    */
   public function getProfileData($email) {
 
@@ -261,7 +261,7 @@ class Gravatar {
    *
    * @param string $email A registered email.
    * @param string $format '', 'json', 'xml', 'php', 'vcf', 'qr'.
-   * @return  string/null             Received profile raw data.
+   * @return  string|null             Received profile raw data.
    */
   public function executeProfileRequest($email, $format = null) {
 
@@ -349,7 +349,7 @@ class Gravatar {
    * @link https://docs.gravatar.com/gravatar-images/php/
    *
    * @param string $email A registered email.
-   * @return  string/null             The hash for accessing the avatar or profile data.
+   * @return  string|null             The hash for accessing the avatar or profile data.
    */
   public function createHash($email) {
     return md5(strtolower(trim((string)$email)));
@@ -383,7 +383,7 @@ class Gravatar {
    * @link https://docs.gravatar.com/general/hash/
    *
    * @param string $email A registered email.
-   * @return  string/null             The hash for accessing the avatar or profile data.
+   * @return  string|null             The hash for accessing the avatar or profile data.
    */
   public function createHashSha256($email) {
     return hash('sha256', strtolower(trim((string)$email)));

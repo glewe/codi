@@ -24,7 +24,7 @@ class PhpInformationController extends BaseController {
    *
    * @return \CodeIgniter\HTTP\RedirectResponse | string
    */
-  public function phpinfo(): string {
+  public function phpinfo(): \CodeIgniter\HTTP\RedirectResponse|string {
 
     $data = [
       'page' => lang('App.phpinfo.title'),

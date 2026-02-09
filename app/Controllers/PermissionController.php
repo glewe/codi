@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use CodeIgniter\Session\Session;
 
-use App\Config\Auth as AuthConfig;
+use Config\Auth as AuthConfig;
 use App\Models\PermissionModel;
 
 use App\Controllers\BaseController;
@@ -30,7 +30,7 @@ class PermissionController extends BaseController {
   protected $session;
 
   /**
-   * @var Validation
+   * @var \CodeIgniter\Validation\Validation
    */
   protected $validation;
 
@@ -77,7 +77,9 @@ class PermissionController extends BaseController {
         // [Delete]
         //
         $recId = $this->request->getPost('hidden_id');
-        if (!$permission = $permissions->where('id', $recId)->first()) {
+        $permission = $permissions->where('id', $recId)->first();
+        /** @var object|null $permission */
+        if (!$permission) {
           return redirect()->route('permissions')->with('errors', lang('Auth.permission.not_found', [ $recId ]));
         } else {
           if (!$permissions->deletePermission($recId)) {
@@ -208,7 +210,9 @@ class PermissionController extends BaseController {
    */
   public function permissionsEdit($id = null): mixed {
     $permissions = model(PermissionModel::class);
-    if (!$permission = $permissions->where('id', $id)->first()) {
+    $permission = $permissions->where('id', $id)->first();
+    /** @var object|null $permission */
+    if (!$permission) {
       return redirect()->to('permissions');
     }
 
@@ -243,7 +247,9 @@ class PermissionController extends BaseController {
     //
     // Get the permission to edit. If not found, return to permissions list page.
     //
-    if (!$permission = $permissions->where('id', $id)->first()) {
+    $permission = $permissions->where('id', $id)->first();
+    /** @var object|null $permission */
+    if (!$permission) {
       return redirect()->to('permissions');
     }
 

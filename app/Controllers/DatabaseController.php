@@ -7,7 +7,7 @@ use App\Models\PermissionModel;
 use App\Models\RoleModel;
 use App\Models\UserModel;
 use App\Models\UserOptionModel;
-use App\Config\Services;
+use Config\Services;
 
 use CodeIgniter\Database\Forge;
 use CodeIgniter\Database\Seeder;
@@ -72,7 +72,7 @@ class DatabaseController extends BaseController {
   protected array $formFields = [];
 
   /**
-   * @var Validation
+   * @var \CodeIgniter\Validation\Validation
    */
   protected $validation;
 

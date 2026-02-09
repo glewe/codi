@@ -412,7 +412,10 @@ class UserModel extends Model {
    */
   public function withGroup(string $groupName): UserModel {
     $group = $this->db->table('groups')->where('name', $groupName)->get()->getFirstRow();
-    $this->assignGroup = $group->id;
+    /** @var object|null $group */
+    if ($group) {
+        $this->assignGroup = $group->id;
+    }
     return $this;
   }
 
@@ -430,6 +433,7 @@ class UserModel extends Model {
   public function withRole(string $roleName): UserModel {
     $role = $this->db->table('roles')->where('name', $roleName)->get()->getFirstRow();
     if ($role) {
+      /** @var object $role */
       $this->assignRole = $role->id;
     }
     return $this;

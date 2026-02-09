@@ -23,7 +23,7 @@ class GroupModel extends Model {
    * @param int $permissionId
    * @param int $groupId
    *
-   * @return mixed
+   * @return bool
    */
   public function addPermissionToGroup(int $permissionId, int $groupId): bool {
     $data = [
@@ -131,6 +131,7 @@ class GroupModel extends Model {
 
     $found = [];
     foreach ($fromGroup as $permission) {
+      /** @var object $permission */
       $found[$permission->id] = $permission;
     }
 
@@ -173,7 +174,7 @@ class GroupModel extends Model {
    * @param int $permissionId
    * @param int $groupId
    *
-   * @return mixed
+   * @return bool
    */
   public function removePermissionFromGroup(int $permissionId, int $groupId): bool {
     return $this->db->table('groups_permissions')
@@ -192,7 +193,7 @@ class GroupModel extends Model {
    *
    * @param int $groupId
    *
-   * @return mixed
+   * @return bool
    */
   public function removeAllPermissionsFromGroup(int $groupId): bool {
     return $this->db->table('groups_permissions')->where([ 'group_id' => $groupId ])->delete();
@@ -207,7 +208,7 @@ class GroupModel extends Model {
    *
    * @param int $permissionId
    *
-   * @return mixed
+   * @return bool
    */
   public function removePermissionFromAllGroups(int $permissionId): bool {
     return $this->db->table('groups_permissions')->where('permission_id', $permissionId)->delete();

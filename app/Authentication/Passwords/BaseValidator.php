@@ -2,7 +2,7 @@
 
 namespace App\Authentication\Passwords;
 
-use App\Config\Auth as AuthConfig;
+use Config\Auth as AuthConfig;
 
 class BaseValidator {
   /**

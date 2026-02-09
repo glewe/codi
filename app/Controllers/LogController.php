@@ -37,7 +37,7 @@ class LogController extends BaseController {
   protected $logTypes;
 
   /**
-   * @var Validation
+   * @var \CodeIgniter\Validation\Validation
    */
   protected $validation;
 

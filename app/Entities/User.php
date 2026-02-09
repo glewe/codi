@@ -9,6 +9,30 @@ use App\Models\PermissionModel;
 use App\Password;
 use App\Models\UserOptionModel;
 
+/**
+ * @property int|string|null $id
+ * @property string $email
+ * @property string $username
+ * @property string|null $lastname
+ * @property string|null $firstname
+ * @property string|null $displayname
+ * @property bool $hidden
+ * @property string $password_hash
+ * @property string|null $secret_hash
+ * @property string|null $reset_hash
+ * @property \CodeIgniter\I18n\Time|null $reset_at
+ * @property \CodeIgniter\I18n\Time|null $reset_expires
+ * @property string|null $activate_hash
+ * @property string|null $status
+ * @property string|null $status_message
+ * @property bool $active
+ * @property bool $force_pass_reset
+ * @property string|null $password
+ * @property array $permissions
+ * @property \CodeIgniter\I18n\Time|null $deleted_at
+ * @property \CodeIgniter\I18n\Time|null $created_at
+ * @property \CodeIgniter\I18n\Time|null $updated_at
+ */
 class User extends Entity {
   /**
    * Maps names used in sets and gets against unique
@@ -234,7 +258,7 @@ class User extends Entity {
    *
    * Returns the user's groups
    *
-   * @return array|mixed
+   * @return array
    */
   public function getGroups(): array {
     if (empty($this->id)) {
@@ -280,7 +304,7 @@ class User extends Entity {
    *
    * Returns the user's options
    *
-   * @return array|mixed
+   * @return array
    */
   public function getOptions(): array {
     if (empty($this->id)) {
@@ -304,7 +328,7 @@ class User extends Entity {
    *
    * Returns the user's permissions
    *
-   * @return array|mixed
+   * @return array
    */
   public function getPermissions(): array {
     if (empty($this->id)) {
@@ -323,7 +347,7 @@ class User extends Entity {
    *
    * Returns the user's personal permissions
    *
-   * @return array|mixed
+   * @return array
    */
   public function getPersonalPermissions(): array {
     if (empty($this->id)) {
@@ -342,7 +366,7 @@ class User extends Entity {
    *
    * Returns the user's roles
    *
-   * @return array|mixed
+   * @return array
    */
   public function getRoles(): array {
     if (empty($this->id)) {

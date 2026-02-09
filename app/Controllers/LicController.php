@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use CodeIgniter\Controller;
 use CodeIgniter\I18n\Time;
-use App\Config\Lic as LicConfig;
+use Config\Lic as LicConfig;
 use App\Controllers\BaseController;
 use App\Libraries\Bootstrap;
 use App\Models\SettingsModel;
@@ -166,7 +166,7 @@ class LicController extends BaseController {
    *
    * @return bool|object|string
    */
-  public function callAPI($method, $url, $data = false): bool|object|string {
+  public function callAPI($method, $url, array $data = []): bool|object|string {
     $curl = curl_init();
 
     switch (strtoupper($method)) {

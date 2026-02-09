@@ -5,7 +5,7 @@ namespace App\Controllers;
 use CodeIgniter\Controller;
 use CodeIgniter\Session\Session;
 
-use App\Config\Auth as AuthConfig;
+use Config\Auth as AuthConfig;
 use App\Entities\User;
 use App\Models\UserModel;
 use App\Models\UserOptionModel;
@@ -29,7 +29,7 @@ class AuthController extends BaseController {
   protected $logType;
 
   /**
-   * @var
+   * @var \App\Authentication\LocalAuthenticator
    */
   protected $auth;
 
@@ -39,7 +39,7 @@ class AuthController extends BaseController {
   protected $authConfig;
 
   /**
-   * @var
+   * @var \App\Authorization\FlatAuthorization
    */
   protected $authorize;
 
@@ -77,7 +77,7 @@ class AuthController extends BaseController {
   protected $passphrase;
 
   /**
-   * @var
+   * @var \CodeIgniter\Throttle\Throttler
    */
   protected $throttler;
 
@@ -123,6 +123,7 @@ class AuthController extends BaseController {
       return service('response')->setStatusCode(429)->setBody(lang('Auth.login.too_many_requests', [$this->throttler->getTokentime()]));
     }
 
+    /** @var User|null $user */
     $user = $this->users->where('activate_hash', $this->request->getGet('token'))->where('active', 0)->first();
 
     if (is_null($user)) {
@@ -162,6 +163,7 @@ class AuthController extends BaseController {
     $login = urldecode($this->request->getGet('login'));
     $type = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
+    /** @var User|null $user */
     $user = $this->users->where($type, $login)->where('active', 0)->first();
 
     if (is_null($user)) {
@@ -231,6 +233,7 @@ class AuthController extends BaseController {
       return redirect()->route('login')->with('error', lang('Auth.forgot.disabled'));
     }
 
+    /** @var User|null $user */
     $user = $this->users->where('email', $this->request->getPost('email'))->first();
 
     if (is_null($user)) {
@@ -340,7 +343,12 @@ class AuthController extends BaseController {
     // At this point we know that the user submitted the correct credentials.
     // Now we need to check whether a 2FA is required.
     //
+    /** @var User|null $user */
     $user = $this->users->where('email', $this->auth->user()->email)->first();
+
+    if ($user === null) {
+      return redirect()->route('login')->with('error', lang('Auth.activation.no_user'));
+    }
 
     if ($this->auth->user()->hasSecret()) {
       //
@@ -373,7 +381,7 @@ class AuthController extends BaseController {
         //
         $UO = model(UserOptionModel::class);
         $userLanguage = $UO->getOption(['user_id' => $user->id, 'option' => 'language']);
-        if ($userLanguage && in_array($userLanguage, config('Config\App')->supportedLocales)) {
+        if ($userLanguage && in_array($userLanguage, config('App')->supportedLocales)) {
           $this->session->set('lang', $userLanguage);
         }
         //
@@ -423,7 +431,11 @@ class AuthController extends BaseController {
     //
     // Get the remember setting from the login page
     //
+    /** @var User|null $user */
     $user = $this->users->where('email', $this->session->get('2fa_in_progress'))->first();
+    if ($user === null) {
+      return redirect()->route('login')->with('error', lang('Auth.activation.no_user'));
+    }
     return $this->_render(
       $this->authConfig->views['login2fa'],
       [
@@ -466,13 +478,17 @@ class AuthController extends BaseController {
     // Check PIN
     //
     if ($this->request->getPost('pin')) {
+      /** @var User|null $user */
       $user = $this->users->where('email', $this->session->get('2fa_in_progress'))->first();
+      if ($user === null) {
+        return redirect()->route('login')->with('error', lang('Auth.activation.no_user'));
+      }
       //
       // Get the hashed secret, decrypt and verify the PIN with it.
       //
       $pin = $this->request->getPost('pin');
       $secret_hash = $user->getSecret();
-      $secret = $this->decrypt($secret_hash, $this->passphrase);
+      $secret = $this->decrypt($secret_hash, true);
       $verifyResult = $this->tfa->verifyCode($secret, $pin);
       if ($verifyResult) {
         //
@@ -725,6 +741,7 @@ class AuthController extends BaseController {
       return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
     }
 
+    /** @var User|null $user */
     $user = $this->users
       ->where('email', $this->request->getPost('email'))
       ->where('reset_hash', $this->request->getPost('token'))
@@ -786,14 +803,22 @@ class AuthController extends BaseController {
       // The user got here after logging in fine with his credentials but a 2FA setup is required. He must setup 2FA before he can be logged in for good.
       // At login, the user's email was saved in session('2fa_setup_required') so we know who we are dealing with here.
       //
+      /** @var User|null $user */
       $user = $this->users->where('email', $this->session->get('2fa_setup_required'))->first();
+      if ($user === null) {
+        return redirect()->route('login')->with('error', lang('Auth.activation.no_user'));
+      }
       $has_secret = false;
     } else {
       //
       // The user called this page to setup his 2FA
       //
+      /** @var User|null $user */
       $user = user();
-      $has_secret = user()->hasSecret();
+      if ($user === null) {
+        return redirect()->route('login');
+      }
+      $has_secret = $user->hasSecret();
     }
 
     //
@@ -829,6 +854,7 @@ class AuthController extends BaseController {
    * @return mixed
    */
   public function setup2faDo(): mixed {
+    /** @var User|null $user */
     $user = $this->users->where('email', $this->request->getPost('hidden_email'))->first();
 
     $rules = [
@@ -854,7 +880,7 @@ class AuthController extends BaseController {
         //
         // Success. Hash and save the secret to the user record.
         //
-        $user->setSecret($this->encrypt($secret, $this->cipher));
+        $user->setSecret($this->encrypt($secret, true));
         $this->users->save($user);
         //
         // In case this was a required setup, log in the user for

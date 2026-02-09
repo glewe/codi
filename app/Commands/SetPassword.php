@@ -56,6 +56,7 @@ class SetPassword extends BaseCommand {
     if (!$user) {
       CLI::write('User with identity: ' . $identity . ' not found.', 'red');
     } else {
+      /** @var \App\Entities\User $user */
       $user->password = $password;
 
       if ($userModel->save($user)) {

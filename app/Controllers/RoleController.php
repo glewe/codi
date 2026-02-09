@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use CodeIgniter\Session\Session;
 
-use App\Config\Auth as AuthConfig;
+use Config\Auth as AuthConfig;
 use App\Models\RoleModel;
 
 use App\Controllers\BaseController;
@@ -30,7 +30,7 @@ class RoleController extends BaseController {
   protected $session;
 
   /**
-   * @var Validation
+   * @var \CodeIgniter\Validation\Validation
    */
   protected $validation;
 
@@ -72,6 +72,7 @@ class RoleController extends BaseController {
     $rolePermissions = [];
 
     foreach ($allRoles as $role) {
+      /** @var object $role */
       $rolePermissions[$role->id][] = $roles->getPermissionsForRole($role->id);
     }
     $data['rolePermissions'] = $rolePermissions;
@@ -85,7 +86,9 @@ class RoleController extends BaseController {
         // [Delete]
         //
         $recId = $this->request->getPost('hidden_id');
-        if (!$role = $roles->where('id', $recId)->first()) {
+        $role = $roles->where('id', $recId)->first();
+        /** @var object|null $role */
+        if (!$role) {
           return redirect()->route('roles')->with('errors', lang('Auth.role.not_found', [ $recId ]));
         } else {
           if (!$roles->deleteRole($recId)) {
@@ -216,7 +219,9 @@ class RoleController extends BaseController {
   public function rolesEdit($id = null): mixed {
     $roles = model(RoleModel::class);
 
-    if (!$role = $roles->where('id', $id)->first()) {
+    $role = $roles->where('id', $id)->first();
+    /** @var object|null $role */
+    if (!$role) {
       return redirect()->to('roles');
     }
 
@@ -249,7 +254,9 @@ class RoleController extends BaseController {
     //
     // Get the role to edit. If not found, return to roles list page.
     //
-    if (!$role = $roles->where('id', $id)->first()) {
+    $role = $roles->where('id', $id)->first();
+    /** @var object|null $role */
+    if (!$role) {
       return redirect()->to('roles');
     }
 

@@ -51,6 +51,7 @@ class ActivateUser extends BaseCommand {
     if (!$user) {
       CLI::write('User with identity: ' . $identity . ' not found.', 'red');
     } else {
+      /** @var \App\Entities\User $user */
       $user->active = 1;
 
       if ($userModel->save($user)) {
