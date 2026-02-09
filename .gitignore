@@ -153,3 +153,4 @@ _files/
 _images/
 .htaccess.ionos
 public/.htaccess.ionos
+.env.prod
