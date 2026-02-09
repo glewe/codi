@@ -17,7 +17,7 @@ class UserActivator extends BaseActivator implements ActivatorInterface {
    *
    * @return bool
    */
-  public function send(User $user = null): bool {
+  public function send(?User $user = null): bool {
     if (!$this->config->requireActivation) {
       return true;
     }

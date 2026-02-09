@@ -18,7 +18,7 @@ use App\Authentication\Passwords\ValidatorInterface;
 use App\Authentication\Resetters\EmailResetter;
 use App\Authentication\Resetters\ResetterInterface;
 
-use Codeigniter\Config\Services as BaseService;
+use CodeIgniter\Config\Services as BaseService;
 
 class Services extends BaseService {
   /**

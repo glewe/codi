@@ -5,7 +5,7 @@ namespace App\Authentication;
 use CodeIgniter\Events\Events;
 use CodeIgniter\Model;
 
-use App\Config\Auth as AuthConfig;
+use Config\Auth as AuthConfig;
 use App\Entities\User;
 use App\Exceptions\AuthException;
 use App\Exceptions\UserNotFoundException;
@@ -88,7 +88,7 @@ class AuthenticationBase {
    * @return bool
    * @throws \Exception
    */
-  public function login(User $user = null, bool $remember = false): bool {
+  public function login(?User $user = null, bool $remember = false): bool {
     if (empty($user)) {
       $this->user = null;
       return false;
@@ -246,7 +246,7 @@ class AuthenticationBase {
    *
    * @return bool|int|string
    */
-  public function recordLoginAttempt(string $email, bool $success, string $info, string $ipAddress = null, int $userID = null): bool|int|string {
+  public function recordLoginAttempt(string $email, bool $success, string $info, ?string $ipAddress = null, ?int $userID = null): bool|int|string {
     return $this->loginModel->insert([
       'ip_address' => $ipAddress,
       'email' => $email,

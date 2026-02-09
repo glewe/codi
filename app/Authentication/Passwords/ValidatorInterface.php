@@ -28,7 +28,7 @@ interface ValidatorInterface {
    *
    * @return bool
    */
-  public function check(string $password, Entity $user = null): bool;
+  public function check(string $password, ?Entity $user = null): bool;
 
   /**
    * --------------------------------------------------------------------------

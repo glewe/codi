@@ -34,7 +34,7 @@ class ValidationRules {
    *
    * @return bool
    */
-  public function strong_password(string $value, string &$error1 = null, array $data = [], string &$error2 = null): bool {
+  public function strong_password(string $value, ?string &$error1 = null, array $data = [], ?string &$error2 = null): bool {
     $checker = service('passwords');
 
     if (function_exists('user') && user()) {

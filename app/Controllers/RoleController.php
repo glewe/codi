@@ -69,6 +69,8 @@ class RoleController extends BaseController {
       'roles' => $allRoles,
     ];
 
+    $rolePermissions = [];
+
     foreach ($allRoles as $role) {
       $rolePermissions[$role->id][] = $roles->getPermissionsForRole($role->id);
     }

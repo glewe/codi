@@ -2,7 +2,7 @@
 
 namespace App\Authentication\Resetters;
 
-use App\Config\Auth as AuthConfig;
+use Config\Auth as AuthConfig;
 use App\Entities\User;
 
 abstract class BaseResetter {
@@ -27,7 +27,7 @@ abstract class BaseResetter {
    *
    * @return bool
    */
-  abstract public function send(User $user = null): bool;
+  abstract public function send(?User $user = null): bool;
 
   /**
    * --------------------------------------------------------------------------
@@ -38,7 +38,7 @@ abstract class BaseResetter {
    *
    * @param AuthConfig|null $config
    */
-  public function __construct(AuthConfig $config = null) {
+  public function __construct(?AuthConfig $config = null) {
     $this->config = $config ?? config('Auth');
   }
 

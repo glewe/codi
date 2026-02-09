@@ -954,14 +954,16 @@ class AuthController extends BaseController {
    * @return string
    */
   protected function decrypt($ciphertext, $encoded = false): string {
+    $nonceSize = openssl_cipher_iv_length($this->cipher);
+    $message = $ciphertext;
+
     if ($encoded) {
       $message = base64_decode($ciphertext, true);
       if ($message === false) {
-        throw new InvalidArgumentException('Encryption failure');
+        throw new \InvalidArgumentException('Encryption failure');
       }
     }
 
-    $nonceSize = openssl_cipher_iv_length($this->cipher);
     $nonce = mb_substr($message, 0, $nonceSize, '8bit');
     $ciphertext = mb_substr($message, $nonceSize, null, '8bit');
 

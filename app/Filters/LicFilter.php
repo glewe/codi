@@ -41,6 +41,7 @@ class LicFilter implements FilterInterface {
     $lic->readKey();
     $lic->load();
     $error = false;
+    $errorMessage = '';
 
     if ($lic->key === null || $lic->key === "") {
       $redirectURL = '/error_auth';

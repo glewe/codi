@@ -70,6 +70,8 @@ class GroupController extends BaseController {
       'groups' => $allGroups,
     ];
 
+    $groupPermissions = [];
+
     foreach ($allGroups as $group) {
       $groupPermissions[$group->id][] = $groups->getPermissionsForGroup($group->id);
     }

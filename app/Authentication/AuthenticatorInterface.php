@@ -17,7 +17,7 @@ interface AuthenticatorInterface {
    *
    * @return bool
    */
-  public function attempt(array $credentials, bool $remember = null): bool;
+  public function attempt(array $credentials, ?bool $remember = null): bool;
 
   /**
    * --------------------------------------------------------------------------

@@ -8,6 +8,7 @@ use App\Models\RoleModel;
 use App\Entities\User;
 
 class UserModel extends Model {
+  public $error;
   protected $table = 'users';
   protected $primaryKey = 'id';
 
@@ -365,7 +366,7 @@ class UserModel extends Model {
    *
    * @return void
    */
-  public function logActivationAttempt(string $token = null, string $ipAddress = null, string $userAgent = null): void {
+  public function logActivationAttempt(?string $token = null, ?string $ipAddress = null, ?string $userAgent = null): void {
     $this->db->table('activation_attempts')->insert([
       'ip_address' => $ipAddress,
       'user_agent' => $userAgent,
@@ -388,7 +389,7 @@ class UserModel extends Model {
    *
    * @return void
    */
-  public function logResetAttempt(string $email, string $token = null, string $ipAddress = null, string $userAgent = null): void {
+  public function logResetAttempt(string $email, ?string $token = null, ?string $ipAddress = null, ?string $userAgent = null): void {
     $this->db->table('reset_attempts')->insert([
       'email' => $email,
       'ip_address' => $ipAddress,
@@ -426,9 +427,11 @@ class UserModel extends Model {
    *
    * @return $this
    */
-  public function withRole(string $roleName) {
+  public function withRole(string $roleName): UserModel {
     $role = $this->db->table('roles')->where('name', $roleName)->get()->getFirstRow();
-    $this->assignRole = $role->id;
+    if ($role) {
+      $this->assignRole = $role->id;
+    }
     return $this;
   }
 }

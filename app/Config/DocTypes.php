@@ -3,7 +3,6 @@
 namespace Config;
 
 /**
- * @immutable
  */
 class DocTypes {
   /**

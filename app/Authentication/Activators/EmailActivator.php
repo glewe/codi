@@ -24,7 +24,7 @@ class EmailActivator extends BaseActivator implements ActivatorInterface {
    *
    * @return bool
    */
-  public function send(User $user = null): bool {
+  public function send(?User $user = null): bool {
     $email = service('email');
     $config = new Email();
 

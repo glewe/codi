@@ -23,7 +23,7 @@ class EmailResetter extends BaseResetter implements ResetterInterface {
    *
    * @return bool
    */
-  public function send(User $user = null): bool {
+  public function send(?User $user = null): bool {
     $email = service('email');
     $config = new Email();
 

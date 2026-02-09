@@ -2,7 +2,7 @@
 
 namespace App\Authentication\Activators;
 
-use App\Config\Auth as AuthConfig;
+use Config\Auth as AuthConfig;
 use App\Entities\User;
 
 abstract class BaseActivator {
@@ -27,7 +27,7 @@ abstract class BaseActivator {
    *
    * @return bool
    */
-  abstract public function send(User $user = null): bool;
+  abstract public function send(?User $user = null): bool;
 
   /**
    * --------------------------------------------------------------------------
@@ -38,7 +38,7 @@ abstract class BaseActivator {
    *
    * @param AuthConfig|null $config
    */
-  public function __construct(AuthConfig $config = null) {
+  public function __construct(?AuthConfig $config = null) {
     $this->config = $config ?? config('Auth');
   }
 

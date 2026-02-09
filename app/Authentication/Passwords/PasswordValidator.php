@@ -34,7 +34,7 @@ class PasswordValidator {
    *
    * @return bool
    */
-  public function check(string $password, User $user = null): bool {
+  public function check(string $password, ?User $user = null): bool {
     if (is_null($user)) {
       throw AuthException::forNoEntityProvided();
     }

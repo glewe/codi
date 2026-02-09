@@ -11,6 +11,7 @@ class RoleModel extends Model {
   protected $allowedFields = [ 'name', 'description', 'bscolor' ];
   protected $useTimestamps = false;
   protected $skipValidation = false;
+  public $error;
 
   /**
    * --------------------------------------------------------------------------

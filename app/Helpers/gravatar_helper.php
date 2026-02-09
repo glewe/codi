@@ -31,12 +31,12 @@ if (!function_exists('gravatar')) {
    * @return string The Gravatar URL or an HTML image tag.
    */
   function gravatar($email = '', $size = 50, $rating = 'g', $url_only = false, $default = false) {
-    $ci = &get_instance();
-    $ci->load->library('gravatar');
+    /** @var \App\Libraries\Gravatar $gravatar */
+    $gravatar = new \App\Libraries\Gravatar();
     if (@ (string)$default == '') {
       $default = null;
     }
-    $gravatar_url = $ci->gravatar->get($email, $size, $default, null, $rating);
+    $gravatar_url = $gravatar->get($email, $size, $default, null, $rating);
     if ($url_only) {
       return $gravatar_url;
     }

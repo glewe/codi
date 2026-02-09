@@ -456,7 +456,7 @@ class User extends Entity {
    *
    * @return void
    */
-  public function setPermissions(array $permissions = null): void {
+  public function setPermissions(?array $permissions = null): void {
     throw new \LogicException('User entity does not support saving permissions directly.');
   }
 
@@ -511,7 +511,7 @@ class User extends Entity {
    * @return $this
    */
   public function unBan(): User {
-    $this->attributes['status'] = $this->status_message = '';
+    $this->attributes['status'] = $this->attributes['status_message'] = '';
     return $this;
   }
 }

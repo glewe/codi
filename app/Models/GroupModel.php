@@ -11,6 +11,7 @@ class GroupModel extends Model {
   protected $allowedFields = [ 'name', 'description' ];
   protected $useTimestamps = false;
   protected $skipValidation = false;
+  public $error;
 
   /**
    * --------------------------------------------------------------------------

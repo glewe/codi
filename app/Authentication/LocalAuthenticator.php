@@ -2,7 +2,7 @@
 
 namespace App\Authentication;
 
-use CodeIgniter\Router\Exceptions\RedirectException;
+use CodeIgniter\HTTP\Exceptions\RedirectException;
 use App\Entities\User;
 use App\Exceptions\AuthException;
 use App\Password;
@@ -21,7 +21,7 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
    *
    * @return bool
    */
-  public function attempt(array $credentials, bool $remember = null): bool {
+  public function attempt(array $credentials, ?bool $remember = null): bool {
     $this->user = $this->validate($credentials, true);
 
     if (empty($this->user)) {

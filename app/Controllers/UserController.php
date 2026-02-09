@@ -21,7 +21,7 @@ class UserController extends BaseController {
    */
   protected $logType;
 
-  protected $auth;
+  protected $authorize;
 
   /**
    * @var AuthConfig
@@ -615,7 +615,7 @@ class UserController extends BaseController {
       'user' => $user,
       'profile' => $profile,
       'languageOptions' => $languageOptions,
-      'gravatarUrl' => $gravatarUrl ?? '',
+      'gravatarUrl' => $gravatarUrl,
       'profileAvatar' => $profileAvatar ?? '',
       'avaUrl' => $avatarUrl,
       'avatars' => $avatars,

@@ -10,6 +10,7 @@ class PermissionModel extends Model {
   protected $returnType = 'object';
   protected $allowedFields = [ 'name', 'description' ];
   protected $useTimestamps = false;
+  public $error;
 
   /**
    * --------------------------------------------------------------------------

@@ -470,9 +470,7 @@ class LicController extends BaseController {
           $alert['help'] = '';
           break;
       }
-    }
-
-    $details = "
+      $details = "
       <table class=\"table table-hover\">
         <tr class=\"table-" . $alert['type'] . "\"><th>" . lang('Lic.product') . ":</th><td>" . $data->product_ref . "</td></tr>
         <tr class=\"table-" . $alert['type'] . "\"><th>" . lang('Lic.key') . ":</th><td>" . $data->license_key . "</td></tr>
@@ -484,6 +482,7 @@ class LicController extends BaseController {
         <tr class=\"table-" . $alert['type'] . "\"><th>" . lang('Lic.date_expiry') . ":</th><td>" . $data->date_expiry . $daysleft . "</td></tr>
         <tr class=\"table-" . $alert['type'] . "\"><th>" . lang('Lic.registered_domains') . ":</th><td>" . $domains . "</td></tr>
       </table>";
+    }
 
     return $this->bs->alert([
       'type' => $alert['type'],
