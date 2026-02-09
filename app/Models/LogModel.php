@@ -1,123 +1,106 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use CodeIgniter\Model;
 
-class LogModel extends Model {
-
-  protected $table = 'log';
-  protected $primaryKey = 'id';
-  protected $useTimestamps = true;
+/**
+ * LogModel
+ */
+class LogModel extends Model
+{
+  protected $table          = 'log';
+  protected $primaryKey     = 'id';
+  protected $useTimestamps  = true;
   protected $skipValidation = true;
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Log Event.
-   * --------------------------------------------------------------------------
+   * Creates a new log entry.
    *
-   * Creates a new day type.
+   * @param array $data Array with record data.
    *
-   * @param array $data Array with record data
-   *
-   * @return int
+   * @return int Insert ID or 0 on failure.
    */
-  public function logEvent($data): int {
+  public function logEvent(array $data): int {
     $result = $this->db->table($this->table)->insert($data);
+
     if ($result) {
-      return $this->db->insertID();
+      return (int) $this->db->insertID();
     }
+
     return 0;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Delete All.
-   * --------------------------------------------------------------------------
-   *
    * Deletes all records.
    *
-   * @return mixed
+   * @return bool True on success, false on failure.
    */
-  public function deleteAll(): mixed {
-    return $this->db->table($this->table)->truncate();
+  public function deleteAll(): bool {
+    return (bool) $this->db->table($this->table)->truncate();
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get Event.
-   * --------------------------------------------------------------------------
-   *
    * Gets the record for a given ID.
    *
-   * @param string $id Record ID
+   * @param int|string $id Record ID.
    *
-   * @return mixed
+   * @return object|bool Record object or false if not found.
    */
-  public function getEvent($id): mixed {
-    if ($row = $this->db->table($this->table)->where([ 'id' => $id ])->get()->getRow()) {
+  public function getEvent(int|string $id): object|bool {
+    if ($row = $this->db->table($this->table)->where(['id' => $id])->get()->getRow()) {
       return $row;
     }
+
     return false;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get Type Events.
-   * --------------------------------------------------------------------------
-   *
    * Returns an array of all records for given event type.
    *
-   * @param string $type Event type
-   * @return array
+   * @param string $type Event type.
+   *
+   * @return array Array of records.
    */
-  public function getTypeEvents($type): array {
-    //
-    // Read all records for this user.
-    //
+  public function getTypeEvents(string $type): array {
     return $this->builder()->select($this->table . '.*')->where('type', $type)->get()->getResultArray();
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get User Events.
-   * --------------------------------------------------------------------------
+   * Returns an array of all records for given username.
    *
-   * Returns an array of all records for given event type.
+   * @param string $user Username.
    *
-   * @param string $user Username
-   * @return array
+   * @return array Array of records.
    */
-  public function getUserEvents($user): array {
-    //
-    // Read all records for this user.
-    //
+  public function getUserEvents(string $user): array {
     return $this->builder()->select($this->table . '.*')->where('user', $user)->get()->getResultArray();
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Save Record.
-   * --------------------------------------------------------------------------
+   * Saves (create or update) a record.
    *
-   * Saves (create/insert) a record.
+   * @param int|string $id   Record ID.
+   * @param array      $data Array with record data.
    *
-   * @param array $data Array with record data
-   *
-   * @return bool
+   * @return bool True on success, false on failure.
    */
-  public function saveRecord($id, $data): bool {
-    $row = $this->db->table($this->table)->where([ 'id' => $id ])->get()->getRow();
+  public function saveRecord(int|string $id, array $data): bool {
+    $row = $this->db->table($this->table)->where(['id' => $id])->get()->getRow();
+
     if (isset($row)) {
-      //
-      // Record exists. Update.
-      //
-      return $this->db->table($this->table)->where([ 'id' => $id ])->update($data);
-    } else {
-      //
-      // Record does not exist. Insert.
-      //
-      return $this->db->table($this->table)->insert($data);
+      return (bool) $this->db->table($this->table)->where(['id' => $id])->update($data);
     }
+
+    return (bool) $this->db->table($this->table)->insert($data);
   }
 }
+

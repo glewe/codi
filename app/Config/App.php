@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Config;
 
 use CodeIgniter\Config\BaseConfig;
 
-class App extends BaseConfig {
+class App extends BaseConfig
+{
   /**
    * --------------------------------------------------------------------------
    * Base Site URL
@@ -55,7 +58,7 @@ class App extends BaseConfig {
    *
    * @var string
    */
-  public $viewLayout = 'Views\layout';
+  public string $viewLayout = 'Views\layout';
 
   /**
    * --------------------------------------------------------------------------
@@ -69,7 +72,7 @@ class App extends BaseConfig {
    *
    * @var boolean
    */
-  public $showHelpMenu = true;
+  public bool $showHelpMenu = true;
 
   /**
    * --------------------------------------------------------------------------
@@ -78,7 +81,7 @@ class App extends BaseConfig {
    *
    * @var array
    */
-  public $views = [
+  public array $views = [
     'database' => 'settings\database',
     'log' => 'log\list',
     'options' => 'settings\options',
@@ -140,7 +143,7 @@ class App extends BaseConfig {
    *
    * @var string[]
    */
-  public array $supportedLocales = [ 'en', 'de' ];
+  public array $supportedLocales = ['en', 'de'];
 
   /**
    * --------------------------------------------------------------------------
@@ -154,10 +157,10 @@ class App extends BaseConfig {
    * @var array<int, array<string, string>>
    */
   public array $supportedFonts = [
-    [ 'id' => 'lato', 'name' => 'Lato' ],
-    [ 'id' => 'montserrat', 'name' => 'Montserrat' ],
-    [ 'id' => 'opensans', 'name' => 'Open Sans' ],
-    [ 'id' => 'roboto', 'name' => 'Roboto' ],
+    ['id' => 'lato', 'name' => 'Lato'],
+    ['id' => 'montserrat', 'name' => 'Montserrat'],
+    ['id' => 'opensans', 'name' => 'Open Sans'],
+    ['id' => 'roboto', 'name' => 'Roboto'],
   ];
 
   /**
@@ -262,12 +265,12 @@ class App extends BaseConfig {
    * ['title' => 'My Animals Avatar Set', 'set' => 'animals', 'sample' => 'av_animals_cat.png', 'creditsName' => 'Me', 'creditsLink' => 'https://me.com']
    *
    */
-  public $avatarSets = array(
-    [ 'title' => 'Freepik-051', 'set' => 'freepik-051', 'sample' => 'av_freepik-051_man.png', 'creditsName' => 'Freepik', 'creditsLink' => 'https://www.flaticon.com/authors/freepik' ],
-    [ 'title' => 'Iconshock People', 'set' => 'iconshock-user', 'sample' => 'av_iconshock-user_administrator.png', 'creditsName' => 'Iconshock', 'creditsLink' => 'https://www.iconshock.com/people-icons/' ],
-    [ 'title' => 'Iconshock Flat People', 'set' => 'iconshock-flat-people', 'sample' => 'av_iconshock-flat-people_actor.png', 'creditsName' => 'Iconshock', 'creditsLink' => 'https://www.iconshock.com/people-icons/' ],
-    [ 'title' => 'Iconshock Material People', 'set' => 'iconshock-material-people', 'sample' => 'av_iconshock-material-people_actor.png', 'creditsName' => 'Iconshock', 'creditsLink' => 'https://www.iconshock.com/people-icons/' ],
-  );
+  public array $avatarSets = [
+    ['title' => 'Freepik-051', 'set' => 'freepik-051', 'sample' => 'av_freepik-051_man.png', 'creditsName' => 'Freepik', 'creditsLink' => 'https://www.flaticon.com/authors/freepik'],
+    ['title' => 'Iconshock People', 'set' => 'iconshock-user', 'sample' => 'av_iconshock-user_administrator.png', 'creditsName' => 'Iconshock', 'creditsLink' => 'https://www.iconshock.com/people-icons/'],
+    ['title' => 'Iconshock Flat People', 'set' => 'iconshock-flat-people', 'sample' => 'av_iconshock-flat-people_actor.png', 'creditsName' => 'Iconshock', 'creditsLink' => 'https://www.iconshock.com/people-icons/'],
+    ['title' => 'Iconshock Material People', 'set' => 'iconshock-material-people', 'sample' => 'av_iconshock-material-people_actor.png', 'creditsName' => 'Iconshock', 'creditsLink' => 'https://www.iconshock.com/people-icons/'],
+  ];
 
   /**
    * --------------------------------------------------------------------------
@@ -281,7 +284,7 @@ class App extends BaseConfig {
    *
    * @var array
    */
-  public $logTypes = [
+  public array $logTypes = [
     'Auth',
     'Database',
     'Group',
@@ -292,5 +295,4 @@ class App extends BaseConfig {
     'Settings',
     'User',
   ];
-
 }

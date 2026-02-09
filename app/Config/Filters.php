@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Config;
 
 use CodeIgniter\Config\BaseConfig;
@@ -17,7 +19,8 @@ use App\Filters\LicFilter;
 
 use App\Filters\UnderMaintenanceFilter;
 
-class Filters extends BaseConfig {
+class Filters extends BaseConfig
+{
   /**
    * Configures aliases for Filter classes to
    * make reading things nicer and simpler.
@@ -26,17 +29,17 @@ class Filters extends BaseConfig {
    *                                                     or [filter_name => [classname1, classname2, ...]]
    */
   public array $aliases = [
-    'csrf' => CSRF::class,
-    'toolbar' => DebugToolbar::class,
-    'honeypot' => Honeypot::class,
-    'invalidchars' => InvalidChars::class,
-    'secureheaders' => SecureHeaders::class,
-    'group' => GroupFilter::class,
-    'login' => LoginFilter::class,
-    'permission' => PermissionFilter::class,
-    'role' => RoleFilter::class,
+    'csrf'             => CSRF::class,
+    'toolbar'          => DebugToolbar::class,
+    'honeypot'         => Honeypot::class,
+    'invalidchars'     => InvalidChars::class,
+    'secureheaders'    => SecureHeaders::class,
+    'group'            => GroupFilter::class,
+    'login'            => LoginFilter::class,
+    'permission'       => PermissionFilter::class,
+    'role'             => RoleFilter::class,
     'undermaintenance' => UnderMaintenanceFilter::class,
-    'license' => LicFilter::class,
+    'license'          => LicFilter::class,
   ];
 
   /**
@@ -51,7 +54,7 @@ class Filters extends BaseConfig {
       // 'csrf',
       // 'invalidchars',
     ],
-    'after' => [
+    'after'  => [
       'toolbar',
       // 'honeypot',
       // 'secureheaders',

@@ -1,28 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Commands;
 
-use CodeIgniter\CLI\BaseCommand;
-use CodeIgniter\CLI\CLI;
 use App\Entities\User;
 use App\Models\UserModel;
+use CodeIgniter\CLI\BaseCommand;
+use CodeIgniter\CLI\CLI;
 
-class CreateUser extends BaseCommand {
+class CreateUser extends BaseCommand
+{
   protected $role = 'Auth';
   protected $name = 'auth:create_user';
-  protected $description = "Adds a new user to the database.";
+  protected $description = 'Adds a new user to the database.';
 
-  protected $usage = "auth:create_user [username] [email]";
-  protected $arguments = [
-    'username' => "The username of the new user to create",
-    'email' => "The email address of the new user to create",
-  ];
+  protected $usage = 'auth:create_user [username] [email]';
 
   /**
-   * --------------------------------------------------------------------------
-   * Run.
-   * --------------------------------------------------------------------------
-   *
+   * @var array<string, string>
+   */
+  protected $arguments = [
+    'username' => 'The username of the new user to create',
+    'email' => 'The email address of the new user to create',
+  ];
+
+  //---------------------------------------------------------------------------
+  /**
    * This method is responsible for creating a new user in the system.
    * It takes an array of parameters as input, which should contain the user's username and email.
    * If the username is not provided, it prompts the user to enter it.
@@ -34,8 +38,10 @@ class CreateUser extends BaseCommand {
    * If the insertion fails, it outputs the error messages.
    *
    * @param array $params An array of parameters. The first element should be the user's username and the second element should be the user's email.
+   *
+   * @return void
    */
-  public function run(array $params = []) {
+  public function run(array $params = []): void {
     // Start with the fields required for the account to be usable
     $row = [
       'active' => 1,
@@ -59,7 +65,7 @@ class CreateUser extends BaseCommand {
 
     $users = model(UserModel::class);
     if ($userId = $users->insert($user)) {
-      CLI::write(lang('Auth.register.create_success', [ $row['username'], $userId ]), 'green');
+      CLI::write(lang('Auth.register.create_success', [$row['username'], $userId]), 'green');
     } else {
       foreach ($users->errors() as $message) {
         CLI::write($message, 'red');

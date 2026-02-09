@@ -6,5 +6,6 @@ parameters:
 		- vendor
 		- app/Views
 		- app/Database
+		- app/Language
 	bootstrapFiles:
 		- phpstan_bootstrap.php

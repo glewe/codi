@@ -1,22 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controllers;
 
-use App\Models\GroupModel;
-use App\Models\PermissionModel;
-use App\Models\RoleModel;
-use App\Models\UserModel;
-use App\Models\UserOptionModel;
-use Config\Services;
-
+use App\Authorization\FlatAuthorization;
 use CodeIgniter\Database\Forge;
 use CodeIgniter\Database\Seeder;
 use CodeIgniter\HTTP\RedirectResponse;
-use Config\Validation;
+use CodeIgniter\Validation\Validation;
 
-use App\Models\LogModel;
-
-class DatabaseController extends BaseController {
+/**
+ * Class DatabaseController
+ */
+class DatabaseController extends BaseController
+{
   /**
    * Check the BaseController for inherited properties and methods.
    */
@@ -27,89 +25,42 @@ class DatabaseController extends BaseController {
   protected string $logType;
 
   /**
-   * @var GroupModel
-   */
-  protected $GRP;
-
-  /**
-   * @var LogModel
-   */
-  protected $LOG;
-
-  /**
-   * @var PermissionModel
-   */
-  protected $PER;
-
-  /**
-   * @var RoleModel
-   */
-  protected $ROL;
-
-  /**
-   * @var UserModel
-   */
-  protected $USR;
-
-  /**
-   * @var UserOptionModel
-   */
-  protected $UOP;
-
-  /**
    * @var Forge
    */
-  protected $forge;
+  protected Forge $forge;
 
   /**
    * @var Seeder
    */
-  protected $seeder;
+  protected Seeder $seeder;
 
   /**
-   * @var array
+   * @var Validation
    */
-  protected array $formFields = [];
+  protected Validation $validation;
 
   /**
-   * @var \CodeIgniter\Validation\Validation
+   * @var FlatAuthorization
    */
-  protected $validation;
+  protected FlatAuthorization $authorize;
 
+  //---------------------------------------------------------------------------
   /**
-   * @var Services
-   */
-  protected $authorize;
-
-  /**
-   * --------------------------------------------------------------------------
    * Constructor.
-   * --------------------------------------------------------------------------
-   *
    */
   public function __construct() {
     //
     // Most services in this controller require the session to be started
     //
-    $this->GRP = model(GroupModel::class);
-    $this->LOG = model(LogModel::class);
-    $this->PER = model(PermissionModel::class);
-    $this->ROL = model(RoleModel::class);
-    $this->USR = model(UserModel::class);
-    $this->UOP = model(UserOptionModel::class);
-
     $this->validation = service('validation');
-    $this->logType = 'Database';
-    $this->authorize = service('authorization');
-    $this->forge = \Config\Database::forge();
-    $this->seeder = \Config\Database::seeder();
+    $this->logType    = 'Database';
+    $this->authorize  = service('authorization');
+    $this->forge      = \Config\Database::forge();
+    $this->seeder     = \Config\Database::seeder();
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Database.
-   * --------------------------------------------------------------------------
-   *
    * Handles the database administration page.
    *
    * @return RedirectResponse|string
@@ -127,10 +78,10 @@ class DatabaseController extends BaseController {
         //
         logEvent(
           [
-            'type' => $this->logType,
+            'type'  => $this->logType,
             'event' => lang('Database.optimize_success'),
-            'user' => user_username(),
-            'ip' => $this->request->getIPAddress(),
+            'user'  => user_username(),
+            'ip'    => $this->request->getIPAddress(),
           ]
         );
         return redirect()->back()->withInput()->with('success', lang('Database.optimize_success'));
@@ -143,10 +94,10 @@ class DatabaseController extends BaseController {
     if (array_key_exists('btn_reset', $this->request->getPost())) {
       $validationRules = [
         'txt_resetConfirm' => [
-          'label' => lang('Database.resetConfirm'),
-          'rules' => 'exact_value[YesIAmSure]',
+          'label'  => lang('Database.resetConfirm'),
+          'rules'  => 'exact_value[YesIAmSure]',
           'errors' => [
-            'exact_value' => lang('Validation.exact_value', [ 'YesIAmSure' ]),
+            'exact_value' => lang('Validation.exact_value', ['YesIAmSure']),
           ],
         ],
       ];
@@ -163,7 +114,8 @@ class DatabaseController extends BaseController {
         // Return validation error
         //
         return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
-      } else {
+      }
+      else {
         $this->dropTables();
         $this->createTables();
         $this->seeder->call('App\Database\Seeds\UserSeeder');
@@ -180,10 +132,10 @@ class DatabaseController extends BaseController {
         //
         logEvent(
           [
-            'type' => $this->logType,
+            'type'  => $this->logType,
             'event' => lang('Database.reset_success'),
-            'user' => user_username(),
-            'ip' => $this->request->getIPAddress(),
+            'user'  => user_username(),
+            'ip'    => $this->request->getIPAddress(),
           ]
         );
         return redirect()->back()->withInput()->with('success', lang('Database.reset_success'));
@@ -193,17 +145,14 @@ class DatabaseController extends BaseController {
     return $this->_render(
       $this->config->views['database'],
       [
-        'page' => lang('Database.pageTitle'),
+        'page'   => lang('Database.pageTitle'),
         'config' => $this->config,
       ]
     );
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Drop Tables.
-   * --------------------------------------------------------------------------
-   *
    * Drops all tables in the database.
    *
    * @return void
@@ -231,11 +180,8 @@ class DatabaseController extends BaseController {
     $this->forge->dropTable('migrations', true);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Create Tables.
-   * --------------------------------------------------------------------------
-   *
    * Creates all tables in the database.
    *
    * @return void
@@ -245,26 +191,26 @@ class DatabaseController extends BaseController {
     // Users Table
     //
     $this->forge->addField([
-      'id' => [ 'type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true ],
-      'email' => [ 'type' => 'varchar', 'constraint' => 255 ],
-      'username' => [ 'type' => 'varchar', 'constraint' => 80, 'null' => true ],
-      'lastname' => [ 'type' => 'varchar', 'constraint' => 120 ],
-      'firstname' => [ 'type' => 'varchar', 'constraint' => 120 ],
-      'displayname' => [ 'type' => 'varchar', 'constraint' => 120 ],
-      'hidden' => [ 'type' => 'tinyint', 'constraint' => 1, 'null' => 0, 'default' => 0 ],
-      'password_hash' => [ 'type' => 'varchar', 'constraint' => 255 ],
-      'secret_hash' => [ 'type' => 'varchar', 'constraint' => 255 ],
-      'reset_hash' => [ 'type' => 'varchar', 'constraint' => 255, 'null' => true ],
-      'reset_at' => [ 'type' => 'datetime', 'null' => true ],
-      'reset_expires' => [ 'type' => 'datetime', 'null' => true ],
-      'activate_hash' => [ 'type' => 'varchar', 'constraint' => 255, 'null' => true ],
-      'status' => [ 'type' => 'varchar', 'constraint' => 255, 'null' => true ],
-      'status_message' => [ 'type' => 'varchar', 'constraint' => 255, 'null' => true ],
-      'active' => [ 'type' => 'tinyint', 'constraint' => 1, 'null' => 0, 'default' => 0 ],
-      'force_pass_reset' => [ 'type' => 'tinyint', 'constraint' => 1, 'null' => 0, 'default' => 0 ],
-      'created_at' => [ 'type' => 'timestamp DEFAULT current_timestamp()', 'null' => false ],
-      'updated_at' => [ 'type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false ],
-      'deleted_at' => [ 'type' => 'datetime', 'null' => true ],
+      'id'               => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
+      'email'            => ['type' => 'varchar', 'constraint' => 255],
+      'username'         => ['type' => 'varchar', 'constraint' => 80, 'null' => true],
+      'lastname'         => ['type' => 'varchar', 'constraint' => 120],
+      'firstname'        => ['type' => 'varchar', 'constraint' => 120],
+      'displayname'      => ['type' => 'varchar', 'constraint' => 120],
+      'hidden'           => ['type' => 'tinyint', 'constraint' => 1, 'null' => 0, 'default' => 0],
+      'password_hash'    => ['type' => 'varchar', 'constraint' => 255],
+      'secret_hash'      => ['type' => 'varchar', 'constraint' => 255],
+      'reset_hash'       => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
+      'reset_at'         => ['type' => 'datetime', 'null' => true],
+      'reset_expires'    => ['type' => 'datetime', 'null' => true],
+      'activate_hash'    => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
+      'status'           => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
+      'status_message'   => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
+      'active'           => ['type' => 'tinyint', 'constraint' => 1, 'null' => 0, 'default' => 0],
+      'force_pass_reset' => ['type' => 'tinyint', 'constraint' => 1, 'null' => 0, 'default' => 0],
+      'created_at'       => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
+      'updated_at'       => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
+      'deleted_at'       => ['type' => 'datetime', 'null' => true],
     ]);
 
     $this->forge->addKey('id', true);
@@ -276,13 +222,13 @@ class DatabaseController extends BaseController {
     // Logins Table
     //
     $this->forge->addField([
-      'id' => [ 'type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true ],
-      'ip_address' => [ 'type' => 'varchar', 'constraint' => 255, 'null' => true ],
-      'email' => [ 'type' => 'varchar', 'constraint' => 255, 'null' => true ],
-      'user_id' => [ 'type' => 'int', 'constraint' => 11, 'unsigned' => true, 'null' => true ],
-      'date' => [ 'type' => 'datetime' ],
-      'success' => [ 'type' => 'tinyint', 'constraint' => 1 ],
-      'info' => [ 'type' => 'varchar', 'constraint' => 255, 'null' => true ],
+      'id'         => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
+      'ip_address' => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
+      'email'      => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
+      'user_id'    => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'null' => true],
+      'date'       => ['type' => 'datetime'],
+      'success'    => ['type' => 'tinyint', 'constraint' => 1],
+      'info'       => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
     ]);
     $this->forge->addKey('id', true);
     $this->forge->addKey('email');
@@ -295,13 +241,13 @@ class DatabaseController extends BaseController {
     // @see https://paragonie.com/blog/2015/04/secure-authentication-php-with-long-term-persistence
     //
     $this->forge->addField([
-      'id' => [ 'type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true ],
-      'selector' => [ 'type' => 'varchar', 'constraint' => 255 ],
-      'hashedValidator' => [ 'type' => 'varchar', 'constraint' => 255 ],
-      'user_id' => [ 'type' => 'int', 'constraint' => 11, 'unsigned' => true ],
-      'expires' => [ 'type' => 'datetime' ],
-      'created_at' => [ 'type' => 'timestamp DEFAULT current_timestamp()', 'null' => false ],
-      'updated_at' => [ 'type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false ],
+      'id'              => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
+      'selector'        => ['type' => 'varchar', 'constraint' => 255],
+      'hashedValidator' => ['type' => 'varchar', 'constraint' => 255],
+      'user_id'         => ['type' => 'int', 'constraint' => 11, 'unsigned' => true],
+      'expires'         => ['type' => 'datetime'],
+      'created_at'      => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
+      'updated_at'      => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
     ]);
     $this->forge->addKey('id', true);
     $this->forge->addKey('selector');
@@ -312,13 +258,13 @@ class DatabaseController extends BaseController {
     // Reset Attempts Table
     //
     $this->forge->addField([
-      'id' => [ 'type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true ],
-      'email' => [ 'type' => 'varchar', 'constraint' => 255 ],
-      'ip_address' => [ 'type' => 'varchar', 'constraint' => 255 ],
-      'user_agent' => [ 'type' => 'varchar', 'constraint' => 255 ],
-      'token' => [ 'type' => 'varchar', 'constraint' => 255, 'null' => true ],
-      'created_at' => [ 'type' => 'timestamp DEFAULT current_timestamp()', 'null' => false ],
-      'updated_at' => [ 'type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false ],
+      'id'         => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
+      'email'      => ['type' => 'varchar', 'constraint' => 255],
+      'ip_address' => ['type' => 'varchar', 'constraint' => 255],
+      'user_agent' => ['type' => 'varchar', 'constraint' => 255],
+      'token'      => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
+      'created_at' => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
+      'updated_at' => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
     ]);
     $this->forge->addKey('id', true);
     $this->forge->createTable('reset_attempts', true);
@@ -327,12 +273,12 @@ class DatabaseController extends BaseController {
     // Activation Attempts Table
     //
     $this->forge->addField([
-      'id' => [ 'type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true ],
-      'ip_address' => [ 'type' => 'varchar', 'constraint' => 255 ],
-      'user_agent' => [ 'type' => 'varchar', 'constraint' => 255 ],
-      'token' => [ 'type' => 'varchar', 'constraint' => 255, 'null' => true ],
-      'created_at' => [ 'type' => 'timestamp DEFAULT current_timestamp()', 'null' => false ],
-      'updated_at' => [ 'type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false ],
+      'id'         => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
+      'ip_address' => ['type' => 'varchar', 'constraint' => 255],
+      'user_agent' => ['type' => 'varchar', 'constraint' => 255],
+      'token'      => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
+      'created_at' => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
+      'updated_at' => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
     ]);
     $this->forge->addKey('id', true);
     $this->forge->createTable('activation_attempts', true);
@@ -341,12 +287,12 @@ class DatabaseController extends BaseController {
     // Roles Table
     //
     $this->forge->addField([
-      'id' => [ 'type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true ],
-      'name' => [ 'type' => 'varchar', 'constraint' => 255 ],
-      'description' => [ 'type' => 'varchar', 'constraint' => 255 ],
-      'bscolor' => [ 'type' => 'varchar', 'constraint' => 16, 'default' => 'primary' ],
-      'created_at' => [ 'type' => 'timestamp DEFAULT current_timestamp()', 'null' => false ],
-      'updated_at' => [ 'type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false ],
+      'id'          => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
+      'name'        => ['type' => 'varchar', 'constraint' => 255],
+      'description' => ['type' => 'varchar', 'constraint' => 255],
+      'bscolor'     => ['type' => 'varchar', 'constraint' => 16, 'default' => 'primary'],
+      'created_at'  => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
+      'updated_at'  => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
     ]);
 
     $this->forge->addKey('id', true);
@@ -356,11 +302,11 @@ class DatabaseController extends BaseController {
     // Permissions Table
     //
     $this->forge->addField([
-      'id' => [ 'type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true ],
-      'name' => [ 'type' => 'varchar', 'constraint' => 255 ],
-      'description' => [ 'type' => 'varchar', 'constraint' => 255 ],
-      'created_at' => [ 'type' => 'timestamp DEFAULT current_timestamp()', 'null' => false ],
-      'updated_at' => [ 'type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false ],
+      'id'          => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
+      'name'        => ['type' => 'varchar', 'constraint' => 255],
+      'description' => ['type' => 'varchar', 'constraint' => 255],
+      'created_at'  => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
+      'updated_at'  => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
     ]);
 
     $this->forge->addKey('id', true);
@@ -370,13 +316,13 @@ class DatabaseController extends BaseController {
     // Roles_Permissions Table
     //
     $this->forge->addField([
-      'role_id' => [ 'type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0 ],
-      'permission_id' => [ 'type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0 ],
-      'created_at' => [ 'type' => 'timestamp DEFAULT current_timestamp()', 'null' => false ],
-      'updated_at' => [ 'type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false ],
+      'role_id'       => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
+      'permission_id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
+      'created_at'    => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
+      'updated_at'    => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
     ]);
 
-    $this->forge->addKey([ 'role_id', 'permission_id' ]);
+    $this->forge->addKey(['role_id', 'permission_id']);
     $this->forge->addForeignKey('role_id', 'roles', 'id', '', 'CASCADE');
     $this->forge->addForeignKey('permission_id', 'permissions', 'id', '', 'CASCADE');
     $this->forge->createTable('roles_permissions', true);
@@ -385,13 +331,13 @@ class DatabaseController extends BaseController {
     // Roles_Users Table
     //
     $this->forge->addField([
-      'role_id' => [ 'type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0 ],
-      'user_id' => [ 'type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0 ],
-      'created_at' => [ 'type' => 'timestamp DEFAULT current_timestamp()', 'null' => false ],
-      'updated_at' => [ 'type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false ],
+      'role_id'    => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
+      'user_id'    => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
+      'created_at' => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
+      'updated_at' => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
     ]);
 
-    $this->forge->addKey([ 'role_id', 'user_id' ]);
+    $this->forge->addKey(['role_id', 'user_id']);
     $this->forge->addForeignKey('role_id', 'roles', 'id', '', 'CASCADE');
     $this->forge->addForeignKey('user_id', 'users', 'id', '', 'CASCADE');
     $this->forge->createTable('roles_users', true);
@@ -400,13 +346,13 @@ class DatabaseController extends BaseController {
     // Users_Permissions Table
     //
     $this->forge->addField([
-      'user_id' => [ 'type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0 ],
-      'permission_id' => [ 'type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0 ],
-      'created_at' => [ 'type' => 'timestamp DEFAULT current_timestamp()', 'null' => false ],
-      'updated_at' => [ 'type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false ],
+      'user_id'       => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
+      'permission_id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
+      'created_at'    => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
+      'updated_at'    => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
     ]);
 
-    $this->forge->addKey([ 'user_id', 'permission_id' ]);
+    $this->forge->addKey(['user_id', 'permission_id']);
     $this->forge->addForeignKey('user_id', 'users', 'id', '', 'CASCADE');
     $this->forge->addForeignKey('permission_id', 'permissions', 'id', '', 'CASCADE');
     $this->forge->createTable('users_permissions', true);
@@ -415,11 +361,11 @@ class DatabaseController extends BaseController {
     // Groups Table
     //
     $this->forge->addField([
-      'id' => [ 'type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true ],
-      'name' => [ 'type' => 'varchar', 'constraint' => 255 ],
-      'description' => [ 'type' => 'varchar', 'constraint' => 255 ],
-      'created_at' => [ 'type' => 'timestamp DEFAULT current_timestamp()', 'null' => false ],
-      'updated_at' => [ 'type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false ],
+      'id'          => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
+      'name'        => ['type' => 'varchar', 'constraint' => 255],
+      'description' => ['type' => 'varchar', 'constraint' => 255],
+      'created_at'  => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
+      'updated_at'  => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
     ]);
 
     $this->forge->addKey('id', true);
@@ -429,13 +375,13 @@ class DatabaseController extends BaseController {
     // Groups_Users Table
     //
     $this->forge->addField([
-      'group_id' => [ 'type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0 ],
-      'user_id' => [ 'type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0 ],
-      'created_at' => [ 'type' => 'timestamp DEFAULT current_timestamp()', 'null' => false ],
-      'updated_at' => [ 'type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false ],
+      'group_id'   => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
+      'user_id'    => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
+      'created_at' => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
+      'updated_at' => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
     ]);
 
-    $this->forge->addKey([ 'group_id', 'user_id' ]);
+    $this->forge->addKey(['group_id', 'user_id']);
     $this->forge->addForeignKey('group_id', 'groups', 'id', '', 'CASCADE');
     $this->forge->addForeignKey('user_id', 'users', 'id', '', 'CASCADE');
     $this->forge->createTable('groups_users', true);
@@ -444,13 +390,13 @@ class DatabaseController extends BaseController {
     // Groups_Permissions Table
     //
     $this->forge->addField([
-      'group_id' => [ 'type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0 ],
-      'permission_id' => [ 'type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0 ],
-      'created_at' => [ 'type' => 'timestamp DEFAULT current_timestamp()', 'null' => false ],
-      'updated_at' => [ 'type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false ],
+      'group_id'      => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
+      'permission_id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
+      'created_at'    => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
+      'updated_at'    => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
     ]);
 
-    $this->forge->addKey([ 'group_id', 'permission_id' ]);
+    $this->forge->addKey(['group_id', 'permission_id']);
     $this->forge->addForeignKey('group_id', 'groups', 'id', '', 'CASCADE');
     $this->forge->addForeignKey('permission_id', 'permissions', 'id', '', 'CASCADE');
     $this->forge->createTable('groups_permissions', true);
@@ -459,11 +405,11 @@ class DatabaseController extends BaseController {
     // Settings Table
     //
     $this->forge->addField([
-      'id' => [ 'type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true ],
-      'key' => [ 'type' => 'varchar', 'constraint' => 255 ],
-      'value' => [ 'type' => 'text' ],
-      'created_at' => [ 'type' => 'timestamp DEFAULT current_timestamp()', 'null' => false ],
-      'updated_at' => [ 'type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false ],
+      'id'         => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
+      'key'        => ['type' => 'varchar', 'constraint' => 255],
+      'value'      => ['type' => 'text'],
+      'created_at' => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
+      'updated_at' => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
     ]);
 
     $this->forge->addKey('id', true);
@@ -474,16 +420,16 @@ class DatabaseController extends BaseController {
     // Users_Options Table
     //
     $this->forge->addField([
-      'id' => [ 'type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true ],
-      'user_id' => [ 'type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0 ],
-      'option' => [ 'type' => 'varchar', 'constraint' => 255 ],
-      'value' => [ 'type' => 'varchar', 'constraint' => 255 ],
-      'created_at' => [ 'type' => 'timestamp DEFAULT current_timestamp()', 'null' => false ],
-      'updated_at' => [ 'type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false ],
+      'id'         => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
+      'user_id'    => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
+      'option'     => ['type' => 'varchar', 'constraint' => 255],
+      'value'      => ['type' => 'varchar', 'constraint' => 255],
+      'created_at' => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
+      'updated_at' => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
     ]);
 
     $this->forge->addKey('id', true);
-    $this->forge->addUniqueKey([ 'user_id', 'option' ]);
+    $this->forge->addUniqueKey(['user_id', 'option']);
     $this->forge->addForeignKey('user_id', 'users', 'id', '', 'CASCADE');
     $this->forge->createTable('users_options', true);
 
@@ -491,13 +437,13 @@ class DatabaseController extends BaseController {
     // Log Table
     //
     $this->forge->addField([
-      'id' => [ 'type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true ],
-      'type' => [ 'type' => 'varchar', 'constraint' => 80 ],
-      'user' => [ 'type' => 'varchar', 'constraint' => 80 ],
-      'ip' => [ 'type' => 'varchar', 'constraint' => 80 ],
-      'event' => [ 'type' => 'varchar', 'constraint' => 255 ],
-      'created_at' => [ 'type' => 'timestamp DEFAULT current_timestamp()', 'null' => false ],
-      'updated_at' => [ 'type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false ],
+      'id'         => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
+      'type'       => ['type' => 'varchar', 'constraint' => 80],
+      'user'       => ['type' => 'varchar', 'constraint' => 80],
+      'ip'         => ['type' => 'varchar', 'constraint' => 80],
+      'event'      => ['type' => 'varchar', 'constraint' => 255],
+      'created_at' => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
+      'updated_at' => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
     ]);
 
     $this->forge->addKey('id', true);

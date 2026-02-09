@@ -1,31 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Authentication\Activators;
 
 use App\Entities\User;
 
-/**
- * Interface ActivatorInterface
- *
- * @package App\Authentication\Activators
- */
-interface ActivatorInterface {
+interface ActivatorInterface
+{
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Send.
-   * --------------------------------------------------------------------------
+   * Send activation message to user.
    *
-   * Send activation message to user
+   * @param User|null $user  User object
    *
    * @return bool
    */
   public function send(?User $user = null): bool;
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Error.
-   * --------------------------------------------------------------------------
-   *
    * Returns the error string that should be displayed to the user.
    *
    * @return string

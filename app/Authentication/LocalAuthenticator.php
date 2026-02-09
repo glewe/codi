@@ -1,30 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Authentication;
 
-use CodeIgniter\HTTP\Exceptions\RedirectException;
 use App\Entities\User;
 use App\Exceptions\AuthException;
 use App\Password;
+use CodeIgniter\HTTP\Exceptions\RedirectException;
 
-class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInterface {
-
+class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInterface
+{
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Attempt.
-   * --------------------------------------------------------------------------
-   *
    * Attempts to validate the credentials and log a user in.
    *
-   * @param array $credentials
-   * @param bool $remember Should we remember the user (if enabled)
+   * @param array     $credentials  User credentials
+   * @param bool|null $remember     Should we remember the user (if enabled)
    *
    * @return bool
    */
   public function attempt(array $credentials, ?bool $remember = null): bool {
-    /** @var User|null $user */
+    /** @var User|bool $user */
     $user = $this->validate($credentials, true);
-    $this->user = $user;
+    $this->user = $user instanceof User ? $user : null;
 
     if (empty($this->user)) {
       //
@@ -53,7 +52,7 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
       //
       $ipAddress = service('request')->getIPAddress();
       $this->recordLoginAttempt($credentials['email'] ?? $credentials['username'], false, 'User inactive', $ipAddress, $this->user?->id ?? null);
-      $param = http_build_query([ 'login' => urlencode($credentials['email'] ?? $credentials['username']) ]);
+      $param = http_build_query(['login' => urlencode($credentials['email'] ?? $credentials['username'])]);
       $this->error = lang('Auth.activation.not_activated') . '<br>' . anchor(route_to('resend-activate-account') . '?' . $param, lang('Auth.activation.resend'));
       $this->user = null;
       return false;
@@ -64,15 +63,12 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
     // Do not login the user yet. Return true only because a 2FA might still
     // be needed.
     //
-//        return $this->login($this->user, $remember);
+    // return $this->login($this->user, $remember);
     return true;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Check.
-   * --------------------------------------------------------------------------
-   *
    * Checks to see if the user is logged in or not.
    *
    * @return bool
@@ -98,7 +94,7 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
       return false;
     }
 
-    [ $selector, $validator ] = explode(':', $remember);
+    [$selector, $validator] = explode(':', $remember);
     $validator = hash('sha256', $validator);
 
     $token = $this->loginModel->getRememberToken($selector);
@@ -131,20 +127,17 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
     return true;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Validate.
-   * --------------------------------------------------------------------------
-   *
    * Checks the user's credentials to see if they could authenticate.
    * Unlike `attempt()`, will not log the user into the system.
    *
-   * @param array $credentials
-   * @param bool $returnUser
+   * @param array $credentials  User credentials
+   * @param bool  $returnUser   Whether to return the user object
    *
-   * @return bool|\App\Entities\User|array
+   * @return bool|User
    */
-  public function validate(array $credentials, bool $returnUser = false): bool|\App\Entities\User|array|null {
+  public function validate(array $credentials, bool $returnUser = false): bool|User {
     //
     // Can't validate without a password.
     //
@@ -194,7 +187,7 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
     // a user logged in.
     //
     if (Password::needsRehash($user->password_hash, $this->config->hashAlgorithm)) {
-      /** @var \App\Entities\User $user */
+      /** @var User $user */
       $user->password = $password;
       $this->userModel->save($user);
     }

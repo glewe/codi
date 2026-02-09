@@ -1,166 +1,154 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use CodeIgniter\Model;
 
-class UserOptionModel extends Model {
-  protected $table = 'users_options';
-  protected $primaryKey = 'id';
-  protected $useTimestamps = true;
+/**
+ * UserOptionModel
+ */
+class UserOptionModel extends Model
+{
+  protected $table          = 'users_options';
+  protected $primaryKey     = 'id';
+  protected $useTimestamps  = true;
   protected $skipValidation = true;
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Delete Option.
-   * --------------------------------------------------------------------------
-   *
    * Deletes a given option record.
    *
-   * @param array $data ['user_id', 'option']
+   * @param array $data Data containing 'user_id' and 'option'.
    *
-   * @return bool
+   * @return bool True if successful, false otherwise.
    */
-  public function deleteOption($data): bool {
-    $conditions = array(
-      'user_id' => $data['user_id'],
-      'option' => $data['option']
-    );
-    return $this->builder($this->table)->where($conditions)->delete();
+  public function deleteOption(array $data): bool {
+    $conditions = [
+      'user_id' => $data['user_id'] ?? 0,
+      'option'  => $data['option'] ?? '',
+    ];
+
+    return (bool) $this->builder($this->table)->where($conditions)->delete();
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Delete Options For User.
-   * --------------------------------------------------------------------------
-   *
    * Deletes all options for a given user.
    *
-   * @param int $userId
+   * @param int $userId User ID.
    *
-   * @return bool
+   * @return bool True if successful, false otherwise.
    */
   public function deleteOptionsForUser(int $userId): bool {
-    $conditions = array(
+    $conditions = [
       'user_id' => $userId,
-    );
-    return $this->builder($this->table)->where($conditions)->delete();
+    ];
+
+    return (bool) $this->builder($this->table)->where($conditions)->delete();
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get Avatar.
-   * --------------------------------------------------------------------------
-   *
    * Gets the user avatar.
    *
-   * @param int $id User ID
+   * @param int|null $id User ID.
    *
-   * @return string
+   * @return string Avatar filename.
    */
-  public function getAvatar($id = null): string {
+  public function getAvatar(?int $id = null): string {
+    if ($id === null) {
+      return 'default_male.png';
+    }
+
     $found = $this->db->table($this->table)
       ->select('value')
-      ->where(array(
+      ->where([
         'user_id' => $id,
-        'option' => 'avatar'
-      ))
+        'option'  => 'avatar',
+      ])
       ->get()
       ->getRow();
 
     if ($found) {
-      return $found->value;
+      return (string) $found->value;
     }
+
     return 'default_male.png';
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get Option.
-   * --------------------------------------------------------------------------
-   *
    * Reads the value of a given option and user.
    *
-   * @param array $data ['user_id', 'option']
+   * @param array $data Data containing 'user_id' and 'option'.
    *
-   * @return mixed
+   * @return mixed Option value or false if not found.
    */
-  public function getOption($data): mixed {
+  public function getOption(array $data): mixed {
     $found = $this->db->table($this->table)
       ->select('value')
-      ->where(array(
-        'user_id' => $data['user_id'],
-        'option' => $data['option']
-      ))
+      ->where([
+        'user_id' => $data['user_id'] ?? 0,
+        'option'  => $data['option'] ?? '',
+      ])
       ->get()
       ->getRow();
 
     if ($found) {
       return $found->value;
     }
+
     return false;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get Options For User.
-   * --------------------------------------------------------------------------
-   *
    * Returns an array of all options that a user has set.
    *
-   * @param int $userId
+   * @param int $userId User ID.
    *
-   * @return array
+   * @return array Array of options [option => value].
    */
   public function getOptionsForUser(int $userId): array {
-    //
-    // Read all records for this user.
-    //
     $optionRecords = $this->builder()
       ->select($this->table . '.option, ' . $this->table . '.value')
       ->where('user_id', $userId)
       ->get()->getResultArray();
-    //
-    // Build an options array and return it.
-    //
+
     $options = [];
+
     foreach ($optionRecords as $record) {
-      $options[$record['option']] = $record['value'];
+      $options[(string) $record['option']] = $record['value'];
     }
+
     return $options;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Save Option.
-   * --------------------------------------------------------------------------
+   * Saves (creates or updates) an option for a user.
    *
-   * Saves (create/insert) an option for a user.
+   * @param array $data Data containing 'user_id', 'option', and 'value'.
    *
-   * @param array $data ['user_id', 'option', 'value']
-   *
-   * @return bool
+   * @return bool True if successful, false otherwise.
    */
-  public function saveOption($data): bool {
-    $conditions = array(
-      'user_id' => $data['user_id'],
-      'option' => $data['option']
-    );
+  public function saveOption(array $data): bool {
+    $conditions = [
+      'user_id' => $data['user_id'] ?? 0,
+      'option'  => $data['option'] ?? '',
+    ];
 
     $row = $this->db->table($this->table)->where($conditions)->get()->getRow();
 
     if (isset($row)) {
-      //
-      // Record exists. Update.
-      //
-      return $this->db->table($this->table)
+      return (bool) $this->db->table($this->table)
         ->where($conditions)
-        ->update([ 'value' => $data['value'] ]);
-    } else {
-      //
-      // Record does not exist. Insert.
-      //
-      return $this->db->table($this->table)->insert($data);
+        ->update(['value' => ($data['value'] ?? '')]);
     }
+
+    return (bool) $this->db->table($this->table)->insert($data);
   }
 }
+

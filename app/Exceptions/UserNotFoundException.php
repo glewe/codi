@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Exceptions;
 
-class UserNotFoundException extends \RuntimeException implements ExceptionInterface {
+class UserNotFoundException extends \RuntimeException implements ExceptionInterface
+{
   //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * User ID.
-   * --------------------------------------------------------------------------
    *
    * This static method is responsible for creating a new instance of the
    * UserNotFoundException.
@@ -24,7 +25,7 @@ class UserNotFoundException extends \RuntimeException implements ExceptionInterf
    *
    * @return UserNotFoundException The newly created exception.
    */
-  public static function forUserID(int $id) {
-    return new self(lang('Auth.user.not_found', [ $id ]), 404);
+  public static function forUserID(int $id): self {
+    return new self(lang('Auth.user.not_found', [$id]), 404);
   }
 }

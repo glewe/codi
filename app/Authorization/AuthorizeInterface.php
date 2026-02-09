@@ -1,19 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Authorization;
 
-interface AuthorizeInterface {
+interface AuthorizeInterface
+{
+  //---------------------------------------------------------------------------
   /**
    * Returns the latest error string.
    *
-   * @return mixed
+   * @return string|null
    */
-  public function error();
+  public function error(): ?string;
 
-  //=========================================================================
-  // Actions
-  //=========================================================================
-
+  //---------------------------------------------------------------------------
   /**
    * Checks to see if a user is in a group.
    *
@@ -22,12 +23,13 @@ interface AuthorizeInterface {
    * to ONE of. (It's an OR check not an AND check)
    *
    * @param mixed $groups
-   * @param int $userId
+   * @param int   $userId
    *
    * @return bool
    */
-  public function inGroup($groups, int $userId);
+  public function inGroup($groups, int $userId): bool;
 
+  //---------------------------------------------------------------------------
   /**
    * Checks to see if a user is in a role.
    *
@@ -36,106 +38,112 @@ interface AuthorizeInterface {
    * ONE of. (It's an OR check not an AND check)
    *
    * @param mixed $roles
-   * @param int $userId
+   * @param int   $userId
    *
    * @return bool
    */
-  public function inRole($roles, int $userId);
+  public function inRole($roles, int $userId): bool;
 
+  //---------------------------------------------------------------------------
   /**
    * Checks a user's roles to see if they have the specified permission.
    *
    * @param int|string $permission
-   * @param int $userId
+   * @param int        $userId
    *
-   * @return mixed
+   * @return bool
    */
-  public function hasPermission($permission, int $userId);
+  public function hasPermission($permission, int $userId): bool;
 
+  //---------------------------------------------------------------------------
   /**
    * Adds a user to a group.
    *
-   * @param int $userid
-   * @param int|string $group Either ID or name
+   * @param int        $userid
+   * @param int|string $group   Either ID or name
    *
    * @return bool
    */
-  public function addUserToGroup(int $userid, $group);
+  public function addUserToGroup(int $userid, $group): bool;
 
+  //---------------------------------------------------------------------------
   /**
    * Adds a user to a role.
    *
-   * @param int $userid
-   * @param int|string $role Either ID or name
+   * @param int        $userid
+   * @param int|string $role    Either ID or name
    *
    * @return bool
    */
-  public function addUserToRole(int $userid, $role);
+  public function addUserToRole(int $userid, $role): bool;
 
+  //---------------------------------------------------------------------------
   /**
    * Removes a single user from a group.
    *
-   * @param int $userId
+   * @param int        $userId
    * @param int|string $group
    *
-   * @return mixed
+   * @return bool
    */
-  public function removeUserFromGroup(int $userId, $group);
+  public function removeUserFromGroup(int $userId, $group): bool;
 
+  //---------------------------------------------------------------------------
   /**
    * Removes a single user from a role.
    *
-   * @param int $userId
+   * @param int        $userId
    * @param int|string $role
    *
-   * @return mixed
+   * @return bool
    */
-  public function removeUserFromRole(int $userId, $role);
+  public function removeUserFromRole(int $userId, $role): bool;
 
+  //---------------------------------------------------------------------------
   /**
    * Adds a single permission to a single group.
    *
    * @param int|string $permission
    * @param int|string $group
    *
-   * @return mixed
+   * @return bool
    */
-  public function addPermissionToGroup($permission, $group);
+  public function addPermissionToGroup($permission, $group): bool;
 
+  //---------------------------------------------------------------------------
   /**
    * Adds a single permission to a single role.
    *
    * @param int|string $permission
    * @param int|string $role
    *
-   * @return mixed
+   * @return bool
    */
-  public function addPermissionToRole($permission, $role);
+  public function addPermissionToRole($permission, $role): bool;
 
+  //---------------------------------------------------------------------------
   /**
    * Removes a single permission from a group.
    *
    * @param int|string $permission
    * @param int|string $group
    *
-   * @return mixed
+   * @return bool
    */
-  public function removePermissionFromGroup($permission, $group);
+  public function removePermissionFromGroup($permission, $group): bool;
 
+  //---------------------------------------------------------------------------
   /**
    * Removes a single permission from a role.
    *
    * @param int|string $permission
    * @param int|string $role
    *
-   * @return mixed
+   * @return bool
    */
-  public function removePermissionFromRole($permission, $role);
+  public function removePermissionFromRole($permission, $role): bool;
 
-  //=========================================================================
-  // Groups
-  //=========================================================================
-
+  //---------------------------------------------------------------------------
   /**
    * Grabs the details about a single group.
    *
@@ -143,23 +151,26 @@ interface AuthorizeInterface {
    *
    * @return object|null
    */
-  public function group($group);
+  public function group($group): ?object;
 
+  //---------------------------------------------------------------------------
   /**
    * Grabs an array of all groups.
    *
-   * @return array of objects
+   * @return array
    */
-  public function groups();
+  public function groups(): array;
 
+  //---------------------------------------------------------------------------
   /**
    * @param string $name
    * @param string $description
    *
-   * @return mixed
+   * @return int|bool
    */
-  public function createGroup(string $name, string $description = '');
+  public function createGroup(string $name, string $description = ''): int|bool;
 
+  //---------------------------------------------------------------------------
   /**
    * Deletes a single group.
    *
@@ -167,23 +178,21 @@ interface AuthorizeInterface {
    *
    * @return bool
    */
-  public function deleteGroup(int $groupId);
+  public function deleteGroup(int $groupId): bool;
 
+  //---------------------------------------------------------------------------
   /**
    * Updates a single group's information.
    *
-   * @param int $id
+   * @param int    $id
    * @param string $name
    * @param string $description
    *
-   * @return mixed
+   * @return bool
    */
-  public function updateGroup(int $id, string $name, string $description = '');
+  public function updateGroup(int $id, string $name, string $description = ''): bool;
 
-  //=========================================================================
-  // Roles
-  //=========================================================================
-
+  //---------------------------------------------------------------------------
   /**
    * Grabs the details about a single role.
    *
@@ -191,24 +200,27 @@ interface AuthorizeInterface {
    *
    * @return object|null
    */
-  public function role($role);
+  public function role($role): ?object;
 
+  //---------------------------------------------------------------------------
   /**
    * Grabs an array of all roles.
    *
-   * @return array of objects
+   * @return array
    */
-  public function roles();
+  public function roles(): array;
 
+  //---------------------------------------------------------------------------
   /**
    * @param string $name
    * @param string $description
    * @param string $bscolor
    *
-   * @return mixed
+   * @return int|bool
    */
-  public function createRole(string $name, string $description = '', string $bscolor = 'primary');
+  public function createRole(string $name, string $description = '', string $bscolor = 'primary'): int|bool;
 
+  //---------------------------------------------------------------------------
   /**
    * Deletes a single role.
    *
@@ -216,24 +228,22 @@ interface AuthorizeInterface {
    *
    * @return bool
    */
-  public function deleteRole(int $roleId);
+  public function deleteRole(int $roleId): bool;
 
+  //---------------------------------------------------------------------------
   /**
    * Updates a single role's information.
    *
-   * @param int $id
+   * @param int    $id
    * @param string $name
    * @param string $description
    * @param string $bscolor
    *
-   * @return mixed
+   * @return bool
    */
-  public function updateRole(int $id, string $name, string $description = '', string $bscolor = 'primary');
+  public function updateRole(int $id, string $name, string $description = '', string $bscolor = 'primary'): bool;
 
-  //=========================================================================
-  // Permissions
-  //=========================================================================
-
+  //---------------------------------------------------------------------------
   /**
    * Returns the details about a single permission.
    *
@@ -241,42 +251,46 @@ interface AuthorizeInterface {
    *
    * @return object|null
    */
-  public function permission($permission);
+  public function permission($permission): ?object;
 
+  //---------------------------------------------------------------------------
   /**
    * Returns an array of all permissions in the system.
    *
-   * @return mixed
+   * @return array
    */
-  public function permissions();
+  public function permissions(): array;
 
+  //---------------------------------------------------------------------------
   /**
    * Creates a single permission.
    *
    * @param string $name
    * @param string $description
    *
-   * @return mixed
+   * @return int|bool
    */
-  public function createPermission(string $name, string $description = '');
+  public function createPermission(string $name, string $description = ''): int|bool;
 
+  //---------------------------------------------------------------------------
   /**
    * Deletes a single permission and removes that permission from all roles.
    *
    * @param int $permissionId
    *
-   * @return mixed
+   * @return bool
    */
-  public function deletePermission(int $permissionId);
+  public function deletePermission(int $permissionId): bool;
 
+  //---------------------------------------------------------------------------
   /**
    * Updates the details for a single permission.
    *
-   * @param int $id
+   * @param int    $id
    * @param string $name
    * @param string $description
    *
    * @return bool
    */
-  public function updatePermission(int $id, string $name, string $description = '');
+  public function updatePermission(int $id, string $name, string $description = ''): bool;
 }

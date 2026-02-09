@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Config;
 
 use CodeIgniter\Config\BaseConfig;
 
-class Lic extends BaseConfig {
+class Lic extends BaseConfig
+{
   /**
    * ------------------------------------------------------------------------
    * Check license switch.

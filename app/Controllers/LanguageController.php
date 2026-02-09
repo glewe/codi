@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
-use App\Models\UserOptionModel;
 use App\Models\UserModel;
+use App\Models\UserOptionModel;
 
 /**
  * ----------------------------------------------------------------------------
@@ -16,16 +17,14 @@ use App\Models\UserModel;
  *
  * See: https://onlinewebtutorblog.com/create-multilingual-website-in-codeigniter-4/
  */
-class LanguageController extends BaseController {
+class LanguageController extends BaseController
+{
   /**
    * Check the BaseController for inherited properties and methods.
    */
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Index.
-   * --------------------------------------------------------------------------
-   *
    * The index method is the default method for this controller.
    *
    * It retrieves the current locale from the request, removes any existing
@@ -51,19 +50,19 @@ class LanguageController extends BaseController {
       //
       // If a user is logged in, update the user's language preference.
       //
-      $users = model(UserModel::class);
+      $users       = model(UserModel::class);
       $userOptions = model(UserOptionModel::class);
       if ($users->where('id', user_id())->first()) {
         //
         // User found, update the user's language preference.
         //
-        $userOptions->saveOption([ 'user_id' => user_id(), 'option' => 'language', 'value' => $locale ]);
+        $userOptions->saveOption(['user_id' => user_id(), 'option' => 'language', 'value' => $locale]);
       }
     }
 
     // Redirect the user to the base URL
-//    $url = base_url();
-//    return redirect()->to($url); // Redirect to the base URL
+    // $url = base_url();
+    // return redirect()->to($url); // Redirect to the base URL
 
     // Redirect the user back to the previous page
     return redirect()->back();

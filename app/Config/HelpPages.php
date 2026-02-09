@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Config;
 
 use CodeIgniter\Config\BaseConfig;
 
-class HelpPages extends BaseConfig {
+class HelpPages extends BaseConfig
+{
   /**
    * ------------------------------------------------------------------------
    * Links to help pages
@@ -21,13 +24,13 @@ class HelpPages extends BaseConfig {
    * @var array [route => helpUrl]
    */
   public $url = [
-    'about' => '',
-    'home' => '',
-    'login' => '',
+    'about'       => '',
+    'home'        => '',
+    'login'       => '',
     'sample/view' => '',
     'sample/edit' => '',
-    'users' => '',
-    'welcome' => '',
+    'users'       => '',
+    'welcome'     => '',
   ];
 
 }

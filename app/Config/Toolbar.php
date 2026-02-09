@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Config;
 
 use CodeIgniter\Config\BaseConfig;
@@ -23,7 +25,8 @@ use App\Collectors\Auth;
  * NOT be displayed under production environments, and will only display if
  * `CI_DEBUG` is true, since if it's not, there's not much to display anyway.
  */
-class Toolbar extends BaseConfig {
+class Toolbar extends BaseConfig
+{
   /**
    * --------------------------------------------------------------------------
    * Toolbar Collectors
@@ -39,7 +42,7 @@ class Toolbar extends BaseConfig {
     Database::class,
     Logs::class,
     Views::class,
-    // \CodeIgniter\Debug\Toolbar\Collectors\Cache::class,
+      // \CodeIgniter\Debug\Toolbar\Collectors\Cache::class,
     Files::class,
     Routes::class,
     Events::class,
@@ -115,6 +118,12 @@ class Toolbar extends BaseConfig {
    * used to determine if the hot-reload feature should reload the page or not.
    */
   public array $watchedExtensions = [
-    'php', 'css', 'js', 'html', 'svg', 'json', 'env',
+    'php',
+    'css',
+    'js',
+    'html',
+    'svg',
+    'json',
+    'env',
   ];
 }

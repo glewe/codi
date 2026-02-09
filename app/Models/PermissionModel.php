@@ -1,50 +1,52 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use CodeIgniter\Model;
 
-class PermissionModel extends Model {
-  protected $table = 'permissions';
-  protected $primaryKey = 'id';
-  protected $returnType = 'object';
-  protected $allowedFields = [ 'name', 'description' ];
+/**
+ * PermissionModel
+ */
+class PermissionModel extends Model
+{
+  protected $table         = 'permissions';
+  protected $primaryKey    = 'id';
+  protected $returnType    = 'object';
+  protected $allowedFields = ['name', 'description'];
   protected $useTimestamps = false;
+
+  /** @var mixed */
   public $error;
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Add Permission to User.
-   * --------------------------------------------------------------------------
-   *
    * Adds a single permission to a single user.
    *
-   * @param int $permissionId
-   * @param int $userId
+   * @param int $permissionId Permission ID.
+   * @param int $userId       User ID.
    *
-   * @return bool
+   * @return bool True if successful, false otherwise.
    */
   public function addPermissionToUser(int $permissionId, int $userId): bool {
     cache()->delete("{$userId}_permissions");
 
-    return $this->db->table('users_permissions')->insert([
-      'user_id' => $userId,
-      'permission_id' => $permissionId
+    return (bool) $this->db->table('users_permissions')->insert([
+      'user_id'       => $userId,
+      'permission_id' => $permissionId,
     ]);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Delete Permission.
-   * --------------------------------------------------------------------------
-   *
    * Deletes a permission.
    *
-   * @param int $id Permission ID
+   * @param int $id Permission ID.
    *
-   * @return bool
+   * @return bool True if successful, false otherwise.
    */
-  public function deletePermission(int $id) {
+  public function deletePermission(int $id): bool {
     if (!$this->delete($id)) {
       $this->error = $this->errors();
       return false;
@@ -53,75 +55,47 @@ class PermissionModel extends Model {
     return true;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Does User have Permission.
-   * --------------------------------------------------------------------------
-   *
    * Checks if a user has a specific permission (personal, group, role).
    *
-   * @param int $userId
-   * @param int $permissionId
+   * @param int $userId       User ID.
+   * @param int $permissionId Permission ID.
    *
-   * @return bool
+   * @return bool True if the user has the permission, false otherwise.
    */
   public function doesUserHavePermission(int $userId, int $permissionId): bool {
-    //
-    // Check user permissions and take advantage of caching
-    //
     $userPerms = $this->getPermissionsForUser($userId);
 
-    if (count($userPerms) && array_key_exists($permissionId, $userPerms)) {
+    if (count($userPerms) > 0 && array_key_exists($permissionId, $userPerms)) {
       return true;
     }
 
-    //
-    // Check groups of the user for the permission
-    //
-    $count = $this->db->table('groups_permissions')
+    $count = (int) $this->db->table('groups_permissions')
       ->join('groups_users', 'groups_users.group_id = groups_permissions.group_id', 'inner')
       ->where('groups_permissions.permission_id', $permissionId)
       ->where('groups_users.user_id', $userId)
       ->countAllResults();
 
-    //
-    // Check roles of the user for the permission
-    //
-    $count += $this->db->table('roles_permissions')
+    $count += (int) $this->db->table('roles_permissions')
       ->join('roles_users', 'roles_users.role_id = roles_permissions.role_id', 'inner')
       ->where('roles_permissions.permission_id', $permissionId)
       ->where('roles_users.user_id', $userId)
       ->countAllResults();
 
-    //
-    // Return true for positive count, else 0
-    //
     return $count > 0;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get Permissions for User.
-   * --------------------------------------------------------------------------
+   * Gets all personal, group and role permissions for a user.
    *
-   * Gets all personal, group and role permissions for a user in a way that can
-   * be easily used to check against:
+   * @param int $userId User ID.
    *
-   * [
-   *   id => name,
-   *   id => name
-   * ]
-   *
-   * @param int $userId
-   *
-   * @return array
+   * @return array Array of permissions [id => name].
    */
   public function getPermissionsForUser(int $userId): array {
-    if (null === $found = cache("{$userId}_permissions")) {
-
-      //
-      // Get personal permissions
-      //
+    if (null === ($found = cache("{$userId}_permissions"))) {
       $fromUser = $this->db->table('users_permissions')
         ->select('id, permissions.name')
         ->join('permissions', 'permissions.id = permission_id', 'inner')
@@ -129,9 +103,6 @@ class PermissionModel extends Model {
         ->get()
         ->getResultObject();
 
-      //
-      // Get group permissions
-      //
       $fromGroup = $this->db->table('groups_users')
         ->select('permissions.id, permissions.name')
         ->join('groups_permissions', 'groups_permissions.group_id = groups_users.group_id', 'inner')
@@ -140,9 +111,6 @@ class PermissionModel extends Model {
         ->get()
         ->getResultObject();
 
-      //
-      // Get role permissions
-      //
       $fromRole = $this->db->table('roles_users')
         ->select('permissions.id, permissions.name')
         ->join('roles_permissions', 'roles_permissions.role_id = roles_users.role_id', 'inner')
@@ -155,7 +123,8 @@ class PermissionModel extends Model {
 
       $found = [];
       foreach ($combined as $row) {
-        $found[$row->id] = strtolower($row->name);
+        /** @var object $row */
+        $found[$row->id] = strtolower((string) $row->name);
       }
 
       cache()->save("{$userId}_permissions", $found, 300);
@@ -164,28 +133,16 @@ class PermissionModel extends Model {
     return $found;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get Personal Permissions for User.
-   * --------------------------------------------------------------------------
+   * Gets all personal permissions for a user.
    *
-   * Gets all personal permissions for a user in a way that can be easily used
-   * to check against:
+   * @param int $userId User ID.
    *
-   * [
-   *   id => name,
-   *   id => name
-   * ]
-   *
-   * @param int $userId
-   *
-   * @return array
+   * @return array Array of personal permissions [id => name].
    */
   public function getPersonalPermissionsForUser(int $userId): array {
-    if (null === $found = cache("{$userId}_personal_permissions")) {
-      //
-      // Get personal permissions
-      //
+    if (null === ($found = cache("{$userId}_personal_permissions"))) {
       $fromUser = $this->db->table('users_permissions')
         ->select('id, permissions.name')
         ->join('permissions', 'permissions.id = permission_id', 'inner')
@@ -195,7 +152,8 @@ class PermissionModel extends Model {
 
       $found = [];
       foreach ($fromUser as $row) {
-        $found[$row->id] = strtolower($row->name);
+        /** @var object $row */
+        $found[$row->id] = strtolower((string) $row->name);
       }
 
       cache()->save("{$userId}_personal_permissions", $found, 300);
@@ -204,22 +162,16 @@ class PermissionModel extends Model {
     return $found;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get Groups for Permission.
-   * --------------------------------------------------------------------------
-   *
    * Gets all groups that have a single permission assigned.
    *
-   * @param int $permId Permission ID to check
+   * @param int $permId Permission ID.
    *
-   * @return array
+   * @return array Array of groups [id => name].
    */
   public function getGroupsForPermission(int $permId): array {
-    if (null === $found = cache("{$permId}_permission_groups")) {
-      //
-      // Get personal permissions
-      //
+    if (null === ($found = cache("{$permId}_permission_groups"))) {
       $permGroups = $this->db->table('groups_permissions')
         ->select('id, groups.name')
         ->join('groups', 'groups.id = group_id', 'inner')
@@ -229,31 +181,26 @@ class PermissionModel extends Model {
 
       $found = [];
       foreach ($permGroups as $row) {
-        $found[$row->id] = $row->name;
+        /** @var object $row */
+        $found[$row->id] = (string) $row->name;
       }
 
-      cache()->save("{$permId}_permissions_groups", $found, 300);
+      cache()->save("{$permId}_permission_groups", $found, 300);
     }
 
     return $found;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get Roles for Permission.
-   * --------------------------------------------------------------------------
+   * Gets all roles that have a single permission assigned.
    *
-   * Gets all groups that have a single permission assigned.
+   * @param int $permId Permission ID.
    *
-   * @param int $permId Permission ID to check
-   *
-   * @return array
+   * @return array Array of roles [id => name].
    */
   public function getRolesForPermission(int $permId): array {
-    if (null === $found = cache("{$permId}_permission_roles")) {
-      //
-      // Get personal permissions
-      //
+    if (null === ($found = cache("{$permId}_permission_roles"))) {
       $permRoles = $this->db->table('roles_permissions')
         ->select('id, roles.name')
         ->join('roles', 'roles.id = role_id', 'inner')
@@ -263,31 +210,26 @@ class PermissionModel extends Model {
 
       $found = [];
       foreach ($permRoles as $row) {
-        $found[$row->id] = $row->name;
+        /** @var object $row */
+        $found[$row->id] = (string) $row->name;
       }
 
-      cache()->save("{$permId}_permissions_roles", $found, 300);
+      cache()->save("{$permId}_permission_roles", $found, 300);
     }
 
     return $found;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get Users for Permission.
-   * --------------------------------------------------------------------------
-   *
    * Gets all users that hold a single personal permission.
    *
-   * @param int $permId Permission ID to check
+   * @param int $permId Permission ID.
    *
-   * @return array
+   * @return array Array of users [id => username].
    */
   public function getUsersForPermission(int $permId): array {
-    if (null === $found = cache("{$permId}_permissions_users")) {
-      //
-      // Get personal permissions
-      //
+    if (null === ($found = cache("{$permId}_permission_users"))) {
       $permUsers = $this->db->table('users_permissions')
         ->select('id, users.username')
         ->join('users', 'users.id = user_id', 'inner')
@@ -297,45 +239,45 @@ class PermissionModel extends Model {
 
       $found = [];
       foreach ($permUsers as $row) {
-        $found[$row->id] = $row->username;
+        /** @var object $row */
+        $found[$row->id] = (string) $row->username;
       }
 
-      cache()->save("{$permId}_permissions_users", $found, 300);
+      cache()->save("{$permId}_permission_users", $found, 300);
     }
 
     return $found;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Remove Permission from User.
-   * --------------------------------------------------------------------------
-   *
    * Removes a permission from a user.
    *
-   * @param int $permissionId
-   * @param int $userId
+   * @param int $permissionId Permission ID.
+   * @param int $userId       User ID.
+   *
+   * @return bool True if successful, false otherwise.
    */
   public function removePermissionFromUser(int $permissionId, int $userId): bool {
-    $res = $this->db->table('users_permissions')->where([ 'user_id' => $userId, 'permission_id' => $permissionId ])->delete();
+    $res = $this->db->table('users_permissions')->where(['user_id' => $userId, 'permission_id' => $permissionId])->delete();
     cache()->delete("{$userId}_permissions");
 
-    return (bool)$res;
+    return (bool) $res;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Remove all Permissions from User.
-   * --------------------------------------------------------------------------
-   *
    * Removes all permissions from a user.
    *
-   * @param int $userId
+   * @param int $userId User ID.
+   *
+   * @return bool True if successful, false otherwise.
    */
   public function removeAllPermissionsFromUser(int $userId): bool {
-    $res = $this->db->table('users_permissions')->where([ 'user_id' => $userId ])->delete();
+    $res = $this->db->table('users_permissions')->where(['user_id' => $userId])->delete();
     cache()->delete("{$userId}_permissions");
 
-    return (bool)$res;
+    return (bool) $res;
   }
 }
+

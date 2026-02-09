@@ -1,18 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Authentication\Passwords;
 
 use CodeIgniter\Entity\Entity;
-use App\Entities\User;
 
 /**
  * Class NothingPersonalValidator
  *
  * Checks password does not contain any personal information
- *
- * @package App\Authentication\Passwords\Validators
  */
-class NothingPersonalValidator extends BaseValidator implements ValidatorInterface {
+class NothingPersonalValidator extends BaseValidator implements ValidatorInterface
+{
   /**
    * @var string
    */
@@ -23,23 +23,20 @@ class NothingPersonalValidator extends BaseValidator implements ValidatorInterfa
    */
   protected $suggestion;
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Check.
-   * --------------------------------------------------------------------------
-   *
    * Returns true if $password contains no part of the username or the user's
    * email. Otherwise, it returns false.
    * If true is returned the password will be passed to next validator.
    * If false is returned the validation process will be immediately stopped.
    *
-   * @param string $password
-   * @param User $user
+   * @param string      $password  Password to check
+   * @param Entity|null $user      User entity
    *
    * @return bool
    */
-  public function check(string $password, $user = null): bool {
-    $password = \strtolower($password);
+  public function check(string $password, ?Entity $user = null): bool {
+    $password = strtolower($password);
 
     if ($valid = $this->isNotPersonal($password, $user) === true) {
       $valid = $this->isNotSimilar($password, $user);
@@ -48,11 +45,8 @@ class NothingPersonalValidator extends BaseValidator implements ValidatorInterfa
     return $valid;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Is Not Personal.
-   * --------------------------------------------------------------------------
-   *
    * Looks for personal information in a password. The personal info used
    * comes from App\Entities\User properties username and email.
    *
@@ -64,17 +58,17 @@ class NothingPersonalValidator extends BaseValidator implements ValidatorInterfa
    *
    *   public $personalFields = ['firstname', 'lastname'];
    *
-   * isNotPersonal() returns true if no personal information can be found, or false
+   * returns true if no personal information can be found, or false
    * if such info is found.
    *
    * @param string $password
-   * @param User $user
+   * @param object $user
    *
-   * @return boolean
+   * @return bool
    */
-  protected function isNotPersonal($password, $user): bool {
-    $userName = \strtolower($user->username);
-    $email = \strtolower($user->email);
+  protected function isNotPersonal(string $password, ?object $user): bool {
+    $userName = strtolower($user->username);
+    $email = strtolower($user->email);
     $valid = true;
 
     // The most obvious transgressions
@@ -90,23 +84,27 @@ class NothingPersonalValidator extends BaseValidator implements ValidatorInterfa
     // Use the pieces as needles and haystacks and look every which way for matches.
     if ($valid) {
       // Take username apart for use as search needles
-      $needles = $this->strip_explode($userName);
+      $needles = $this->stripExplode($userName);
 
       // extract local-part and domain parts from email as separate needles
-      [ $localPart, $domain ] = \explode('@', $email);
+      [$localPart, $domain] = explode('@', $email);
+
       // might be john.doe@example.com and we want all the needles we can get
-      $emailParts = $this->strip_explode($localPart);
+      $emailParts = $this->stripExplode($localPart);
+
       if (!empty($domain)) {
         $emailParts[] = $domain;
       }
-      $needles = \array_merge($needles, $emailParts);
+
+      $needles = array_merge($needles, $emailParts);
 
       // Get any other "personal" fields defined in config
       $personalFields = $this->config->personalFields;
+
       if (!empty($personalFields)) {
         foreach ($personalFields as $value) {
           if (!empty($user->$value)) {
-            $needles[] = \strtolower($user->$value);
+            $needles[] = strtolower($user->$value);
           }
         }
       }
@@ -117,7 +115,7 @@ class NothingPersonalValidator extends BaseValidator implements ValidatorInterfa
       ];
 
       // Make password into haystacks
-      $haystacks = $this->strip_explode($password);
+      $haystacks = $this->stripExplode($password);
 
       foreach ($haystacks as $haystack) {
         if (empty($haystack) || in_array($haystack, $trivial)) {
@@ -140,21 +138,20 @@ class NothingPersonalValidator extends BaseValidator implements ValidatorInterfa
         }
       }
     }
+
     if ($valid) {
       return true;
     }
 
     $this->error = lang('Auth.password.error_personal');
     $this->suggestion = lang('Auth.password.suggest_personal');
+
     return false;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Is Not Similar.
-   * --------------------------------------------------------------------------
-   *
-   * notSimilar() uses $password and $userName to calculate a similarity value.
+   * uses $password and $userName to calculate a similarity value.
    * Similarity values equal to, or greater than Config\Auth::$maxSimilarity
    * are rejected for being too much alike and false is returned.
    * Otherwise, true is returned,
@@ -163,12 +160,13 @@ class NothingPersonalValidator extends BaseValidator implements ValidatorInterfa
    * In other words, 0 (zero) turns off similarity testing.
    *
    * @param string $password
-   * @param User $user
+   * @param object $user
    *
    * @return bool
    */
-  protected function isNotSimilar($password, $user): bool {
+  protected function isNotSimilar(string $password, ?object $user): bool {
     $maxSimilarity = (float)$this->config->maxSimilarity;
+
     // sanity checking - working range 1-100, 0 is off
     if ($maxSimilarity < 1) {
       $maxSimilarity = 0;
@@ -177,23 +175,22 @@ class NothingPersonalValidator extends BaseValidator implements ValidatorInterfa
     }
 
     if (!empty($maxSimilarity)) {
-      $userName = \strtolower($user->username);
+      $userName = strtolower($user->username);
 
       similar_text($password, $userName, $similarity);
+
       if ($similarity >= $maxSimilarity) {
         $this->error = lang('Auth.password.error_similar');
         $this->suggestion = lang('Auth.password.suggest_similar');
         return false;
       }
     }
+
     return true;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * strip_explode($str).
-   * --------------------------------------------------------------------------
-   *
    * Replaces all non-word characters and underscores in $str with a space.
    * Then it explodes that result using the space for a delimiter.
    *
@@ -201,9 +198,9 @@ class NothingPersonalValidator extends BaseValidator implements ValidatorInterfa
    *
    * @return array
    */
-  protected function strip_explode($str): array {
-    $stripped = \preg_replace('/[\W_]+/', ' ', $str);
-    $parts = \explode(' ', \trim($stripped));
+  protected function stripExplode(string $str): array {
+    $stripped = preg_replace('/[\W_]+/', ' ', $str);
+    $parts = explode(' ', trim($stripped));
 
     // If it's not already there put the untouched input at the top of the array
     if (!in_array($str, $parts)) {
@@ -213,11 +210,8 @@ class NothingPersonalValidator extends BaseValidator implements ValidatorInterfa
     return $parts;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Error.
-   * --------------------------------------------------------------------------
-   *
    * Returns the error string that should be displayed to the user.
    *
    * @return string
@@ -226,11 +220,8 @@ class NothingPersonalValidator extends BaseValidator implements ValidatorInterfa
     return $this->error ?? '';
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Suggestion.
-   * --------------------------------------------------------------------------
-   *
    * Returns a suggestion that may be displayed to the user to help them choose
    * a better password. The method is required, but a suggestion is optional.
    * May return an empty string instead.

@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Authentication\Activators;
 
-use Config\Auth as AuthConfig;
 use App\Entities\User;
+use Config\Auth as AuthConfig;
 
-abstract class BaseActivator {
+abstract class BaseActivator
+{
   /**
    * @var AuthConfig
    */
@@ -16,24 +19,8 @@ abstract class BaseActivator {
    */
   protected $error = '';
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Send.
-   * --------------------------------------------------------------------------
-   *
-   * Sends an activation message to user
-   *
-   * @param User $user
-   *
-   * @return bool
-   */
-  abstract public function send(?User $user = null): bool;
-
-  /**
-   * --------------------------------------------------------------------------
-   * Constructor.
-   * --------------------------------------------------------------------------
-   *
    * Sets the initial config file.
    *
    * @param AuthConfig|null $config
@@ -42,27 +29,31 @@ abstract class BaseActivator {
     $this->config = $config ?? config('Auth');
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Set Config.
-   * --------------------------------------------------------------------------
+   * Sends an activation message to user.
    *
+   * @param User|null $user
+   *
+   * @return bool
+   */
+  abstract public function send(?User $user = null): bool;
+
+  //---------------------------------------------------------------------------
+  /**
    * Allows for changing the config file on the Activator.
    *
    * @param AuthConfig $config
    *
-   * @return $this
+   * @return self
    */
   public function setConfig(AuthConfig $config): self {
     $this->config = $config;
     return $this;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get Activator Settings.
-   * --------------------------------------------------------------------------
-   *
    * Gets a config settings for current Activator.
    *
    * @return object
@@ -71,11 +62,8 @@ abstract class BaseActivator {
     return (object)$this->config->userActivators[static::class];
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Error.
-   * --------------------------------------------------------------------------
-   *
    * Returns the current error.
    *
    * @return string

@@ -1,39 +1,42 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entities;
 
-use CodeIgniter\Entity\Entity;
 use App\Models\GroupModel;
-use App\Models\RoleModel;
 use App\Models\PermissionModel;
-use App\Password;
+use App\Models\RoleModel;
 use App\Models\UserOptionModel;
+use App\Password;
+use CodeIgniter\Entity\Entity;
 
 /**
- * @property int|string|null $id
- * @property string $email
- * @property string $username
- * @property string|null $lastname
- * @property string|null $firstname
- * @property string|null $displayname
- * @property bool $hidden
- * @property string $password_hash
- * @property string|null $secret_hash
- * @property string|null $reset_hash
+ * @property int|string|null           $id
+ * @property string                    $email
+ * @property string                    $username
+ * @property string|null               $lastname
+ * @property string|null               $firstname
+ * @property string|null               $displayname
+ * @property bool                      $hidden
+ * @property string                    $password_hash
+ * @property string|null               $secret_hash
+ * @property string|null               $reset_hash
  * @property \CodeIgniter\I18n\Time|null $reset_at
  * @property \CodeIgniter\I18n\Time|null $reset_expires
- * @property string|null $activate_hash
- * @property string|null $status
- * @property string|null $status_message
- * @property bool $active
- * @property bool $force_pass_reset
- * @property string|null $password
- * @property array $permissions
+ * @property string|null               $activate_hash
+ * @property string|null               $status
+ * @property string|null               $status_message
+ * @property bool                      $active
+ * @property bool                      $force_pass_reset
+ * @property string|null               $password
+ * @property array                     $permissions
  * @property \CodeIgniter\I18n\Time|null $deleted_at
  * @property \CodeIgniter\I18n\Time|null $created_at
  * @property \CodeIgniter\I18n\Time|null $updated_at
  */
-class User extends Entity {
+class User extends Entity
+{
   /**
    * Maps names used in sets and gets against unique
    * names within the class, allowing independence from
@@ -43,22 +46,28 @@ class User extends Entity {
    *  $datamap = [
    *      'db_name' => 'class_name'
    *  ];
+   *
+   * @var array<string, string>
    */
   protected $datamap = [];
 
   /**
    * Define properties that are automatically converted to Time instances.
+   *
+   * @var list<string>
    */
-  protected $dates = [ 'reset_at', 'reset_expires', 'created_at', 'updated_at', 'deleted_at' ];
+  protected $dates = ['reset_at', 'reset_expires', 'created_at', 'updated_at', 'deleted_at'];
 
   /**
    * Array of field names and the type of value to cast them as
    * when they are accessed.
+   *
+   * @var array<string, string>
    */
   protected $casts = [
-    'active' => 'boolean',
+    'active'           => 'boolean',
     'force_pass_reset' => 'boolean',
-    'hidden' => 'boolean',
+    'hidden'           => 'boolean',
   ];
 
   /**
@@ -66,69 +75,65 @@ class User extends Entity {
    *
    * @var array
    */
-  protected $permissions = [];
+  protected array $permissions = [];
 
   /**
    * Per-user personal permissions cache
    *
    * @var array
    */
-  protected $personalPermissions = [];
+  protected array $personalPermissions = [];
 
   /**
    * Per-user groups cache
    *
-   * @var array
+   * @var array<int, string>
    */
-  protected $groups = [];
+  protected array $groups = [];
 
   /**
    * Per-user options cache
    *
-   * @var array
+   * @var array<string, string>
    */
-  protected $options = [];
+  protected array $options = [];
 
   /**
    * Per-user roles cache
    *
-   * @var array
+   * @var array<int, string>
    */
-  protected $roles = [];
+  protected array $roles = [];
 
   //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Activate User.
-   * --------------------------------------------------------------------------
    *
    * @return $this
    */
   public function activate(): User {
-    $this->attributes['active'] = 1;
+    $this->attributes['active']        = 1;
     $this->attributes['activate_hash'] = null;
     return $this;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Bans a user.
-   * --------------------------------------------------------------------------
    *
    * @param string $reason
    *
    * @return $this
    */
   public function ban(string $reason): User {
-    $this->attributes['status'] = 'banned';
+    $this->attributes['status']         = 'banned';
     $this->attributes['status_message'] = $reason;
     return $this;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Hides a user from calendar.
-   * -------------------------------------------------------------------------
    *
    * @return $this
    */
@@ -137,10 +142,9 @@ class User extends Entity {
     return $this;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Unhides a user from calendar.
-   * --------------------------------------------------------------------------
    *
    * @return $this
    */
@@ -149,10 +153,9 @@ class User extends Entity {
     return $this;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Can.
-   * --------------------------------------------------------------------------
    *
    * Determines whether the user has the appropriate permission, either
    * directly, or through one of it's roles.
@@ -165,10 +168,9 @@ class User extends Entity {
     return in_array(strtolower($permission), $this->getPermissions());
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Deactivate user.
-   * --------------------------------------------------------------------------
    *
    * @return $this
    */
@@ -177,18 +179,15 @@ class User extends Entity {
     return $this;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Force Password Reset.
-   * --------------------------------------------------------------------------
    *
    * Force a user to reset their password on next page refresh or login.
    * Checked in the LocalAuthenticator's check() method.
    *
    * @return $this
-   * @return $this
    * @throws \Exception
-   *
    */
   public function forcePasswordReset(): User {
     $this->generateResetHash();
@@ -196,43 +195,36 @@ class User extends Entity {
     return $this;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Generate Activate Hash.
-   * --------------------------------------------------------------------------
    *
-   * @return $this
    * @return $this
    * @throws \Exception
-   *
    */
   public function generateActivateHash(): User {
     $this->attributes['activate_hash'] = bin2hex(random_bytes(16));
     return $this;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Generate Reset Hash.
-   * --------------------------------------------------------------------------
    *
-   * @return $this
    * @return $this
    * @throws \Exception
-   *
    */
   public function generateResetHash(): User {
-    $this->attributes['reset_hash'] = bin2hex(random_bytes(16));
+    $this->attributes['reset_hash']    = bin2hex(random_bytes(16));
     $this->attributes['reset_expires'] = date('Y-m-d H:i:s', time() + config('Auth')->resetTime);
     return $this;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Get Attribute.
-   * --------------------------------------------------------------------------
    *
-   * @param $attr
+   * @param string $attr
    *
    * @return mixed
    */
@@ -240,10 +232,9 @@ class User extends Entity {
     return $this->attributes[$attr];
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Get Attributes.
-   * --------------------------------------------------------------------------
    *
    * @return array
    */
@@ -251,10 +242,9 @@ class User extends Entity {
     return $this->attributes;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Get Groups.
-   * --------------------------------------------------------------------------
    *
    * Returns the user's groups
    *
@@ -275,10 +265,9 @@ class User extends Entity {
     return $this->groups;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Get Option.
-   * --------------------------------------------------------------------------
    *
    * Returns a specific user options.
    *
@@ -286,21 +275,20 @@ class User extends Entity {
    *
    * @return string
    */
-  public function getOption($option): string {
+  public function getOption(string $option): string {
     if (empty($this->id)) {
       throw new \LogicException('Users must be created before getting options.');
     }
 
     return model(UserOptionModel::class)->getOption([
       'user_id' => $this->id,
-      'option' => $option
+      'option'  => $option,
     ]);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Get Options.
-   * --------------------------------------------------------------------------
    *
    * Returns the user's options
    *
@@ -321,10 +309,9 @@ class User extends Entity {
     return $this->options;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Get Permissions.
-   * --------------------------------------------------------------------------
    *
    * Returns the user's permissions
    *
@@ -340,10 +327,9 @@ class User extends Entity {
     return $this->permissions;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Get Personal Permissions.
-   * --------------------------------------------------------------------------
    *
    * Returns the user's personal permissions
    *
@@ -359,10 +345,9 @@ class User extends Entity {
     return $this->personalPermissions;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Get Roles.
-   * --------------------------------------------------------------------------
    *
    * Returns the user's roles
    *
@@ -383,10 +368,9 @@ class User extends Entity {
     return $this->roles;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Has Secret.
-   * --------------------------------------------------------------------------
    *
    * Checks whether the user has a secret hash (2FA setup).
    *
@@ -396,10 +380,9 @@ class User extends Entity {
     return isset($this->attributes['secret_hash']) && $this->attributes['secret_hash'] != '';
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Is Activated.
-   * --------------------------------------------------------------------------
    *
    * Checks to see if a user is active.
    *
@@ -409,10 +392,9 @@ class User extends Entity {
     return isset($this->attributes['active']) && $this->attributes['active'];
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Is Banned.
-   * --------------------------------------------------------------------------
    *
    * Checks to see if a user has been banned.
    *
@@ -422,10 +404,9 @@ class User extends Entity {
     return isset($this->attributes['status']) && $this->attributes['status'] === 'banned';
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Set Attribute.
-   * --------------------------------------------------------------------------
    *
    * Sets a single attribute value.
    *
@@ -434,14 +415,13 @@ class User extends Entity {
    *
    * @return void
    */
-  public function setAttribute($attr, $val): void {
+  public function setAttribute(string $attr, $val): void {
     $this->attributes[$attr] = $val;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Set Password.
-   * --------------------------------------------------------------------------
    *
    * Automatically hashes the password when set.
    *
@@ -464,19 +444,18 @@ class User extends Entity {
     // User would have a new password but still anyone with the reset-token
     // would be able to change the password.
     //
-    $this->attributes['reset_hash'] = null;
-    $this->attributes['reset_at'] = null;
+    $this->attributes['reset_hash']    = null;
+    $this->attributes['reset_at']      = null;
     $this->attributes['reset_expires'] = null;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Set Permissions.
-   * --------------------------------------------------------------------------
    *
    * Warns the developer it won't work, so they don't spend hours tracking stuff down.
    *
-   * @param array $permissions
+   * @param array|null $permissions
    *
    * @return void
    */
@@ -484,10 +463,9 @@ class User extends Entity {
     throw new \LogicException('User entity does not support saving permissions directly.');
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Set Secret.
-   * --------------------------------------------------------------------------
    *
    * Encrypts the secret when set.
    *
@@ -499,10 +477,9 @@ class User extends Entity {
     $this->attributes['secret_hash'] = $secret;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Get Secret.
-   * --------------------------------------------------------------------------
    *
    * Encrypts the secret when set.
    *
@@ -512,10 +489,9 @@ class User extends Entity {
     return $this->attributes['secret_hash'];
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Remove Secret.
-   * --------------------------------------------------------------------------
    *
    * Removes the secret.
    *
@@ -525,10 +501,9 @@ class User extends Entity {
     $this->attributes['secret_hash'] = '';
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Unban.
-   * --------------------------------------------------------------------------
    *
    * Removes a ban from a user.
    *

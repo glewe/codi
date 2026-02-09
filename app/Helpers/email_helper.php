@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Models\SettingsModel;
 
 /**
@@ -9,11 +11,8 @@ use App\Models\SettingsModel;
  */
 
 if (!function_exists('sendEmail')) {
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Send Email.
-   * --------------------------------------------------------------------------
-   *
    * Sends an email with the provided parameters.
    *
    * @param string $to        The recipient's email address. If not provided, defaults to 'george.lewe@gmail.com'.
@@ -21,29 +20,35 @@ if (!function_exists('sendEmail')) {
    * @param string $bcc       The BCC recipient's email address. If not provided, defaults to an empty string.
    * @param string $subject   The subject of the email. If not provided, defaults to 'Email Test'.
    * @param string $message   The body of the email. If not provided, defaults to 'Testing the email class.'.
+   * @param string $recipient The name of the recipient.
+   * @param bool   $onScreen  Whether to display the email on screen instead of sending.
    *
    * @return bool Returns true if the email was successfully sent, false otherwise.
    */
-  function sendEmail($to = '', $cc = '', $bcc = '', $subject = '', $message = '', $recipient = 'User', $onScreen = false): bool {
-
+  function sendEmail(
+    string $to = '',
+    string $cc = '',
+    string $bcc = '',
+    string $subject = '',
+    string $message = '',
+    string $recipient = 'User',
+    bool $onScreen = false
+  ): bool {
     $settings = model(SettingsModel::class);
-    $email = initializeEmail();
+    $email    = initializeEmail();
+
+    if ($email === false) {
+      return false;
+    }
 
     if (!strlen($to)) {
       return false;
-    } else {
-      $email->setTo($to);
     }
-    if (!strlen($cc)) {
-      $email->setCC('');
-    } else {
-      $email->setCC($cc);
-    }
-    if (!strlen($bcc)) {
-      $email->setBCC('');
-    } else {
-      $email->setBCC($bcc);
-    }
+
+    $email->setTo($to);
+    $email->setCC($cc);
+    $email->setBCC($bcc);
+
     if (!strlen($subject)) {
       $email->setSubject('Email Test');
     } else {
@@ -54,45 +59,47 @@ if (!function_exists('sendEmail')) {
     // Now, build the email body based on the template file.
     //
     $data = [
-      'summary' => 'This is the body summary',
-      'greeting' => lang('General.hello'),
-      'recipient' => $recipient,
-      'message' => $message,
-      'signature' => lang('General.your_team', [ $settings->getSetting('applicationName') ]),
-      'button' => false,
-      'button_url' => '',
+      'summary'        => 'This is the body summary',
+      'greeting'       => lang('General.hello'),
+      'recipient'      => $recipient,
+      'message'        => $message,
+      'signature'      => lang('General.your_team', [$settings->getSetting('applicationName')]),
+      'button'         => false,
+      'button_url'     => '',
       'button_message' => '',
-      'button_text' => '',
+      'button_text'    => '',
       'footer_message' => 'Powered by ' . config('AppInfo')->name . ' ' . config('AppInfo')->version,
     ];
 
     if ($onScreen) {
       echo buildEmailBody($data);
       return true;
-    } else {
-      $email->setMessage(buildEmailBody($data));
-      return $email->send();
     }
+
+    $email->setMessage(buildEmailBody($data));
+
+    return $email->send();
   }
 }
 
 if (!function_exists('sendActivationEmail')) {
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Send Activation Email.
-   * --------------------------------------------------------------------------
-   *
    * Sends the account activation email.
    *
-   * @param array|object $user The user to reset the password for.
+   * @param object $user     The user to reset the password for.
+   * @param bool   $onScreen Whether to display the email on screen instead of sending.
    *
    * @return bool Returns true if the email was successfully sent, false otherwise.
    */
-  function sendActivationEmail($user, $onScreen = false): bool {
+  function sendActivationEmail(object $user, bool $onScreen = false): bool {
     /** @var \App\Entities\User $user */
-
     $settings = model(SettingsModel::class);
-    $email = initializeEmail();
+    $email    = initializeEmail();
+
+    if ($email === false) {
+      return false;
+    }
 
     $email->setTo($user->email);
     $email->setSubject(lang('Auth.activation.subject'));
@@ -105,41 +112,43 @@ if (!function_exists('sendActivationEmail')) {
     // Now, build the email body based on the template file.
     //
     $data = [
-      'summary' => lang('Auth.activation.subject'),
-      'greeting' => lang('General.hello'),
-      'recipient' => $user->username,
-      'message' => $message,
-      'signature' => lang('General.your_team', [ $settings->getSetting('applicationName') ]),
+      'summary'        => lang('Auth.activation.subject'),
+      'greeting'       => lang('General.hello'),
+      'recipient'      => $user->username,
+      'message'        => $message,
+      'signature'      => lang('General.your_team', [$settings->getSetting('applicationName')]),
       'footer_message' => 'Powered by ' . config('AppInfo')->name . ' ' . config('AppInfo')->version,
     ];
 
     if ($onScreen) {
       echo buildEmailBody($data);
       die();
-    } else {
-      $email->setMessage(buildEmailBody($data));
-      return $email->send();
     }
+
+    $email->setMessage(buildEmailBody($data));
+
+    return $email->send();
   }
 }
 
 if (!function_exists('sendResetEmail')) {
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Send Reset Email.
-   * --------------------------------------------------------------------------
-   *
    * Sends an reset password email.
    *
-   * @param array|object $user The user to reset the password for.
+   * @param object $user     The user to reset the password for.
+   * @param bool   $onScreen Whether to display the email on screen instead of sending.
    *
    * @return bool Returns true if the email was successfully sent, false otherwise.
    */
-  function sendResetEmail($user, $onScreen = false): bool {
+  function sendResetEmail(object $user, bool $onScreen = false): bool {
     /** @var \App\Entities\User $user */
-
     $settings = model(SettingsModel::class);
-    $email = initializeEmail();
+    $email    = initializeEmail();
+
+    if ($email === false) {
+      return false;
+    }
 
     $email->setTo($user->email);
     $email->setSubject(lang('Auth.forgot.subject'));
@@ -152,30 +161,28 @@ if (!function_exists('sendResetEmail')) {
     // Now, build the email body based on the template file.
     //
     $data = [
-      'summary' => lang('Auth.forgot.subject'),
-      'greeting' => lang('General.hello'),
-      'recipient' => $user->username,
-      'message' => $message,
-      'signature' => lang('General.your_team', [ $settings->getSetting('applicationName') ]),
+      'summary'        => lang('Auth.forgot.subject'),
+      'greeting'       => lang('General.hello'),
+      'recipient'      => $user->username,
+      'message'        => $message,
+      'signature'      => lang('General.your_team', [$settings->getSetting('applicationName')]),
       'footer_message' => 'Powered by ' . config('AppInfo')->name . ' ' . config('AppInfo')->version,
     ];
 
     if ($onScreen) {
       echo buildEmailBody($data);
       die();
-    } else {
-      $email->setMessage(buildEmailBody($data));
-      return $email->send();
     }
+
+    $email->setMessage(buildEmailBody($data));
+
+    return $email->send();
   }
 }
 
 if (!function_exists('buildEmailBody')) {
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Build Email Body.
-   * --------------------------------------------------------------------------
-   *
    * Builds the email body based on the template file. The following variables
    * are available:
    *
@@ -196,92 +203,89 @@ if (!function_exists('buildEmailBody')) {
    *
    * @return string The email message body.
    */
-  function buildEmailBody($data): string {
-
+  function buildEmailBody(array $data): string {
     $settings = model(SettingsModel::class);
-    $body = loadEmailTemplate();
+    $body     = loadEmailTemplate();
 
     $body = str_replace('%site_url%', base_url(), $body);
     $body = str_replace('%app_name%', $settings->getSetting('applicationName'), $body);
-    $body = str_replace('%summary%', $data['summary'], $body);
-    $body = str_replace('%greeting%', $data['greeting'], $body);
-    $body = str_replace('%recipient%', $data['recipient'], $body);
-    $body = str_replace('%message%', $data['message'], $body);
-    $body = str_replace('%signature%', $data['signature'], $body);
-    $body = str_replace('%footer_message%', $data['footer_message'], $body);
+    $body = str_replace('%summary%', (string)$data['summary'], $body);
+    $body = str_replace('%greeting%', (string)$data['greeting'], $body);
+    $body = str_replace('%recipient%', (string)$data['recipient'], $body);
+    $body = str_replace('%message%', (string)$data['message'], $body);
+    $body = str_replace('%signature%', (string)$data['signature'], $body);
+    $body = str_replace('%footer_message%', (string)$data['footer_message'], $body);
 
     return $body;
   }
 }
 
 if (!function_exists('initializeEmail')) {
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Initialize Email.
-   * --------------------------------------------------------------------------
-   *
    * Initializes the email service.
    *
-   * @return \CodeIgniter\Email\Email | bool Returns the result true or false.
+   * @return \CodeIgniter\Email\Email|false Returns the result true or false.
    */
-  function initializeEmail(): \CodeIgniter\Email\Email|bool {
-
+  function initializeEmail(): \CodeIgniter\Email\Email|false {
     $settings = model(SettingsModel::class);
-    $email = \Config\Services::email();
+    $email    = \Config\Services::email();
 
     //
     // Initialize the email settings.
     //
     $config['mailType'] = 'html';
     $config['protocol'] = 'sendmail';
+
     if ($settings->getSetting('emailSMTP')) {
-      $config['protocol'] = 'smtp';
-      $config['SMTPHost'] = $settings->getSetting('emailSMTPhost');
-      $config['SMTPPort'] = $settings->getSetting('emailSMTPport');
-      $config['SMTPUser'] = $settings->getSetting('emailSMTPusername');
-      $config['SMTPPass'] = $settings->getSetting('emailSMTPpassword');
+      $config['protocol']   = 'smtp';
+      $config['SMTPHost']   = $settings->getSetting('emailSMTPhost');
+      $config['SMTPPort']   = $settings->getSetting('emailSMTPport');
+      $config['SMTPUser']   = $settings->getSetting('emailSMTPusername');
+      $config['SMTPPass']   = $settings->getSetting('emailSMTPpassword');
       $config['SMTPCrypto'] = ($settings->getSetting('emailSMTPCrypto') !== 'none') ? $settings->getSetting('emailSMTPCrypto') : '';
     }
+
     if (!$email->initialize($config)) {
       return false;
-    } else {
-      $email->setFrom($settings->getSetting('emailReply'), $settings->getSetting('emailFrom'));
-      $email->setReplyTo($settings->getSetting('emailReply'), $settings->getSetting('emailReply'));
-      return $email;
     }
+
+    $email->setFrom($settings->getSetting('emailReply'), $settings->getSetting('emailFrom'));
+    $email->setReplyTo($settings->getSetting('emailReply'), $settings->getSetting('emailReply'));
+
+    return $email;
   }
 }
 
 if (!function_exists('loadEmailMessage')) {
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Load Email Message.
-   * --------------------------------------------------------------------------
-   *
    * Loads the email message type template file.
+   *
+   * @param string $message The message type to load.
    *
    * @return string The email template file.
    */
-  function loadEmailMessage($message = ''): string {
+  function loadEmailMessage(string $message = ''): string {
     $session = service('session');
+
     if (!strlen($message)) {
       return '';
     }
-    return file_get_contents(APPPATH . "Views/emails/" . $session->get('lang') . "/" . $message . ".html");
+
+    return (string)file_get_contents(APPPATH . 'Views/emails/' . (string)$session->get('lang') . '/' . $message . '.html');
   }
 }
 
 if (!function_exists('loadEmailTemplate')) {
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Load Email Template.
-   * --------------------------------------------------------------------------
-   *
    * Loads the basic email template file.
    *
    * @return string The email template file.
    */
   function loadEmailTemplate(): string {
-    return file_get_contents(APPPATH . "Views/emails/template.html");
+    return (string)file_get_contents(APPPATH . 'Views/emails/template.html');
   }
 }
+

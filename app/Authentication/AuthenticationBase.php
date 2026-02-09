@@ -1,17 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Authentication;
 
-use CodeIgniter\Events\Events;
-use CodeIgniter\Model;
-
-use Config\Auth as AuthConfig;
 use App\Entities\User;
 use App\Exceptions\AuthException;
 use App\Exceptions\UserNotFoundException;
 use App\Models\LoginModel;
+use CodeIgniter\Events\Events;
+use CodeIgniter\Model;
+use Config\Auth as AuthConfig;
 
-class AuthenticationBase {
+class AuthenticationBase
+{
   /**
    * @var User|null
    */
@@ -37,21 +39,16 @@ class AuthenticationBase {
    */
   protected $config;
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Constructor.
-   * --------------------------------------------------------------------------
-   *
+   * @param AuthConfig $config
    */
   public function __construct($config) {
     $this->config = $config;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Error.
-   * --------------------------------------------------------------------------
-   *
    * Returns the current error, if any.
    *
    * @return string
@@ -60,11 +57,8 @@ class AuthenticationBase {
     return $this->error;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Silent.
-   * --------------------------------------------------------------------------
-   *
    * Whether to continue instead of throwing exceptions, as defined in config.
    *
    * @return bool
@@ -73,20 +67,16 @@ class AuthenticationBase {
     return (bool)$this->config->silent;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Login.
-   * --------------------------------------------------------------------------
-   *
    * Logs a user into the system.
    * NOTE: does not perform validation. All validation should be done prior to
    * using the login method, incl. 2FA.
    *
-   * @param User $user
-   * @param bool $remember
+   * @param User|null $user
+   * @param bool      $remember
    *
    * @return bool
-   * @throws \Exception
    */
   public function login(?User $user = null, bool $remember = false): bool {
     if (empty($user)) {
@@ -140,11 +130,8 @@ class AuthenticationBase {
     return true;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Is logged in.
-   * --------------------------------------------------------------------------
-   *
    * Checks to see if the user is logged in.
    *
    * @return bool
@@ -168,20 +155,17 @@ class AuthenticationBase {
     return false;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Login by ID.
-   * --------------------------------------------------------------------------
-   *
    * Logs a user into the system by their ID.
    *
-   * @param int $id
+   * @param int  $id
    * @param bool $remember
    *
    * @return bool
    */
   public function loginByID(int $id, bool $remember = false): bool {
-    $user = $this->retrieveUser([ 'id' => $id ]);
+    $user = $this->retrieveUser(['id' => $id]);
 
     if (empty($user)) {
       throw UserNotFoundException::forUserID($id);
@@ -190,15 +174,15 @@ class AuthenticationBase {
     return $this->login($user, $remember);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Logout.
-   * --------------------------------------------------------------------------
-   *
    * Logs a user out of the system.
+   *
+   * @return void
    */
   public function logout(): void {
     helper('cookie');
+
     //
     // Destroy the session data - but ensure a session is still
     // available for flash messages, etc.
@@ -209,14 +193,17 @@ class AuthenticationBase {
         unset($_SESSION[$key]);
       }
     }
+
     //
     // Regenerate the session ID for a touch of added safety.
     //
     session()->regenerate(true);
+
     //
     // Remove the cookie
     //
     delete_cookie("remember");
+
     //
     // Handle user-specific tasks
     //
@@ -225,6 +212,7 @@ class AuthenticationBase {
       // Take care of any remember me functionality
       //
       $this->loginModel->purgeRememberTokens($user->id);
+
       //
       // Trigger logout event
       //
@@ -233,16 +221,13 @@ class AuthenticationBase {
     }
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Record login attempt.
-   * --------------------------------------------------------------------------
-   *
-   * @param string $email
-   * @param string|null $ipAddress
-   * @param int|null $userID
-   * @param bool $success
-   * @param string $info
+   * @param string   $email     User email
+   * @param bool     $success   Success or failure
+   * @param string   $info      Additional info
+   * @param string|null $ipAddress  IP address
+   * @param int|null    $userID     User ID
    *
    * @return bool|int|string
    */
@@ -257,18 +242,15 @@ class AuthenticationBase {
     ]);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Remember user.
-   * --------------------------------------------------------------------------
-   *
    * Generates a timing-attack safe remember me token and stores the necessary
    * info in the db and a cookie.
    * @see https://paragonie.com/blog/2015/04/secure-authentication-php-with-long-term-persistence
    *
    * @param int $userID
    *
-   * @throws \Exception
+   * @return void
    */
   public function rememberUser(int $userID): void {
     $selector = bin2hex(random_bytes(12));
@@ -303,16 +285,13 @@ class AuthenticationBase {
     );
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Refresh remember.
-   * --------------------------------------------------------------------------
-   *
    * Sets a new validator for this user/selector. This allows a one-time use
    * of remember-me tokens, but still allows a user to be remembered on
    * multiple browsers/devices.
    *
-   * @param int $userID
+   * @param int    $userID
    * @param string $selector
    *
    * @return void
@@ -348,7 +327,7 @@ class AuthenticationBase {
     set_cookie(
       'remember',                             // Cookie Name
       $selector . ':' . $validator,           // Value
-      (string)$this->config->rememberLength,  // # Seconds until it expires
+      (int)$this->config->rememberLength,  // # Seconds until it expires
       $cookieConfig->domain,
       $cookieConfig->path,
       $cookieConfig->prefix,
@@ -357,11 +336,8 @@ class AuthenticationBase {
     );
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Id.
-   * --------------------------------------------------------------------------
-   *
    * Returns the User ID for the current logged in user.
    *
    * @return int|null
@@ -370,11 +346,8 @@ class AuthenticationBase {
     return $this->user?->id ?? null;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * User.
-   * --------------------------------------------------------------------------
-   *
    * Returns the User instance for the current logged in user.
    *
    * @return User|null
@@ -383,11 +356,8 @@ class AuthenticationBase {
     return $this->user;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Retrieve user.
-   * --------------------------------------------------------------------------
-   *
    * Grabs the current user from the database.
    *
    * @param array $wheres
@@ -401,35 +371,29 @@ class AuthenticationBase {
     return $this->userModel->where($wheres)->first();
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Set user model.
-   * --------------------------------------------------------------------------
-   *
    * Sets the model that should be used to work with user accounts.
    *
    * @param Model $model
    *
-   * @return $this
+   * @return AuthenticationBase
    */
   public function setUserModel(Model $model): AuthenticationBase {
     $this->userModel = $model;
     return $this;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Set login model.
-   * --------------------------------------------------------------------------
-   *
    * Sets the model that should be used to record login attempts (but failed
    * and successful).
    *
    * @param LoginModel $model
    *
-   * @return $this
+   * @return AuthenticationBase
    */
-  public function setLoginModel(Model $model): AuthenticationBase {
+  public function setLoginModel(LoginModel $model): AuthenticationBase {
     $this->loginModel = $model;
     return $this;
   }

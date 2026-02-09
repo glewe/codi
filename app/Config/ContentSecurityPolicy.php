@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Config;
 
 use CodeIgniter\Config\BaseConfig;
@@ -13,7 +15,8 @@ use CodeIgniter\Config\BaseConfig;
  *
  * @see https://www.html5rocks.com/en/tutorials/security/content-security-policy/
  */
-class ContentSecurityPolicy extends BaseConfig {
+class ContentSecurityPolicy extends BaseConfig
+{
   // -------------------------------------------------------------------------
   // Broadbrush CSP management
   // -------------------------------------------------------------------------

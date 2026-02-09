@@ -1,27 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Commands;
 
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
 
-class CreateRole extends BaseCommand {
-
+class CreateRole extends BaseCommand
+{
   protected $role = 'Auth';
   protected $name = 'auth:create_role';
-  protected $description = "Adds a new role to the database.";
+  protected $description = 'Adds a new role to the database.';
 
-  protected $usage = "auth:create_role [name] [description]";
+  protected $usage = 'auth:create_role [name] [description]';
+
+  /**
+   * @var array<string, string>
+   */
   protected $arguments = [
-    'name' => "The name of the new role to create",
+    'name' => 'The name of the new role to create',
     'description' => "Optional description 'in quotes'",
   ];
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Run.
-   * --------------------------------------------------------------------------
-   *
    * This method is responsible for creating a new role in the system.
    * It takes an array of parameters as input, which should contain the role's
    * name and description.
@@ -32,8 +35,10 @@ class CreateRole extends BaseCommand {
    * If the creation fails, it outputs an error message.
    *
    * @param array $params An array of parameters. The first element should be the role's name and the second element should be the role's description.
+   *
+   * @return void
    */
-  public function run(array $params = []) {
+  public function run(array $params = []): void {
     $auth = service('authorization');
 
     // consume or prompt for role name

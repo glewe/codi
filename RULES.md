@@ -18,8 +18,9 @@ All PHP code MUST adhere to the PSR-12 specification.
 - **Modifiers:** `abstract` and `final` go before visibility; `static` goes after.
 
 ### Braces & Spacing
-- **Classes/Methods:** Opening brace `{` on its own line. Closing brace `}` on its own line.
-- **Control Structures:** One space after keywords (if, for, while). All control structures have opening and closing braces. Opening brace `{` on the SAME line as the condition.
+- **Classes:** Opening brace `{` on its own line. Closing brace `}` on its own line.
+- **Methods:** Opening brace `{` on the same line as the method declaration. Closing brace `}` on its own line.
+- **Control Structures:** One space after keywords (if, for, while). All control structures have opening and closing braces. Opening brace `{` on the same line as the condition.
 - **Anonymous Classes:** Follow the same logic as methods.
 
 ### Types & Naming

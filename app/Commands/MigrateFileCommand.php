@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Commands;
 
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
 use Config\Services;
 
-class MigrateFileCommand extends BaseCommand {
+class MigrateFileCommand extends BaseCommand
+{
   /**
    * The Command's Group
    *
@@ -41,7 +44,7 @@ class MigrateFileCommand extends BaseCommand {
    * @var array<string, string>
    */
   protected $arguments = [
-    'name' => 'The valid migration file path beginning from the ROOTPATH. For example: php spark migrate:file "app\Database\Migrations\2022-02-16-101819_AddBlogMigration.php"'
+    'name' => 'The valid migration file path beginning from the ROOTPATH. For example: php spark migrate:file "app\Database\Migrations\2022-02-16-101819_AddBlogMigration.php"',
   ];
 
   /**
@@ -54,19 +57,16 @@ class MigrateFileCommand extends BaseCommand {
     '--dbgroup' => 'Set database group. Default: "default".',
   ];
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Run.
-   * --------------------------------------------------------------------------
-   *
    * Actually execute a command.
    *
    * @param array $params
    */
   public function run(array $params): void {
-    CLI::write("Running migration...", 'yellow');
+    CLI::write('Running migration...', 'yellow');
 
-    $message = "";
+    $message = '';
     $paramsSize = count($params);
 
     if (!$paramsSize) {
@@ -83,8 +83,8 @@ class MigrateFileCommand extends BaseCommand {
     }
 
     $runner = Services::migrations();
-    $namespace = ($params['namespace'] ?? CLI::getOption('namespace')) ?: "App";
-    $dbgroup = ($params['dbgroup'] ?? CLI::getOption('dbgroup')) ?: "default";
+    $namespace = ($params['namespace'] ?? CLI::getOption('namespace')) ?: 'App';
+    $dbgroup = ($params['dbgroup'] ?? CLI::getOption('dbgroup')) ?: 'default';
 
     try {
       if (!$runner->force(ROOTPATH . $params[0], $namespace, $dbgroup)) {

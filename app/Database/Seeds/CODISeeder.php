@@ -4,7 +4,8 @@ namespace App\Database\Seeds;
 
 use CodeIgniter\Database\Seeder;
 
-class CODISeeder extends Seeder {
+class CODISeeder extends Seeder
+{
   //---------------------------------------------------------------------------
   /**
    * Seed the tables with sample data.

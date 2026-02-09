@@ -1,27 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Commands;
 
+use App\Entities\User;
+use App\Models\UserModel;
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
-use App\Models\UserModel;
 
-class ActivateUser extends BaseCommand {
+class ActivateUser extends BaseCommand
+{
   protected $role = 'Auth';
   protected $name = 'auth:activate_user';
   protected $description = 'Activate Existing User.';
 
   protected $usage = 'auth:activate_user [identity]';
-  /** @var array<string, string> */
+
+  /**
+   * @var array<string, string>
+   */
   protected $arguments = [
     'identity' => 'User identity.',
   ];
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Run.
-   * --------------------------------------------------------------------------
-   *
    * This method is responsible for activating a user in the system.
    * It takes an array of parameters as input, which should contain the user's identity.
    * If the identity is not provided, it prompts the user to enter it.
@@ -52,7 +56,7 @@ class ActivateUser extends BaseCommand {
     if (!$user) {
       CLI::write('User with identity: ' . $identity . ' not found.', 'red');
     } else {
-      /** @var \App\Entities\User $user */
+      /** @var User $user */
       $user->active = true;
 
       if ($userModel->save($user)) {

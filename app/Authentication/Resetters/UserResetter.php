@@ -1,19 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Authentication\Resetters;
 
 use App\Entities\User;
 
-class UserResetter extends BaseResetter implements ResetterInterface {
+class UserResetter extends BaseResetter implements ResetterInterface
+{
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Send.
-   * --------------------------------------------------------------------------
-   *
    * Sends reset message to the user via specified class
    * in `$activeResetter` setting in Config\Auth.php.
    *
-   * @param User $user
+   * @param User|null $user
    *
    * @return bool
    */
@@ -28,7 +28,7 @@ class UserResetter extends BaseResetter implements ResetterInterface {
     $class->setConfig($this->config);
 
     if ($class->send($user) === false) {
-      log_message('error', lang('Auth.forgot.error_reset', [ $user->username ]));
+      log_message('error', lang('Auth.forgot.error_reset', [$user->username]));
       $this->error = $class->error();
 
       return false;

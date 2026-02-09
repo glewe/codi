@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * ============================================================================
  * Gravatar Helper Functions
@@ -10,11 +12,8 @@
  */
 
 if (!function_exists('gravatar')) {
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Gravatar.
-   * --------------------------------------------------------------------------
-   *
    * Generates a Gravatar URL or an image tag for a specified email address.
    * This helper function has been added here for compatibility with PyroCMS.
    *
@@ -30,16 +29,27 @@ if (!function_exists('gravatar')) {
    *
    * @return string The Gravatar URL or an HTML image tag.
    */
-  function gravatar($email = '', $size = 50, $rating = 'g', $url_only = false, $default = false) {
+  function gravatar(
+    string $email = '',
+    int $size = 50,
+    string $rating = 'g',
+    bool $url_only = false,
+    mixed $default = false
+  ): string {
     /** @var \App\Libraries\Gravatar $gravatar */
     $gravatar = new \App\Libraries\Gravatar();
-    if (@ (string)$default == '') {
+
+    if ((string)$default === '') {
       $default = null;
     }
+
     $gravatar_url = $gravatar->get($email, $size, $default, null, $rating);
+
     if ($url_only) {
       return $gravatar_url;
     }
+
     return '<img src="' . $gravatar_url . '" alt="Gravatar" class="gravatar" />';
   }
 }
+

@@ -1,54 +1,49 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Authentication;
 
 use App\Entities\User;
 
-interface AuthenticatorInterface {
+interface AuthenticatorInterface
+{
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Attempt.
-   * --------------------------------------------------------------------------
-   *
    * Attempts to validate the credentials and log a user in.
    *
-   * @param array $credentials
-   * @param bool  $remember Should we remember the user (if enabled)
+   * @param array     $credentials  User credentials
+   * @param bool|null $remember     Should we remember the user (if enabled)
    *
    * @return bool
    */
   public function attempt(array $credentials, ?bool $remember = null): bool;
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Check.
-   * --------------------------------------------------------------------------
-   *
    * Checks to see if the user is logged in or not.
    *
    * @return bool
    */
   public function check(): bool;
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Validate.
-   * --------------------------------------------------------------------------
-   *
    * Checks the user's credentials to see if they could authenticate.
    * Unlike `attempt()`, will not log the user into the system.
    *
-   * @param array $credentials
-   * @param bool  $returnUser
+   * @param array $credentials  User credentials
+   * @param bool  $returnUser   Whether to return the user object
    *
    * @return bool|User
    */
-  public function validate(array $credentials, bool $returnUser = false);
+  public function validate(array $credentials, bool $returnUser = false): bool|User;
 
+  //---------------------------------------------------------------------------
   /**
    * Returns the User instance for the current logged in user.
    *
    * @return User|null
    */
-  public function user();
+  public function user(): ?User;
 }

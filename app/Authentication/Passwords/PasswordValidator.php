@@ -1,36 +1,45 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Authentication\Passwords;
 
-use Config\Auth as AuthConfig;
 use App\Entities\User;
 use App\Exceptions\AuthException;
+use Config\Auth as AuthConfig;
 
-class PasswordValidator {
-
+class PasswordValidator
+{
   /**
    * @var AuthConfig
    */
   protected $config;
 
+  /**
+   * @var string
+   */
   protected $error;
 
+  /**
+   * @var string
+   */
   protected $suggestion;
 
+  //---------------------------------------------------------------------------
+  /**
+   * @param AuthConfig $config
+   */
   public function __construct(AuthConfig $config) {
     $this->config = $config;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Check.
-   * --------------------------------------------------------------------------
-   *
    * Checks a password against all of the Validators specified
    * in `$passwordValidators` setting in Config\Auth.php.
    *
-   * @param string $password
-   * @param User   $user
+   * @param string    $password  Password to check
+   * @param User|null $user      User entity
    *
    * @return bool
    */
@@ -65,30 +74,24 @@ class PasswordValidator {
     return $valid;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Error.
-   * --------------------------------------------------------------------------
-   *
    * Returns the current error, as defined by validator it failed to pass.
    *
-   * @return mixed
+   * @return string|null
    */
-  public function error() {
+  public function error(): ?string {
     return $this->error;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Suggestion.
-   * --------------------------------------------------------------------------
-   *
    * Returns a string with any suggested fix based on the validator it failed
    * to pass.
    *
-   * @return mixed
+   * @return string|null
    */
-  public function suggestion() {
+  public function suggestion(): ?string {
     return $this->suggestion;
   }
 }

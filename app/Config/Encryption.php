@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Config;
 
 use CodeIgniter\Config\BaseConfig;
@@ -10,7 +12,8 @@ use CodeIgniter\Config\BaseConfig;
  * These are the settings used for encryption, if you don't pass a parameter
  * array to the encrypter for creation/initialization.
  */
-class Encryption extends BaseConfig {
+class Encryption extends BaseConfig
+{
   /**
    * --------------------------------------------------------------------------
    * Encryption Key Starter

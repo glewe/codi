@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Config;
 
 use CodeIgniter\Modules\Modules as BaseModules;
@@ -11,7 +13,8 @@ use CodeIgniter\Modules\Modules as BaseModules;
  *       and does not extend BaseConfig.
  *
  */
-class Modules extends BaseModules {
+class Modules extends BaseModules
+{
   /**
    * --------------------------------------------------------------------------
    * Enable Auto-Discovery?

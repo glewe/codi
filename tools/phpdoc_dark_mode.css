@@ -1,0 +1,169 @@
+:root {
+  --primary-color: #3b82f6;
+  --primary-color-hover: #60a5fa;
+  --bg-color: #121212;
+  --surface-color: #1e1e1e;
+  --text-color: #e0e0e0;
+  --text-muted: #a0a0a0;
+  --border-color: #333333;
+  --code-bg: #2b2b2b;
+  --link-color: #64b5f6;
+  --link-hover-color: #ffb300;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+/* Sidebar */
+.phpdocumentor-sidebar {
+  /* background-color: var(--surface-color); */
+  border-right: 1px solid var(--border-color) !important;
+}
+
+.phpdocumentor-sidebar__category-header {
+  color: var(--primary-color) !important;
+  font-weight: 600 !important;
+}
+
+.phpdocumentor-list__entry a {
+  color: var(--text-color);
+}
+
+.phpdocumentor-list__entry a:hover {
+  color: var(--primary-color-hover);
+}
+
+/* Content */
+.phpdocumentor-content {
+  background-color: var(--bg-color);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--text-color);
+}
+
+a {
+  color: var(--link-color) !important;
+}
+
+a:hover {
+  color: var(--link-hover-color) !important;
+}
+
+/* Breadcrumbs */
+.phpdocumentor-breadcrumbs {
+  color: var(--text-muted);
+}
+
+.phpdocumentor-breadcrumbs__link {
+  color: var(--link-color);
+}
+
+/* Elements / Methods / Properties */
+.phpdocumentor-element__name {
+  color: var(--text-color);
+}
+
+.phpdocumentor-element.-method .phpdocumentor-element__name,
+.phpdocumentor-element.-function .phpdocumentor-element__name {
+  color: #ffd700;
+  /* Gold for methods */
+}
+
+.phpdocumentor-element.-property .phpdocumentor-element__name {
+  color: #ce93d8;
+  /* Light purple for properties */
+}
+
+.phpdocumentor-element__package {
+  color: var(--text-muted);
+}
+
+/* Code blocks */
+code,
+pre,
+.phpdocumentor-signature {
+  background-color: var(--code-bg) !important;
+  color: #dcdCDC !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+/* Tables */
+.table {
+  color: var(--text-color);
+  background-color: var(--surface-color);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.table-bordered td,
+.table-bordered th {
+  border: 1px solid var(--border-color);
+}
+
+/* Search */
+.phpdocumentor-search-results__header,
+.phpdocumentor-search-results__body {
+  background-color: var(--surface-color);
+  color: var(--text-color);
+}
+
+.phpdocumentor-search-results__hit {
+  background-color: var(--surface-color);
+}
+
+.phpdocumentor-search-results__hit:hover {
+  background-color: var(--code-bg);
+}
+
+.phpdocumentor-search-results__entry small {
+  color: var(--primary-color) !important;
+}
+
+/* Mobile menu */
+.phpdocumentor-topnav {
+  background-color: var(--surface-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Modals if any */
+.modal-content {
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+}
+
+.modal-header,
+.modal-footer {
+  border-color: var(--border-color);
+}
+
+.close {
+  color: var(--text-color);
+  text-shadow: none;
+}
+
+/* Search Box Input */
+.phpdocumentor-field {
+  background-color: var(--surface-color) !important;
+  color: var(--text-color) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+::placeholder {
+  color: var(--text-muted) !important;
+}
+
+/* Search Dropdown Backdrop */
+.phpdocumentor-search-results {
+  background-color: var(--surface-color) !important;
+  border: 1px solid var(--border-color) !important;
+}

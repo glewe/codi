@@ -1,21 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controllers;
 
-use CodeIgniter\Controller;
-use CodeIgniter\I18n\Time;
-use Config\Lic as LicConfig;
-use App\Controllers\BaseController;
 use App\Libraries\Bootstrap;
 use App\Models\SettingsModel;
+use CodeIgniter\I18n\Time;
+use Config\Lic as LicConfig;
 
-class LicController extends BaseController {
+/**
+ * Class LicController
+ */
+class LicController extends BaseController
+{
   /**
-   * Bootstrap library.
-   *
-   * @var Bootstrap
+   * Check the BaseController for inherited properties and methods.
    */
-  protected $bs;
 
   /**
    * The license key.
@@ -24,7 +25,7 @@ class LicController extends BaseController {
    *
    * @var string
    */
-  public $key = '';
+  public string $key = '';
 
   /**
    * The license details.
@@ -41,7 +42,7 @@ class LicController extends BaseController {
    *
    * @var string
    */
-  private $domain;
+  private string $domain;
 
   /**
    * The Lic config class.
@@ -51,32 +52,22 @@ class LicController extends BaseController {
    */
   public $licConfig;
 
+  //---------------------------------------------------------------------------
   /**
-   * Settings Model.
-   * Needed to read from application settings records.
-   *
-   * @var SettingsModel
-   */
-  protected $settingsModel;
-
-  /**
-   * --------------------------------------------------------------------------
    * Constructor.
-   * --------------------------------------------------------------------------
+   *
+   * @param string $key
    */
-  public function __construct($key = '') {
-    $this->bs = new Bootstrap();
-    $this->licConfig = config('Lic');
-    $this->domain = $_SERVER['SERVER_NAME'];
-    $this->key = $key;
-    $this->settingsModel = model(SettingsModel::class);
+  public function __construct(string $key = '') {
+    $this->bs            = new Bootstrap();
+    $this->licConfig     = config('Lic');
+    $this->domain        = $_SERVER['SERVER_NAME'];
+    $this->key           = $key;
+    $this->settings      = model(SettingsModel::class);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Index.
-   * --------------------------------------------------------------------------
-   *
    * Handles the license page.
    *
    * @return \CodeIgniter\HTTP\RedirectResponse|mixed
@@ -98,7 +89,12 @@ class LicController extends BaseController {
       //
       // A form was submitted. Let's see what it was...
       //
-      if (array_key_exists('btn_activate', $this->request->getPost()) || array_key_exists('btn_register', $this->request->getPost())) {
+      if (
+        array_key_exists('btn_activate', $this->request->getPost()) || array_key_exists(
+          'btn_register',
+          $this->request->getPost()
+        )
+      ) {
         $this->activate();
         return redirect()->route('license');
       } elseif (array_key_exists('btn_deregister', $this->request->getPost())) {
@@ -110,33 +106,33 @@ class LicController extends BaseController {
       }
     }
 
-    return $this->_render($this->licConfig->views['license'], [
-      'page' => lang('Lic.pageTitle'),
-      'config' => $this->licConfig,
-      'licenseKey' => $this->key,
-      'licStatus' => $this->status(),
-      'L' => $this,
-    ]);
+    return $this->_render(
+      $this->licConfig->views['license'],
+      [
+        'page'       => lang('Lic.pageTitle'),
+        'config'     => $this->licConfig,
+        'licenseKey' => $this->key,
+        'licStatus'  => $this->status(),
+        'L'          => $this,
+      ]
+    );
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Activate.
-   * --------------------------------------------------------------------------
-   *
    * Activates a license key (and registers the domain that the request is
    * coming from).
    *
-   * @return object
+   * @return object|\CodeIgniter\HTTP\RedirectResponse
    */
   public function activate() {
-    $parms = array(
-      'slm_action' => 'slm_activate',
-      'secret_key' => $this->licConfig->secretKey,
-      'license_key' => $this->key,
+    $parms = [
+      'slm_action'        => 'slm_activate',
+      'secret_key'        => $this->licConfig->secretKey,
+      'license_key'       => $this->key,
       'registered_domain' => $this->domain,
-      'item_reference' => urlencode($this->licConfig->itemReference),
-    );
+      'item_reference'    => urlencode($this->licConfig->itemReference),
+    ];
 
     $response = $this->callAPI('GET', $this->licConfig->licenseServer, $parms);
 
@@ -144,7 +140,7 @@ class LicController extends BaseController {
       return redirect()->route('license')->with('error', lang('Lic.alert.api_error'));
     }
 
-    $response = json_decode((string)$response);
+    $response = json_decode((string) $response);
 
     if ($response->result == 'error') {
       return redirect()->route('license')->with('error', $response->message);
@@ -153,24 +149,20 @@ class LicController extends BaseController {
     return $response;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * CallAPI.
-   * --------------------------------------------------------------------------
-   *
    * License server API call.
    *
    * @param string $method POST, PUT, GET, ...
-   * @param string $url API host URL
-   * @param array $data URL paramater: array("param" => "value") ==> index.php?param=value
+   * @param string $url    API host URL
+   * @param array  $data   URL paramater: array("param" => "value") ==> index.php?param=value
    *
    * @return bool|object|string
    */
-  public function callAPI($method, $url, array $data = []): bool|object|string {
+  public function callAPI(string $method, string $url, array $data = []): bool|object|string {
     $curl = curl_init();
 
     switch (strtoupper($method)) {
-
       case "POST":
         curl_setopt($curl, CURLOPT_POST, 1);
         if ($data) {
@@ -204,23 +196,20 @@ class LicController extends BaseController {
     return $result;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Deactivate.
-   * --------------------------------------------------------------------------
-   *
    * De-registers the domain the request is coming from.
    *
-   * @return object
+   * @return object|\CodeIgniter\HTTP\RedirectResponse
    */
-  public function deactivate(): object {
-    $parms = array(
-      'slm_action' => 'slm_deactivate',
-      'secret_key' => $this->licConfig->secretKey,
-      'license_key' => $this->key,
+  public function deactivate() {
+    $parms = [
+      'slm_action'        => 'slm_deactivate',
+      'secret_key'        => $this->licConfig->secretKey,
+      'license_key'       => $this->key,
       'registered_domain' => $this->domain,
-      'item_reference' => urlencode($this->licConfig->itemReference),
-    );
+      'item_reference'    => urlencode($this->licConfig->itemReference),
+    ];
 
     $response = $this->callAPI('GET', $this->licConfig->licenseServer, $parms);
 
@@ -228,7 +217,7 @@ class LicController extends BaseController {
       return redirect()->route('license')->with('error', lang('Lic.alert.api_error'));
     }
 
-    $response = json_decode((string)$response);
+    $response = json_decode((string) $response);
 
     if ($response->result == 'error') {
       return redirect()->route('license')->with('error', $response->message);
@@ -237,28 +226,22 @@ class LicController extends BaseController {
     return $response;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Days to expiry.
-   * --------------------------------------------------------------------------
-   *
    * Returns the days until expiry.
    *
    * @return int
    */
   public function daysToExpiry(): int {
-    $todayDate = new Time('now');
-    $expiryDate = new Time($this->details->date_expiry);
+    $todayDate    = new Time('now');
+    $expiryDate   = new Time($this->details->date_expiry);
     $daysToExpiry = $todayDate->diff($expiryDate);
 
     return intval($daysToExpiry->format('%R%a'));
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Domain registered.
-   * --------------------------------------------------------------------------
-   *
    * Checks whether the current domain is registered.
    *
    * @return bool
@@ -276,11 +259,8 @@ class LicController extends BaseController {
     }
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Expiry warning.
-   * --------------------------------------------------------------------------
-   *
    * Returns an alert message when the expiry threshold is reached.
    *
    * @return string
@@ -289,11 +269,13 @@ class LicController extends BaseController {
     $html = '';
     if ($this->daysToExpiry() <= $this->licConfig->expiryWarning) {
       $html = $this->bs->toast([
-        'title' => lang('Lic.expiringsoon'),
-        'time' => date('Y-m-d H:i'),
-        'style' => 'warning',
-        'body' => lang('Lic.expiringsoon_subject', [ $this->daysToExpiry() ]) . '<br>' . lang('Lic.expiringsoon_help'),
-        'delay' => 5000,
+        'title'        => lang('Lic.expiringsoon'),
+        'time'         => date('Y-m-d H:i'),
+        'style'        => 'warning',
+        'body'         => lang('Lic.expiringsoon_subject', [$this->daysToExpiry()]) . '<br>' . lang(
+          'Lic.expiringsoon_help'
+        ),
+        'delay'        => 5000,
         'custom_style' => false,
       ]);
     }
@@ -301,11 +283,8 @@ class LicController extends BaseController {
     return $html;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get key.
-   * --------------------------------------------------------------------------
-   *
    * Reads the value of the license key property.
    *
    * @return string
@@ -314,21 +293,18 @@ class LicController extends BaseController {
     return $this->key;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Load.
-   * --------------------------------------------------------------------------
-   *
    * Loads the license information from license server.
    *
    * @return \CodeIgniter\HTTP\RedirectResponse|bool
    */
   public function load(): \CodeIgniter\HTTP\RedirectResponse|bool {
-    $parms = array(
-      'slm_action' => 'slm_check',
-      'secret_key' => $this->licConfig->secretKey,
+    $parms = [
+      'slm_action'  => 'slm_check',
+      'secret_key'  => $this->licConfig->secretKey,
       'license_key' => $this->key,
-    );
+    ];
 
     $response = $this->callAPI('GET', $this->licConfig->licenseServer, $parms);
 
@@ -336,7 +312,7 @@ class LicController extends BaseController {
       return redirect()->route('license')->with('error', lang('Lic.alert.api_error'));
     }
 
-    $response = json_decode((string)$response);
+    $response = json_decode((string) $response);
 
     if ($response->result === 'error') {
       return redirect()->route('license')->with('error', $response->message);
@@ -346,11 +322,8 @@ class LicController extends BaseController {
     return true;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Read key.
-   * --------------------------------------------------------------------------
-   *
    * Reads the license key from the database.
    *
    * @return void
@@ -362,63 +335,57 @@ class LicController extends BaseController {
     // here e.g. from a database with this pseudo code
     // $this->key = read_key_from_db();
     //
-//    $this->key = 'CI4-61df038a2d0cb';
-    $this->key = $this->settingsModel->getSetting('licenseKey');
+    // $this->key = 'CI4-61df038a2d0cb';
+    $this->key = $this->settings->getSetting('licenseKey');
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Save key.
-   * --------------------------------------------------------------------------
-   *
    * Saves the license key to the database.
+   *
+   * @param string $value
    *
    * @return void
    */
-  public function saveKey($value): void {
+  public function saveKey(string $value): void {
     //
     // You may want to use this method to save the license key elsewhere
     // e.g. to a database with this pseudo code
     // save_key_to_db($this->key);
     //
-    $this->settingsModel->saveSetting([ 'key' => 'licensekey', 'value' => $value ]);
+    $this->settings->saveSetting(['key' => 'licensekey', 'value' => $value]);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Set key.
-   * --------------------------------------------------------------------------
-   *
    * Sets the class license key.
    *
    * @param string $key The license key
    *
    * @return void
    */
-  public function setKey($key): void {
+  public function setKey(string $key): void {
     $this->key = $key;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Show.
-   * --------------------------------------------------------------------------
-   *
    * Creates a table with license details and displays it inside a Bootstrap
    * alert box. This method assumes that your application uses Bootstrap 5.
    *
-   * @param object $data License information array
+   * @param object $data        License information array
+   * @param bool   $showDetails
    *
    * @return string HTML
    */
-  public function show($data, $showDetails = false): string {
+  public function show(object $data, bool $showDetails = false): string {
     if (isset($data->result) && $data->result == "error") {
-      $alert['type'] = 'danger';
-      $alert['title'] = lang('Lic.invalid');
+      $alert['type']    = 'danger';
+      $alert['title']   = lang('Lic.invalid');
       $alert['subject'] = lang('Lic.invalid_subject');
-      $alert['text'] = lang('Lic.invalid_text');
-      $alert['help'] = lang('Lic.invalid_help');
-      $details = "";
+      $alert['text']    = lang('Lic.invalid_text');
+      $alert['help']    = lang('Lic.invalid_help');
+      $details          = "";
     } else {
       $domains = "";
       if (count($data->registered_domains)) {
@@ -434,72 +401,69 @@ class LicController extends BaseController {
 
       switch ($this->status()) {
         case "expired":
-          $alert['type'] = 'warning';
-          $alert['title'] = lang('Lic.expired');
+          $alert['type']    = 'warning';
+          $alert['title']   = lang('Lic.expired');
           $alert['subject'] = lang('Lic.expired_subject');
-          $alert['text'] = '';
-          $alert['help'] = lang('Lic.expired_help');
+          $alert['text']    = '';
+          $alert['help']    = lang('Lic.expired_help');
           break;
         case "blocked":
-          $alert['type'] = 'warning';
-          $alert['title'] = lang('Lic.blocked');
+          $alert['type']    = 'warning';
+          $alert['title']   = lang('Lic.blocked');
           $alert['subject'] = lang('Lic.blocked_subject');
-          $alert['text'] = '';
-          $alert['help'] = lang('Lic.blocked_help');
+          $alert['text']    = '';
+          $alert['help']    = lang('Lic.blocked_help');
           break;
         case "pending":
-          $alert['type'] = 'warning';
-          $alert['title'] = lang('Lic.pending');
+          $alert['type']    = 'warning';
+          $alert['title']   = lang('Lic.pending');
           $alert['subject'] = lang('Lic.pending_subject');
-          $alert['text'] = '';
-          $alert['help'] = lang('Lic.pending_help');
+          $alert['text']    = '';
+          $alert['help']    = lang('Lic.pending_help');
           break;
         case "unregistered":
-          $alert['type'] = 'warning';
-          $alert['title'] = lang('Lic.active');
+          $alert['type']    = 'warning';
+          $alert['title']   = lang('Lic.active');
           $alert['subject'] = lang('Lic.active_unregistered_subject');
-          $alert['text'] = '';
-          $alert['help'] = '';
+          $alert['text']    = '';
+          $alert['help']    = '';
           break;
         case "active":
         default:
-          $alert['type'] = 'success';
-          $alert['title'] = lang('Lic.active');
+          $alert['type']    = 'success';
+          $alert['title']   = lang('Lic.active');
           $alert['subject'] = lang('Lic.active_subject');
-          $alert['text'] = '';
-          $alert['help'] = '';
+          $alert['text']    = '';
+          $alert['help']    = '';
           break;
       }
       $details = "
-      <table class=\"table table-hover\">
-        <tr class=\"table-" . $alert['type'] . "\"><th>" . lang('Lic.product') . ":</th><td>" . $data->product_ref . "</td></tr>
-        <tr class=\"table-" . $alert['type'] . "\"><th>" . lang('Lic.key') . ":</th><td>" . $data->license_key . "</td></tr>
-        <tr class=\"table-" . $alert['type'] . "\"><th>" . lang('Lic.name') . ":</th><td>" . $data->first_name . " " . $data->last_name . "</td></tr>
-        <tr class=\"table-" . $alert['type'] . "\"><th>" . lang('Lic.email') . ":</th><td>" . $data->email . "</td></tr>
-        <tr class=\"table-" . $alert['type'] . "\"><th>" . lang('Lic.company') . ":</th><td>" . $data->company_name . "</td></tr>
-        <tr class=\"table-" . $alert['type'] . "\"><th>" . lang('Lic.date_created') . ":</th><td>" . $data->date_created . "</td></tr>
-        <tr class=\"table-" . $alert['type'] . "\"><th>" . lang('Lic.date_renewed') . ":</th><td>" . $data->date_renewed . "</td></tr>
-        <tr class=\"table-" . $alert['type'] . "\"><th>" . lang('Lic.date_expiry') . ":</th><td>" . $data->date_expiry . $daysleft . "</td></tr>
-        <tr class=\"table-" . $alert['type'] . "\"><th>" . lang('Lic.registered_domains') . ":</th><td>" . $domains . "</td></tr>
-      </table>";
+       <table class=\"table table-hover\">
+         <tr class=\"table-" . $alert['type'] . "\"><th>" . lang('Lic.product') . ":</th><td>" . $data->product_ref . "</td></tr>
+         <tr class=\"table-" . $alert['type'] . "\"><th>" . lang('Lic.key') . ":</th><td>" . $data->license_key . "</td></tr>
+         <tr class=\"table-" . $alert['type'] . "\"><th>" . lang('Lic.name') . ":</th><td>" . $data->first_name . " " . $data->last_name . "</td></tr>
+         <tr class=\"table-" . $alert['type'] . "\"><th>" . lang('Lic.email') . ":</th><td>" . $data->email . "</td></tr>
+         <tr class=\"table-" . $alert['type'] . "\"><th>" . lang('Lic.company') . ":</th><td>" . $data->company_name . "</td></tr>
+         <tr class=\"table-" . $alert['type'] . "\"><th>" . lang('Lic.date_created') . ":</th><td>" . $data->date_created . "</td></tr>
+         <tr class=\"table-" . $alert['type'] . "\"><th>" . lang('Lic.date_renewed') . ":</th><td>" . $data->date_renewed . "</td></tr>
+         <tr class=\"table-" . $alert['type'] . "\"><th>" . lang('Lic.date_expiry') . ":</th><td>" . $data->date_expiry . $daysleft . "</td></tr>
+         <tr class=\"table-" . $alert['type'] . "\"><th>" . lang('Lic.registered_domains') . ":</th><td>" . $domains . "</td></tr>
+       </table>";
     }
 
     return $this->bs->alert([
-      'type' => $alert['type'],
-      'icon' => '',
-      'title' => $alert['title'],
-      'subject' => $alert['subject'],
-      'text' => $alert['text'],
-      'help' => (strlen($alert['help']) ? "<p><i>" . $alert['help'] . "</i></p>" : "") . (($showDetails) ? $details : ''),
+      'type'        => $alert['type'],
+      'icon'        => '',
+      'title'       => $alert['title'],
+      'subject'     => $alert['subject'],
+      'text'        => $alert['text'],
+      'help'        => (strlen($alert['help']) ? "<p><i>" . $alert['help'] . "</i></p>" : "") . (($showDetails) ? $details : ''),
       'dismissible' => false,
     ]);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Status.
-   * --------------------------------------------------------------------------
-   *
    * Get license status.
    *
    * @return string active/blocked/invalid/expired/pending/unregistered

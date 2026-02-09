@@ -1,70 +1,65 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controllers;
 
-use CodeIgniter\Session\Session;
-
-use Config\Auth as AuthConfig;
+use App\Authorization\FlatAuthorization;
 use App\Models\PermissionModel;
+use CodeIgniter\Validation\Validation;
+use Config\Auth as AuthConfig;
 
-use App\Controllers\BaseController;
-use Config\Validation;
-use App\Models\LogModel;
+/**
+ * Class PermissionController
+ */
+class PermissionController extends BaseController
+{
+  /**
+   * Check the BaseController for inherited properties and methods.
+   */
 
-class PermissionController extends BaseController {
   /**
    * @var string Log type used in log entries from this controller.
    */
-  protected $logType;
+  protected string $logType;
 
-  protected $auth;
+  /**
+   * @var FlatAuthorization
+   */
+  protected FlatAuthorization $auth;
 
   /**
    * @var AuthConfig
    */
-  protected $authConfig;
+  protected AuthConfig $authConfig;
 
   /**
-   * @var Session
+   * @var Validation
    */
-  protected $session;
+  protected Validation $validation;
 
+  //---------------------------------------------------------------------------
   /**
-   * @var \CodeIgniter\Validation\Validation
-   */
-  protected $validation;
-
-  /**
-   * --------------------------------------------------------------------------
    * Constructor.
-   * --------------------------------------------------------------------------
    */
   public function __construct() {
-    //
-    // Most services in this controller require the session to be started
-    //
-    $this->LOG = model(LogModel::class);
-    $this->logType = 'Permission';
-    $this->session = service('session');
+    $this->logType    = 'Permission';
     $this->authConfig = config('Auth');
-    $this->auth = service('authorization');
+    $this->auth       = service('authorization');
     $this->validation = service('validation');
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Permissions.
-   * --------------------------------------------------------------------------
-   *
    * Shows all permission records.
    *
    * @return \CodeIgniter\HTTP\RedirectResponse | string
    */
-  public function permissions(): \CodeIgniter\HTTP\RedirectResponse | string {
+  public function permissions(): \CodeIgniter\HTTP\RedirectResponse|string {
     $permissions = model(PermissionModel::class);
 
     $data = [
-      'config' => $this->authConfig,
+      'config'      => $this->authConfig,
       'permissions' => $permissions->orderBy('name', 'asc')->findAll(),
     ];
 
@@ -76,11 +71,11 @@ class PermissionController extends BaseController {
         //
         // [Delete]
         //
-        $recId = $this->request->getPost('hidden_id');
+        $recId      = $this->request->getPost('hidden_id');
         $permission = $permissions->where('id', $recId)->first();
         /** @var object|null $permission */
         if (!$permission) {
-          return redirect()->route('permissions')->with('errors', lang('Auth.permission.not_found', [ $recId ]));
+          return redirect()->route('permissions')->with('errors', lang('Auth.permission.not_found', [$recId]));
         } else {
           if (!$permissions->deletePermission($recId)) {
             $this->session->set('errors', $permissions->errors());
@@ -88,22 +83,30 @@ class PermissionController extends BaseController {
           }
           logEvent(
             [
-              'type' => $this->logType,
-              'event' => lang('Auth.permission.delete_success', [ $permission->name ]),
-              'user' => user_username(),
-              'ip' => $this->request->getIPAddress(),
+              'type'  => $this->logType,
+              'event' => lang('Auth.permission.delete_success', [$permission->name]),
+              'user'  => user_username(),
+              'ip'    => $this->request->getIPAddress(),
             ]
           );
-          return redirect()->route('permissions')->with('success', lang('Auth.permission.delete_success', [ $permission->name ]));
+          return redirect()->route('permissions')->with(
+            'success',
+            lang('Auth.permission.delete_success', [$permission->name])
+          );
         }
-      } elseif (array_key_exists('btn_search', $this->request->getPost()) && array_key_exists('search', $this->request->getPost())) {
+      } elseif (
+        array_key_exists('btn_search', $this->request->getPost()) && array_key_exists(
+          'search',
+          $this->request->getPost()
+        )
+      ) {
         //
         // [Search]
         //
-        $search = $this->request->getPost('search');
-        $where = '`name` LIKE "%' . $search . '%" OR `description` LIKE "%' . $search . '%"';
+        $search              = $this->request->getPost('search');
+        $where               = '`name` LIKE "%' . $search . '%" OR `description` LIKE "%' . $search . '%"';
         $data['permissions'] = $permissions->where($where)->orderBy('name', 'asc')->findAll();
-        $data['search'] = $search;
+        $data['search']      = $search;
       }
     }
 
@@ -113,24 +116,20 @@ class PermissionController extends BaseController {
     return $this->_render($this->authConfig->views['permissions'], $data);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Permissions Create.
-   * --------------------------------------------------------------------------
-   *
    * Displays the user create page.
+   *
+   * @param int|null $id
    *
    * @return mixed
    */
   public function permissionsCreate($id = null): mixed {
-    return $this->_render($this->authConfig->views['permissionsCreate'], [ 'config' => $this->authConfig ]);
+    return $this->_render($this->authConfig->views['permissionsCreate'], ['config' => $this->authConfig]);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Permissions Create Do.
-   * --------------------------------------------------------------------------
-   *
    * Attempt to create a new user.
    * To be be used by administrators. User will be activated automatically.
    *
@@ -138,29 +137,29 @@ class PermissionController extends BaseController {
    */
   public function permissionsCreateDo(): \CodeIgniter\HTTP\RedirectResponse {
     $permissions = model(PermissionModel::class);
-    $form = array();
+    $form        = [];
 
     //
     // Get form fields
     //
-    $form['name'] = $this->request->getPost('name');
+    $form['name']        = $this->request->getPost('name');
     $form['description'] = $this->request->getPost('description');
 
     //
     // Set validation rules for adding a new group
     //
     $validationRules = [
-      'name' => [
-        'label' => lang('Auth.permission.name'),
-        'rules' => 'required|trim|max_length[255]|lower_alpha_dash_dot|is_unique[permissions.name]',
+      'name'        => [
+        'label'  => lang('Auth.permission.name'),
+        'rules'  => 'required|trim|max_length[255]|lowerAlphaDashDot|is_unique[permissions.name]',
         'errors' => [
-          'is_unique' => lang('Auth.permission.not_unique', [ $form['name'] ])
-        ]
+          'is_unique' => lang('Auth.permission.not_unique', [$form['name']]),
+        ],
       ],
       'description' => [
         'label' => lang('Auth.permission.description'),
-        'rules' => 'permit_empty|trim|max_length[255]'
-      ]
+        'rules' => 'permit_empty|trim|max_length[255]',
+      ],
     ];
 
     //
@@ -177,7 +176,10 @@ class PermissionController extends BaseController {
       // Save the permission
       // Return to Create screen on fail
       //
-      $id = $this->auth->createPermission(strtolower($this->request->getPost('name')), $this->request->getPost('description'));
+      $id = $this->auth->createPermission(
+        strtolower($this->request->getPost('name')),
+        $this->request->getPost('description')
+      );
       if (!$id) {
         return redirect()->back()->withInput()->with('errors', $permissions->errors());
       }
@@ -187,62 +189,62 @@ class PermissionController extends BaseController {
       //
       logEvent(
         [
-          'type' => $this->logType,
-          'event' => lang('Auth.permission.create_success', [ $this->request->getPost('name') ]),
-          'user' => user_username(),
-          'ip' => $this->request->getIPAddress(),
+          'type'  => $this->logType,
+          'event' => lang('Auth.permission.create_success', [$this->request->getPost('name')]),
+          'user'  => user_username(),
+          'ip'    => $this->request->getIPAddress(),
         ]
       );
-      return redirect()->route('permissions')->with('success', lang('Auth.permission.create_success', [ $this->request->getPost('name') ]));
+      return redirect()->route('permissions')->with(
+        'success',
+        lang('Auth.permission.create_success', [$this->request->getPost('name')])
+      );
     }
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Permissions Edit.
-   * --------------------------------------------------------------------------
-   *
    * Displays the user edit page.
    *
-   * @param int $id Permission ID
+   * @param int|null $id Permission ID
    *
    * @return mixed
    */
   public function permissionsEdit($id = null): mixed {
     $permissions = model(PermissionModel::class);
-    $permission = $permissions->where('id', $id)->first();
+    $permission  = $permissions->where('id', $id)->first();
     /** @var object|null $permission */
     if (!$permission) {
       return redirect()->to('permissions');
     }
 
     $permGroups = $permissions->getGroupsForPermission($id);
-    $permRoles = $permissions->getRolesForPermission($id);
-    $permUsers = $permissions->getUsersForPermission($id);
+    $permRoles  = $permissions->getRolesForPermission($id);
+    $permUsers  = $permissions->getUsersForPermission($id);
 
-    return $this->_render($this->authConfig->views['permissionsEdit'], [
-      'config' => $this->authConfig,
-      'permission' => $permission,
-      'permGroups' => $permGroups,
-      'permRoles' => $permRoles,
-      'permUsers' => $permUsers,
-    ]);
+    return $this->_render(
+      $this->authConfig->views['permissionsEdit'],
+      [
+        'config'     => $this->authConfig,
+        'permission' => $permission,
+        'permGroups' => $permGroups,
+        'permRoles'  => $permRoles,
+        'permUsers'  => $permUsers,
+      ]
+    );
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Permissions edit do.
-   * --------------------------------------------------------------------------
-   *
    * Attempt to create a new permission.
    *
-   * @param int $id Permission ID
+   * @param int|null $id Permission ID
    *
    * @return \CodeIgniter\HTTP\RedirectResponse
    */
   public function permissionsEditDo($id = null): \CodeIgniter\HTTP\RedirectResponse {
     $permissions = model(PermissionModel::class);
-    $form = array();
+    $form        = [];
 
     //
     // Get the permission to edit. If not found, return to permissions list page.
@@ -257,20 +259,20 @@ class PermissionController extends BaseController {
     // Set basic validation rules for editing an existing permission.
     //
     $validationRules = [
-      'name' => [
+      'name'        => [
         'label' => lang('Auth.permission.name'),
-        'rules' => 'required|trim|max_length[255]|lower_alpha_dash_dot'
+        'rules' => 'required|trim|max_length[255]|lowerAlphaDashDot',
       ],
       'description' => [
         'label' => lang('Auth.permission.description'),
-        'rules' => 'permit_empty|trim|max_length[255]'
-      ]
+        'rules' => 'permit_empty|trim|max_length[255]',
+      ],
     ];
 
     //
     // Get form fields
     //
-    $form['name'] = $this->request->getPost('name');
+    $form['name']        = $this->request->getPost('name');
     $form['description'] = $this->request->getPost('description');
 
     //
@@ -278,11 +280,11 @@ class PermissionController extends BaseController {
     //
     if ($form['name'] != $permission->name) {
       $validationRules['name'] = [
-        'label' => lang('Auth.permission.name'),
-        'rules' => 'required|trim|max_length[255]|lower_alpha_dash_dot|is_unique[permissions.name]',
+        'label'  => lang('Auth.permission.name'),
+        'rules'  => 'required|trim|max_length[255]|lowerAlphaDashDot|is_unique[permissions.name]',
         'errors' => [
-          'is_unique' => lang('Auth.permission.not_unique', [ $form['name'] ])
-        ]
+          'is_unique' => lang('Auth.permission.not_unique', [$form['name']]),
+        ],
       ];
     }
 
@@ -309,21 +311,21 @@ class PermissionController extends BaseController {
       //
       logEvent(
         [
-          'type' => $this->logType,
-          'event' => lang('Auth.permission.update_success', [ $permission->name ]),
-          'user' => user_username(),
-          'ip' => $this->request->getIPAddress(),
+          'type'  => $this->logType,
+          'event' => lang('Auth.permission.update_success', [$permission->name]),
+          'user'  => user_username(),
+          'ip'    => $this->request->getIPAddress(),
         ]
       );
-      return redirect()->back()->withInput()->with('success', lang('Auth.permission.update_success', [ $permission->name ]));
+      return redirect()->back()->withInput()->with(
+        'success',
+        lang('Auth.permission.update_success', [$permission->name])
+      );
     }
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Format permission name.
-   * --------------------------------------------------------------------------
-   *
    * @param string $name
    *
    * @return string

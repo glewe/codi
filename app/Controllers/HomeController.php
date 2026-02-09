@@ -1,25 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controllers;
 
-class HomeController extends BaseController {
+class HomeController extends BaseController
+{
   /**
    * Check the BaseController for inherited properties and methods.
    */
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Constructor.
-   * --------------------------------------------------------------------------
    */
   public function __construct() {
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Index.
-   * --------------------------------------------------------------------------
-   *
    * Show root/home page.
    *
    * @return string
@@ -31,11 +30,8 @@ class HomeController extends BaseController {
     return $this->_render('home', $data);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * About.
-   * --------------------------------------------------------------------------
-   *
    * Show About page.
    *
    * @return string
@@ -47,11 +43,8 @@ class HomeController extends BaseController {
     return $this->_render('about', $data);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Data Privacy.
-   * --------------------------------------------------------------------------
-   *
    * Show data privacy page.
    *
    * @return string
@@ -63,10 +56,9 @@ class HomeController extends BaseController {
     return $this->_render($this->getLocale() . '/dataprivacy', $data);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Get Locale.
-   * --------------------------------------------------------------------------
    *
    * @return string
    */
@@ -84,11 +76,8 @@ class HomeController extends BaseController {
     return $locale;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Imprint.
-   * --------------------------------------------------------------------------
-   *
    * Show Imprint page.
    *
    * @return string
@@ -100,17 +89,16 @@ class HomeController extends BaseController {
     return $this->_render($this->getLocale() . '/imprint', $data);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Sample.
-   * --------------------------------------------------------------------------
-   *
    * Show Sample page.
+   *
+   * @param string $page
    *
    * @return string
    */
-  public function sample($page = 'view'): string {
-    $chartjs = new \App\Libraries\Chartjs();
+  public function sample(string $page = 'view'): string {
+    $chartjs         = new \App\Libraries\Chartjs();
     $data['chartjs'] = $chartjs;
     if ($page === 'edit') {
       $data['page'] = 'Sample Form';
@@ -120,11 +108,8 @@ class HomeController extends BaseController {
     return $this->_render('samples/' . $page, $data);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Under Maintenance.
-   * --------------------------------------------------------------------------
-   *
    * Show Under Maintenance page.
    *
    * @return string

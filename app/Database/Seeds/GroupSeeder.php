@@ -4,18 +4,19 @@ namespace App\Database\Seeds;
 
 use CodeIgniter\Database\Seeder;
 
-class GroupSeeder extends Seeder {
+class GroupSeeder extends Seeder
+{
   //---------------------------------------------------------------------------
   /**
    * Seed the 'groups' table.
    */
   public function run() {
     $records = array(
-      [ 'name' => 'Admins', 'description' => 'Application administrators' ],
-      [ 'name' => 'Disney', 'description' => 'Disney characters' ],
-      [ 'name' => 'Looney', 'description' => 'Looney characters' ],
-      [ 'name' => 'Marvel', 'description' => 'Marvel characters' ],
-      [ 'name' => 'Pixar', 'description' => 'Pixar characters' ],
+      ['name' => 'Admins', 'description' => 'Application administrators'],
+      ['name' => 'Disney', 'description' => 'Disney characters'],
+      ['name' => 'Looney', 'description' => 'Looney characters'],
+      ['name' => 'Marvel', 'description' => 'Marvel characters'],
+      ['name' => 'Pixar', 'description' => 'Pixar characters'],
     );
 
     //

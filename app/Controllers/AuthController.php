@@ -1,62 +1,57 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controllers;
 
-use CodeIgniter\Controller;
-use CodeIgniter\Session\Session;
-
-use Config\Auth as AuthConfig;
+use App\Authentication\LocalAuthenticator;
+use App\Authorization\FlatAuthorization;
 use App\Entities\User;
 use App\Models\UserModel;
 use App\Models\UserOptionModel;
-use App\Models\LogModel;
-use Exception;
-use InvalidArgumentException;
-use RobThree\Auth\TwoFactorAuth;
+use CodeIgniter\Throttle\Throttler;
+use Config\Auth as AuthConfig;
 use RobThree\Auth\Providers\Qr\EndroidQrCodeProvider;
+use RobThree\Auth\TwoFactorAuth;
 
-use App\Controllers\BaseController;
-
-class AuthController extends BaseController {
+/**
+ * Class AuthController
+ */
+class AuthController extends BaseController
+{
   /**
-   * @var \App\Models\LogModel
+   * Check the BaseController for inherited properties and methods.
    */
-  protected $LOG;
 
   /**
    * @var string Log type used in log entries from this controller.
    */
-  protected $logType;
+  protected string $logType;
 
   /**
-   * @var \App\Authentication\LocalAuthenticator
+   * @var LocalAuthenticator
    */
-  protected $auth;
+  protected LocalAuthenticator $auth;
 
   /**
    * @var AuthConfig
    */
-  protected $authConfig;
+  protected AuthConfig $authConfig;
 
   /**
-   * @var \App\Authorization\FlatAuthorization
+   * @var FlatAuthorization
    */
-  protected $authorize;
-
-  /**
-   * @var Session
-   */
-  protected $session;
+  protected FlatAuthorization $authorize;
 
   /**
    * @var UserModel
    */
-  protected $users;
+  protected UserModel $users;
 
   /**
    * @var TwoFactorAuth
    */
-  protected $tfa;
+  protected TwoFactorAuth $tfa;
 
   /**
    * The 2FA secret key will be encrypted before put into the database and
@@ -65,7 +60,7 @@ class AuthController extends BaseController {
    *
    * @var string
    */
-  protected $cipher = "AES-256-CBC";
+  protected string $cipher = "AES-256-CBC";
 
   /**
    * The 2FA secret key will be encrypted before put into the database and
@@ -74,38 +69,34 @@ class AuthController extends BaseController {
    *
    * @var string
    */
-  protected $passphrase;
+  protected string $passphrase;
 
   /**
-   * @var \CodeIgniter\Throttle\Throttler
+   * @var Throttler
    */
-  protected $throttler;
+  protected Throttler $throttler;
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Constructor.
-   * --------------------------------------------------------------------------
    */
   public function __construct() {
     //
     // Most services in this controller require the session to be started
     //
-    $this->LOG = model(LogModel::class);
-    $this->logType = 'Auth';
-    $this->session = service('session');
+    $this->logType    = 'Auth';
     $this->authConfig = config('Auth');
-    $this->auth = service('authentication');
-    $this->authorize = service('authorization');
-    $this->tfa = new TwoFactorAuth(new EndroidQrCodeProvider(), $this->authConfig->authenticatorTitle);
+    $this->auth       = service('authentication');
+    $this->authorize  = service('authorization');
+    $this->tfa        = new TwoFactorAuth(new EndroidQrCodeProvider(), $this->authConfig->authenticatorTitle);
     $this->passphrase = hex2bin('8849523a8e0e1ff45f440da048428b2554d2660c80957fcedbeb9575c079d7eb');
-    $this->users = model(UserModel::class);
-    $this->throttler = service('throttler');
+    $this->users      = model(UserModel::class);
+    $this->throttler  = service('throttler');
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Activate account.
-   * --------------------------------------------------------------------------
    *
    * @return mixed
    */
@@ -116,7 +107,7 @@ class AuthController extends BaseController {
     $this->users->logActivationAttempt(
       $this->request->getGet('token'),
       $this->request->getIPAddress(),
-      (string)$this->request->getUserAgent()
+      (string) $this->request->getUserAgent()
     );
 
     if ($this->throttler->check(md5($this->request->getIPAddress()), 2, MINUTE) === false) {
@@ -135,19 +126,18 @@ class AuthController extends BaseController {
 
     logEvent(
       [
-        'type' => $this->logType,
+        'type'  => $this->logType,
         'event' => lang('Auth.register.success'),
-        'user' => user_username(),
-        'ip' => $this->request->getIPAddress(),
+        'user'  => user_username(),
+        'ip'    => $this->request->getIPAddress(),
       ]
     );
     return redirect()->route('login')->with('message', lang('Auth.register.success'));
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Resend activation account.
-   * --------------------------------------------------------------------------
    *
    * @return mixed
    */
@@ -161,7 +151,7 @@ class AuthController extends BaseController {
     }
 
     $login = urldecode($this->request->getGet('login'));
-    $type = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+    $type  = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
     /** @var User|null $user */
     $user = $this->users->where($type, $login)->where('active', 0)->first();
@@ -171,7 +161,7 @@ class AuthController extends BaseController {
     }
 
     $activator = service('activator');
-    $sent = $activator->send($user);
+    $sent      = $activator->send($user);
 
     if (!$sent) {
       return redirect()->back()->withInput()->with('error', $activator->error() ?? lang('Auth.exception.unknown_error'));
@@ -181,19 +171,18 @@ class AuthController extends BaseController {
     //
     logEvent(
       [
-        'type' => $this->logType,
+        'type'  => $this->logType,
         'event' => lang('Auth.activation.success'),
-        'user' => user_username(),
-        'ip' => $this->request->getIPAddress(),
+        'user'  => user_username(),
+        'ip'    => $this->request->getIPAddress(),
       ]
     );
     return redirect()->route('login')->with('message', lang('Auth.activation.success'));
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Displays the CI4-Auth error page.
-   * --------------------------------------------------------------------------
    *
    * @return mixed
    */
@@ -201,10 +190,9 @@ class AuthController extends BaseController {
     return $this->_render($this->authConfig->views['error_auth'], ['authConfig' => $this->authConfig]);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Forgot password.
-   * --------------------------------------------------------------------------
    *
    * Displays the forgot password form.
    *
@@ -218,10 +206,9 @@ class AuthController extends BaseController {
     return $this->_render($this->authConfig->views['forgot'], ['authConfig' => $this->authConfig]);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Forgot password do.
-   * --------------------------------------------------------------------------
    *
    * Attempts to find a user account with the given email address and sends
    * password reset instructions to them.
@@ -252,19 +239,18 @@ class AuthController extends BaseController {
     }
     logEvent(
       [
-        'type' => $this->logType,
+        'type'  => $this->logType,
         'event' => lang('Auth.forgot.email_sent'),
-        'user' => user_username(),
-        'ip' => $this->request->getIPAddress(),
+        'user'  => user_username(),
+        'ip'    => $this->request->getIPAddress(),
       ]
     );
     return redirect()->route('reset-password')->with('message', lang('Auth.forgot.email_sent'));
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Login.
-   * --------------------------------------------------------------------------
    *
    * Displays the login form, or redirects the user to their destination/home
    * if they are already logged in.
@@ -289,10 +275,9 @@ class AuthController extends BaseController {
     return $this->_render($this->authConfig->views['login'], ['authConfig' => $this->authConfig]);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Login do.
-   * --------------------------------------------------------------------------
    *
    * Attempts to verify the user's credentials through a POST request.
    *
@@ -300,7 +285,7 @@ class AuthController extends BaseController {
    */
   public function loginDo(): mixed {
     $rules = [
-      'login' => 'required',
+      'login'    => 'required',
       'password' => 'required',
     ];
 
@@ -312,9 +297,9 @@ class AuthController extends BaseController {
       return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
     }
 
-    $login = $this->request->getPost('login');
+    $login    = $this->request->getPost('login');
     $password = $this->request->getPost('password');
-    $remember = (bool)$this->request->getPost('remember');
+    $remember = (bool) $this->request->getPost('remember');
     //
     // Determine credential type
     //
@@ -325,10 +310,10 @@ class AuthController extends BaseController {
     if (!$this->auth->attempt([$type => $login, 'password' => $password], $remember)) {
       logEvent(
         [
-          'type' => $this->logType,
+          'type'  => $this->logType,
           'event' => $this->auth->error() ?? lang('Auth.login.bad_attempt'),
-          'user' => $login,
-          'ip' => $this->request->getIPAddress(),
+          'user'  => $login,
+          'ip'    => $this->request->getIPAddress(),
         ]
       );
       return redirect()->back()->withInput()->with('error', $this->auth->error() ?? lang('Auth.login.bad_attempt'));
@@ -358,7 +343,8 @@ class AuthController extends BaseController {
       $this->session->set('ci4auth-remember', $remember);
       $redirectURL = site_url('/login2fa');
       return redirect()->to($redirectURL)->withCookies();
-    } else {
+    }
+    else {
       //
       // User has not setup 2FA.
       //
@@ -370,7 +356,8 @@ class AuthController extends BaseController {
         $redirectURL = site_url('/setup2fa');
         $this->session->remove('redirect_url');
         return redirect()->to($redirectURL)->withCookies();
-      } else {
+      }
+      else {
         //
         // 2FA is not setup and not required. Login the user.
         //
@@ -379,7 +366,7 @@ class AuthController extends BaseController {
         //
         // Get user language and set it in the session
         //
-        $UO = model(UserOptionModel::class);
+        $UO           = model(UserOptionModel::class);
         $userLanguage = $UO->getOption(['user_id' => $user->id, 'option' => 'language']);
         if ($userLanguage && in_array($userLanguage, config('App')->supportedLocales)) {
           $this->session->set('lang', $userLanguage);
@@ -391,10 +378,10 @@ class AuthController extends BaseController {
         $this->session->remove('redirect_url');
         logEvent(
           [
-            'type' => $this->logType,
+            'type'  => $this->logType,
             'event' => lang('Log.login_successful') . ': ' . $user->email,
-            'user' => user_username(),
-            'ip' => $this->request->getIPAddress(),
+            'user'  => user_username(),
+            'ip'    => $this->request->getIPAddress(),
           ]
         );
         return redirect()->to($redirectURL)->withCookies()->with('success', lang('Auth.login.success'));
@@ -402,10 +389,9 @@ class AuthController extends BaseController {
     }
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Login 2FA.
-   * --------------------------------------------------------------------------
    *
    * Displays the 2FA login page.
    *
@@ -440,16 +426,15 @@ class AuthController extends BaseController {
       $this->authConfig->views['login2fa'],
       [
         'authConfig' => $this->authConfig,
-        'user' => $user,
-        'remember' => $this->session->get('ci4auth-remember'),
+        'user'       => $user,
+        'remember'   => $this->session->get('ci4auth-remember'),
       ]
     );
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Login 2FA do.
-   * --------------------------------------------------------------------------
    *
    * Attempts to verify the user's 2FA PIN through a POST request.
    *
@@ -486,9 +471,9 @@ class AuthController extends BaseController {
       //
       // Get the hashed secret, decrypt and verify the PIN with it.
       //
-      $pin = $this->request->getPost('pin');
-      $secret_hash = $user->getSecret();
-      $secret = $this->decrypt($secret_hash, true);
+      $pin          = $this->request->getPost('pin');
+      $secret_hash  = $user->getSecret();
+      $secret       = $this->decrypt($secret_hash, true);
       $verifyResult = $this->tfa->verifyCode($secret, $pin);
       if ($verifyResult) {
         //
@@ -501,14 +486,15 @@ class AuthController extends BaseController {
         $this->session->remove('ci4auth-remember');
         logEvent(
           [
-            'type' => $this->logType,
+            'type'  => $this->logType,
             'event' => lang('Log.login_successful') . ': ' . $user->email,
-            'user' => user_username(),
-            'ip' => $this->request->getIPAddress(),
+            'user'  => user_username(),
+            'ip'    => $this->request->getIPAddress(),
           ]
         );
         return redirect()->to($redirectURL)->withCookies()->with('message', lang('Auth.login.success'));
-      } else {
+      }
+      else {
         //
         // No match. Reload page with the same secret.
         //
@@ -517,12 +503,13 @@ class AuthController extends BaseController {
           $this->authConfig->views['login2fa'],
           [
             'authConfig' => $this->authConfig,
-            'user' => $user,
-            'remember' => $this->session->get('ci4auth-remember'),
+            'user'       => $user,
+            'remember'   => $this->session->get('ci4auth-remember'),
           ]
         );
       }
-    } else {
+    }
+    else {
       //
       // No PIN submitted.
       //
@@ -530,10 +517,9 @@ class AuthController extends BaseController {
     }
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Logout.
-   * --------------------------------------------------------------------------
    *
    * Log the user out.
    *
@@ -543,10 +529,10 @@ class AuthController extends BaseController {
     if ($this->auth->check()) {
       logEvent(
         [
-          'type' => $this->logType,
+          'type'  => $this->logType,
           'event' => lang('Log.logout') . ': ' . user_email(),
-          'user' => user_username(),
-          'ip' => $this->request->getIPAddress(),
+          'user'  => user_username(),
+          'ip'    => $this->request->getIPAddress(),
         ]
       );
       $this->auth->logout();
@@ -554,10 +540,9 @@ class AuthController extends BaseController {
     return redirect()->to(site_url('/'))->with('success', lang('Auth.login.logout_success'));
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Register.
-   * --------------------------------------------------------------------------
    *
    * Displays the user registration page.
    *
@@ -582,10 +567,9 @@ class AuthController extends BaseController {
     return $this->_render($this->authConfig->views['register'], ['authConfig' => $this->authConfig]);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Register do.
-   * --------------------------------------------------------------------------
    *
    * Attempt to register a new user.
    *
@@ -605,10 +589,10 @@ class AuthController extends BaseController {
     // Validate basics first since some password rules rely on these fields
     //
     $rules = [
-      'username' => 'required|alpha_numeric_space|min_length[3]|max_length[30]|is_unique[users.username]',
-      'email' => 'required|valid_email|is_unique[users.email]',
-      'firstname' => 'max_length[80]',
-      'lastname' => 'max_length[80]',
+      'username'    => 'required|alpha_numeric_space|min_length[3]|max_length[30]|is_unique[users.username]',
+      'email'       => 'required|valid_email|is_unique[users.email]',
+      'firstname'   => 'max_length[80]',
+      'lastname'    => 'max_length[80]',
       'displayname' => 'max_length[80]',
     ];
     if (!$this->validate($rules)) {
@@ -619,7 +603,7 @@ class AuthController extends BaseController {
     // Validate passwords since they can only be validated properly here
     //
     $rules = [
-      'password' => 'required|strong_password',
+      'password'     => 'required|strongPassword',
       'pass_confirm' => 'required|matches[password]',
     ];
     if (!$this->validate($rules)) {
@@ -630,7 +614,7 @@ class AuthController extends BaseController {
     // Save the user. If activation is required, generate a hash.
     //
     $allowedPostFields = array_merge(['password'], $this->authConfig->validFields, $this->authConfig->personalFields);
-    $user = new User($this->request->getPost($allowedPostFields));
+    $user              = new User($this->request->getPost($allowedPostFields));
     $this->authConfig->requireActivation === null ? $user->activate() : $user->generateActivateHash();
 
     //
@@ -658,10 +642,10 @@ class AuthController extends BaseController {
       //
       logEvent(
         [
-          'type' => $this->logType,
+          'type'  => $this->logType,
           'event' => lang('Auth.activation.success') . ': ' . $user->email,
-          'user' => user_username(),
-          'ip' => $this->request->getIPAddress(),
+          'user'  => user_username(),
+          'ip'    => $this->request->getIPAddress(),
         ]
       );
       return redirect()->route('login')->with('message', lang('Auth.activation.success'));
@@ -672,19 +656,18 @@ class AuthController extends BaseController {
     //
     logEvent(
       [
-        'type' => $this->logType,
+        'type'  => $this->logType,
         'event' => lang('Auth.register.success') . ': ' . $user->email,
-        'user' => user_username(),
-        'ip' => $this->request->getIPAddress(),
+        'user'  => user_username(),
+        'ip'    => $this->request->getIPAddress(),
       ]
     );
     return redirect()->route('login')->with('message', lang('Auth.register.success'));
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Reset password.
-   * --------------------------------------------------------------------------
    *
    * Displays the Reset Password form.
    *
@@ -699,14 +682,13 @@ class AuthController extends BaseController {
 
     return $this->_render($this->authConfig->views['reset'], [
       'authConfig' => $this->authConfig,
-      'token' => $token,
+      'token'      => $token,
     ]);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Reset password do.
-   * --------------------------------------------------------------------------
    *
    * Verifies the code with the email and saves the new password,
    * if they all pass validation.
@@ -725,16 +707,16 @@ class AuthController extends BaseController {
       $this->request->getPost('email'),
       $this->request->getPost('token'),
       $this->request->getIPAddress(),
-      (string)$this->request->getUserAgent()
+      (string) $this->request->getUserAgent()
     );
 
     //
     // Use CodeIgniter validation service for input validation
     //
     $rules = [
-      'token' => 'required',
-      'email' => 'required|valid_email',
-      'password' => 'required|strong_password',
+      'token'        => 'required',
+      'email'        => 'required|valid_email',
+      'password'     => 'required|strongPassword',
       'pass_confirm' => 'required|matches[password]',
     ];
     if (!$this->validate($rules)) {
@@ -761,36 +743,35 @@ class AuthController extends BaseController {
     //
     // Success! Save the new password, and cleanup the reset hash.
     //
-    $user->password = $this->request->getPost('password');
-    $user->reset_hash = null;
-    $user->reset_at = \CodeIgniter\I18n\Time::now();
-    $user->reset_expires = null;
+    $user->password         = $this->request->getPost('password');
+    $user->reset_hash       = null;
+    $user->reset_at         = \CodeIgniter\I18n\Time::now();
+    $user->reset_expires    = null;
     $user->force_pass_reset = false;
     $this->users->save($user);
 
     logEvent(
       [
-        'type' => $this->logType,
+        'type'  => $this->logType,
         'event' => lang('Auth.forgot.reset_success') . ': ' . $this->request->getPost('email'),
-        'user' => user_username(),
-        'ip' => $this->request->getIPAddress(),
+        'user'  => user_username(),
+        'ip'    => $this->request->getIPAddress(),
       ]
     );
     return redirect()->route('login')->with('message', lang('Auth.forgot.reset_success'));
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Setup 2FA.
-   * --------------------------------------------------------------------------
    *
    * Displays the 2FA setup page.
    *
-   * @param string $secret - Optional, to show the same QR code on wrong verify
+   * @param string|null $secret Optional, to show the same QR code on wrong verify
    *
    * @return mixed
    */
-  public function setup2fa($secret = null): mixed {
+  public function setup2fa(?string $secret = null): mixed {
     //
     // Redirect back if not logged in and no forced 2FA setup is in progress
     //
@@ -809,7 +790,8 @@ class AuthController extends BaseController {
         return redirect()->route('login')->with('error', lang('Auth.activation.no_user'));
       }
       $has_secret = false;
-    } else {
+    }
+    else {
       //
       // The user called this page to setup his 2FA
       //
@@ -836,18 +818,17 @@ class AuthController extends BaseController {
       $this->authConfig->views['setup2fa'],
       [
         'authConfig' => $this->authConfig,
-        'qrcode' => $qrcode,
-        'secret' => $secret,
-        'user' => $user,
+        'qrcode'     => $qrcode,
+        'secret'     => $secret,
+        'user'       => $user,
         'has_secret' => $has_secret,
       ]
     );
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Setup 2FA do.
-   * --------------------------------------------------------------------------
    *
    * Attempt to setup 2FA for a user.
    *
@@ -873,8 +854,8 @@ class AuthController extends BaseController {
     // Save the settings
     //
     if ($this->request->getPost('authenticator_code')) {
-      $secret = $this->request->getPost('hidden_secret');
-      $totp = $this->request->getPost('authenticator_code');
+      $secret       = $this->request->getPost('hidden_secret');
+      $totp         = $this->request->getPost('authenticator_code');
       $verifyResult = $this->tfa->verifyCode($secret, $totp);
       if ($verifyResult) {
         //
@@ -895,7 +876,8 @@ class AuthController extends BaseController {
           $this->session->remove('ci4auth-remember');
         }
         return redirect()->route('/')->with('message', lang('Auth.2fa.setup.success'));
-      } else {
+      }
+      else {
         //
         // No match. Reload page with the same secret.
         //
@@ -905,14 +887,15 @@ class AuthController extends BaseController {
           $this->authConfig->views['setup2fa'],
           [
             'authConfig' => $this->authConfig,
-            'qrcode' => $qrcode,
-            'secret' => $secret,
-            'user' => $user,
+            'qrcode'     => $qrcode,
+            'secret'     => $secret,
+            'user'       => $user,
             'has_secret' => $user->hasSecret(),
           ]
         );
       }
-    } else {
+    }
+    else {
       //
       // No code submitted.
       //
@@ -920,10 +903,9 @@ class AuthController extends BaseController {
     }
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Whoami.
-   * --------------------------------------------------------------------------
    *
    * Displays the Whoami page.
    *
@@ -933,21 +915,20 @@ class AuthController extends BaseController {
     return $this->_render($this->authConfig->views['whoami'], ['authConfig' => $this->authConfig]);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Encrypt.
-   * --------------------------------------------------------------------------
    *
    * Encrypts (but does not authenticate) a string.
    *
-   * @param string $plaintext - String to encrypt
-   * @param boolean $encode - Return base64-encoded or not
+   * @param string $plaintext String to encrypt
+   * @param bool   $encode    Return base64-encoded or not
    *
    * @return string
    */
-  protected function encrypt($plaintext, $encode = false): string {
+  protected function encrypt(string $plaintext, bool $encode = false): string {
     $nonceSize = openssl_cipher_iv_length($this->cipher);
-    $nonce = openssl_random_pseudo_bytes($nonceSize);
+    $nonce     = openssl_random_pseudo_bytes($nonceSize);
 
     $ciphertext = openssl_encrypt(
       $plaintext,
@@ -967,21 +948,20 @@ class AuthController extends BaseController {
     return $nonce . $ciphertext;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Decrypt.
-   * --------------------------------------------------------------------------
    *
    * Decrypts (but does not verify) an encrypted string.
    *
-   * @param string $ciphertext - Encrypted string
-   * @param boolean $encoded - Is base64 encoded string submitted or not?
+   * @param string $ciphertext Encrypted string
+   * @param bool   $encoded    Is base64 encoded string submitted or not?
    *
    * @return string
    */
-  protected function decrypt($ciphertext, $encoded = false): string {
+  protected function decrypt(string $ciphertext, bool $encoded = false): string {
     $nonceSize = openssl_cipher_iv_length($this->cipher);
-    $message = $ciphertext;
+    $message   = $ciphertext;
 
     if ($encoded) {
       $message = base64_decode($ciphertext, true);
@@ -990,7 +970,7 @@ class AuthController extends BaseController {
       }
     }
 
-    $nonce = mb_substr($message, 0, $nonceSize, '8bit');
+    $nonce      = mb_substr($message, 0, $nonceSize, '8bit');
     $ciphertext = mb_substr($message, $nonceSize, null, '8bit');
 
     return openssl_decrypt(

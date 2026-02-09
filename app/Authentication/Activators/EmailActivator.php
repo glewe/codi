@@ -1,26 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Authentication\Activators;
 
-use Config\Email;
 use App\Entities\User;
+use Config\Email;
 
-/**
- * Class EmailActivator
- *
- * Sends an activation email to user.
- *
- * @package App\Authentication\Activators
- */
-class EmailActivator extends BaseActivator implements ActivatorInterface {
+class EmailActivator extends BaseActivator implements ActivatorInterface
+{
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Send.
-   * --------------------------------------------------------------------------
+   * Sends an activation email.
    *
-   * Sends an activation email
-   *
-   * @param User $user
+   * @param User|null $user
    *
    * @return bool
    */
@@ -33,13 +26,12 @@ class EmailActivator extends BaseActivator implements ActivatorInterface {
     $sent = $email->setFrom($settings->fromEmail ?? $config->fromEmail, $settings->fromName ?? $config->fromName)
       ->setTo($user->email)
       ->setSubject(lang('Auth.activation.subject'))
-      ->setMessage(view($this->config->views['emailActivation'], [ 'hash' => $user->activate_hash ]))
+      ->setMessage(view($this->config->views['emailActivation'], ['hash' => $user->activate_hash]))
       ->setMailType('html')
       ->send();
 
     if (!$sent) {
-
-      $this->error = lang('Auth.activation.error_sending', [ $user->email ]);
+      $this->error = lang('Auth.activation.error_sending', [$user->email]);
       return false;
     }
 

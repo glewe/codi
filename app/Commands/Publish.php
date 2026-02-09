@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Commands;
 
-use Config\Autoload;
-use CodeIgniter\CLI\CLI;
 use CodeIgniter\CLI\BaseCommand;
+use CodeIgniter\CLI\CLI;
+use Config\Autoload;
 
-class Publish extends BaseCommand {
+class Publish extends BaseCommand
+{
   /**
    * The role the command is lumped under
    * when listing commands.
@@ -66,63 +69,63 @@ class Publish extends BaseCommand {
    */
   protected $viewsPublished = false;
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Run.
-   * --------------------------------------------------------------------------
-   *
    * Displays the help for the spark cli script itself.
    *
    * @param array $params
+   *
+   * @return void
    */
-  public function run(array $params) {
+  public function run(array $params): void {
+    helper('filesystem');
     $this->determineSourcePath();
 
     // Migration
-    if (CLI::prompt('Publish Migration?', [ 'y', 'n' ]) == 'y') {
+    if (CLI::prompt('Publish Migration?', ['y', 'n']) === 'y') {
       $this->publishMigration();
     }
 
     // Models
-    if (CLI::prompt('Publish Models?', [ 'y', 'n' ]) == 'y') {
+    if (CLI::prompt('Publish Models?', ['y', 'n']) === 'y') {
       $this->publishModels();
     }
 
     // Entities
-    if (CLI::prompt('Publish Entities?', [ 'y', 'n' ]) == 'y') {
+    if (CLI::prompt('Publish Entities?', ['y', 'n']) === 'y') {
       $this->publishEntities();
     }
 
     // Controller
-    if (CLI::prompt('Publish Controller?', [ 'y', 'n' ]) == 'y') {
+    if (CLI::prompt('Publish Controller?', ['y', 'n']) === 'y') {
       $this->publishController();
     }
 
     // Views
-    if (CLI::prompt('Publish Views?', [ 'y', 'n' ]) == 'y') {
+    if (CLI::prompt('Publish Views?', ['y', 'n']) === 'y') {
       $this->publishViews();
       $this->viewsPublished = true;
     }
 
     // Filters
-    if (CLI::prompt('Publish Filters?', [ 'y', 'n' ]) == 'y') {
+    if (CLI::prompt('Publish Filters?', ['y', 'n']) === 'y') {
       $this->publishFilters();
     }
 
     // Config
-    if (CLI::prompt('Publish Config file?', [ 'y', 'n' ]) == 'y') {
+    if (CLI::prompt('Publish Config file?', ['y', 'n']) === 'y') {
       $this->publishConfig();
     }
 
     // Language
-    if (CLI::prompt('Publish Language file?', [ 'y', 'n' ]) == 'y') {
+    if (CLI::prompt('Publish Language file?', ['y', 'n']) === 'y') {
       $this->publishLanguage();
     }
   }
 
   //---------------------------------------------------------------------------
-  protected function publishModels() {
-    $models = [ 'LoginModel', 'UserModel' ];
+  protected function publishModels(): void {
+    $models = ['LoginModel', 'UserModel'];
 
     foreach ($models as $model) {
       $path = "{$this->sourcePath}/Models/{$model}.php";
@@ -135,7 +138,7 @@ class Publish extends BaseCommand {
   }
 
   //---------------------------------------------------------------------------
-  protected function publishEntities() {
+  protected function publishEntities(): void {
     $path = "{$this->sourcePath}/Entities/User.php";
 
     $content = file_get_contents($path);
@@ -145,7 +148,7 @@ class Publish extends BaseCommand {
   }
 
   //---------------------------------------------------------------------------
-  protected function publishController() {
+  protected function publishController(): void {
     $path = "{$this->sourcePath}/Controllers/AuthController.php";
 
     $content = file_get_contents($path);
@@ -155,7 +158,7 @@ class Publish extends BaseCommand {
   }
 
   //---------------------------------------------------------------------------
-  protected function publishViews() {
+  protected function publishViews(): void {
     $map = directory_map($this->sourcePath . '/Views');
     $prefix = '';
 
@@ -178,7 +181,7 @@ class Publish extends BaseCommand {
   }
 
   //---------------------------------------------------------------------------
-  protected function publishView($view, string $prefix = '') {
+  protected function publishView($view, string $prefix = ''): void {
     $path = "{$this->sourcePath}/Views/{$prefix}{$view}";
     $namespace = defined('APP_NAMESPACE') ? APP_NAMESPACE : 'App';
 
@@ -189,8 +192,8 @@ class Publish extends BaseCommand {
   }
 
   //---------------------------------------------------------------------------
-  protected function publishFilters() {
-    $filters = [ 'LoginFilter', 'PermissionFilter', 'RoleFilter', 'GroupFilter' ];
+  protected function publishFilters(): void {
+    $filters = ['LoginFilter', 'PermissionFilter', 'RoleFilter', 'GroupFilter'];
 
     foreach ($filters as $filter) {
       $path = "{$this->sourcePath}/Filters/{$filter}.php";
@@ -203,7 +206,7 @@ class Publish extends BaseCommand {
   }
 
   //---------------------------------------------------------------------------
-  protected function publishMigration() {
+  protected function publishMigration(): void {
     $map = directory_map($this->sourcePath . '/Database/Migrations');
 
     foreach ($map as $file) {
@@ -217,11 +220,11 @@ class Publish extends BaseCommand {
   }
 
   //---------------------------------------------------------------------------
-  protected function publishConfig() {
+  protected function publishConfig(): void {
     $path = "{$this->sourcePath}/Config/Auth.php";
 
     $content = file_get_contents($path);
-    $content = str_replace('namespace App\Config', "namespace Config", $content);
+    $content = str_replace('namespace App\Config', 'namespace Config', $content);
     $content = str_replace("use CodeIgniter\Config\BaseConfig;\n", '', $content);
     $content = str_replace('extends BaseConfig', "extends \App\Config\Auth", $content);
 
@@ -235,7 +238,7 @@ class Publish extends BaseCommand {
   }
 
   //---------------------------------------------------------------------------
-  protected function publishLanguage() {
+  protected function publishLanguage(): void {
     $path = "{$this->sourcePath}/Language/en/Auth.php";
 
     $content = file_get_contents($path);
@@ -247,11 +250,8 @@ class Publish extends BaseCommand {
   // Utilities
   //---------------------------------------------------------------------------
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Replace Namespace.
-   * --------------------------------------------------------------------------
-   *
    * Replaces the Lewe\Auth namespace in the published
    * file with the applications current namespace.
    *
@@ -269,27 +269,23 @@ class Publish extends BaseCommand {
     return str_replace($originalNamespace, $newNamespace, $contents);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Determine Source Path.
-   * --------------------------------------------------------------------------
-   *
    * Determines the current source path from which all other files are located.
+   *
+   * @return void
    */
-  protected function determineSourcePath() {
+  protected function determineSourcePath(): void {
     $this->sourcePath = realpath(__DIR__ . '/../');
 
-    if ($this->sourcePath == '/' || empty($this->sourcePath)) {
+    if ($this->sourcePath === '/' || empty($this->sourcePath)) {
       CLI::error('Unable to determine the correct source directory. Bailing.');
       exit();
     }
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Write File.
-   * --------------------------------------------------------------------------
-   *
    * Write a file, catching any exceptions and showing a
    * nicely formatted error.
    *
@@ -312,7 +308,7 @@ class Publish extends BaseCommand {
     if (file_exists($filename)) {
       $overwrite = (bool)CLI::getOption('f');
 
-      if (!$overwrite && CLI::prompt("  File '{$path}' already exists in destination. Overwrite?", [ 'n', 'y' ]) === 'n') {
+      if (!$overwrite && CLI::prompt("  File '{$path}' already exists in destination. Overwrite?", ['n', 'y']) === 'n') {
         CLI::error("  Skipped {$path}. If you wish to overwrite, please use the '-f' option or reply 'y' to the prompt.");
         return;
       }

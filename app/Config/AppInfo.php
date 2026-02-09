@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Config;
 
 use CodeIgniter\Config\BaseConfig;
 
-class AppInfo extends BaseConfig {
+class AppInfo extends BaseConfig
+{
   /**
    * ------------------------------------------------------------------------
    * Product Name
@@ -12,7 +15,7 @@ class AppInfo extends BaseConfig {
    *
    * @var string
    */
-  public $name = 'CODI';
+  public string $name = 'CODI';
 
   /**
    * ------------------------------------------------------------------------
@@ -21,7 +24,7 @@ class AppInfo extends BaseConfig {
    *
    * @var string
    */
-  public $subtitle = 'Lewe CodeIgniter Boilerplate';
+  public string $subtitle = 'Lewe CodeIgniter Boilerplate';
 
   /**
    * ------------------------------------------------------------------------
@@ -30,7 +33,7 @@ class AppInfo extends BaseConfig {
    *
    * @var string
    */
-  public $icon = 'bi bi-box-fill';
+  public string $icon = 'bi bi-box-fill';
 
   /**
    * ------------------------------------------------------------------------
@@ -39,7 +42,7 @@ class AppInfo extends BaseConfig {
    *
    * @var string
    */
-  public $version = '6.3.0';
+  public string $version = '6.3.0';
 
   /**
    * ------------------------------------------------------------------------
@@ -48,7 +51,7 @@ class AppInfo extends BaseConfig {
    *
    * @var string
    */
-  public $releaseDate = '2026-02-09';
+  public string $releaseDate = '2026-02-09';
 
   /**
    * ------------------------------------------------------------------------
@@ -57,7 +60,7 @@ class AppInfo extends BaseConfig {
    *
    * @var string
    */
-  public $author = 'George Lewe';
+  public string $author = 'George Lewe';
 
   /**
    * ------------------------------------------------------------------------
@@ -66,7 +69,7 @@ class AppInfo extends BaseConfig {
    *
    * @var string
    */
-  public $authorUrl = 'https://www.lewe.com';
+  public string $authorUrl = 'https://www.lewe.com';
 
   /**
    * ------------------------------------------------------------------------
@@ -75,7 +78,7 @@ class AppInfo extends BaseConfig {
    *
    * @var string
    */
-  public $authorEmail = 'george@lewe.com';
+  public string $authorEmail = 'george@lewe.com';
 
   /**
    * ------------------------------------------------------------------------
@@ -84,7 +87,7 @@ class AppInfo extends BaseConfig {
    *
    * @var string
    */
-  public $copyrightBy = 'Lewe';
+  public string $copyrightBy = 'Lewe';
 
   /**
    * ------------------------------------------------------------------------
@@ -93,7 +96,7 @@ class AppInfo extends BaseConfig {
    *
    * @var string
    */
-  public $copyrightUrl = 'https://www.lewe.com';
+  public string $copyrightUrl = 'https://www.lewe.com';
 
   /**
    * ------------------------------------------------------------------------
@@ -102,7 +105,7 @@ class AppInfo extends BaseConfig {
    *
    * @var string
    */
-  public $supportUrl = 'https://github.com/glewe/codi/issues';
+  public string $supportUrl = 'https://github.com/glewe/codi/issues';
 
   /**
    * ------------------------------------------------------------------------
@@ -111,7 +114,7 @@ class AppInfo extends BaseConfig {
    *
    * @var string
    */
-  public $documentationUrl = 'https://lewe.gitbook.io';
+  public string $documentationUrl = 'https://lewe.gitbook.io';
 
   /**
    * ------------------------------------------------------------------------
@@ -120,7 +123,7 @@ class AppInfo extends BaseConfig {
    *
    * @var string
    */
-  public $repoUrl = 'https://github.com/glewe/codi';
+  public string $repoUrl = 'https://github.com/glewe/codi';
 
   /**
    * ------------------------------------------------------------------------
@@ -129,7 +132,7 @@ class AppInfo extends BaseConfig {
    *
    * @var string
    */
-  public $downloadUrl = 'https://github.com/glewe/codi/releases';
+  public string $downloadUrl = 'https://github.com/glewe/codi/releases';
 
   /**
    * ------------------------------------------------------------------------
@@ -138,7 +141,7 @@ class AppInfo extends BaseConfig {
    *
    * @var string
    */
-  public $versionScript = 'https://support.lewe.com/version/codi.js';
+  public string $versionScript = 'https://support.lewe.com/version/codi.js';
 
   /**
    * ------------------------------------------------------------------------
@@ -149,7 +152,7 @@ class AppInfo extends BaseConfig {
    *
    * @var string
    */
-  public $firstYear = '2024';
+  public string $firstYear = '2024';
 
   /**
    * ------------------------------------------------------------------------
@@ -160,7 +163,7 @@ class AppInfo extends BaseConfig {
    *
    * @var string
    */
-  public $keywords = 'lewe application framework php boilerplate codeigniter 4';
+  public string $keywords = 'lewe application framework php boilerplate codeigniter 4';
 
   /**
    * ------------------------------------------------------------------------
@@ -171,29 +174,29 @@ class AppInfo extends BaseConfig {
    *
    * @var string
    */
-  public $description = 'CODI is a PHP application framework boilerplate based on CodeIgniter 4.';
+  public string $description = 'CODI is a PHP application framework boilerplate based on CodeIgniter 4.';
 
   /**
    * ------------------------------------------------------------------------
    * Data Privacy Site Information
    * ------------------------------------------------------------------------
-   *
    */
-  public $siteEntity = 'ACME Inc.';
-  public $siteName = 'MySite';
-  public $siteOwner = 'John Doe';
-  public $siteOwnerAddr1 = 'Street 123';
-  public $siteOwnerAddr2 = '1235 Town';
-  public $siteOwnerAddr3 = 'Country';
-  public $siteOwnerEmail = 'john@doe.com';
+  public string $siteEntity = 'ACME Inc.';
+  public string $siteName = 'MySite';
+  public string $siteOwner = 'John Doe';
+  public string $siteOwnerAddr1 = 'Street 123';
+  public string $siteOwnerAddr2 = '1235 Town';
+  public string $siteOwnerAddr3 = 'Country';
+  public string $siteOwnerEmail = 'john@doe.com';
 
   /**
    * ------------------------------------------------------------------------
    * Module Credits
    * ------------------------------------------------------------------------
    *
+   * @var array<string, array<string, string>>
    */
-  public $credits = [
+  public array $credits = [
     'bootstrap' => [
       'author' => 'Bootstrap Team',
       'product' => 'Bootstrap Framework',
@@ -314,7 +317,7 @@ class AppInfo extends BaseConfig {
    *
    * @var bool
    */
-  public $showCredits = true;
+  public bool $showCredits = true;
 
   /**
    * --------------------------------------------------------------------------
@@ -326,5 +329,5 @@ class AppInfo extends BaseConfig {
    *
    * @var bool
    */
-  public $showReleaseInfo = true;
+  public bool $showReleaseInfo = true;
 }

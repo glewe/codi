@@ -45,13 +45,14 @@
     "analyze": "phpstan analyze",
     "build": [
       "composer run lint:css",
-      "php minify.php"
+      "php tools/minify.php"
     ],
     "build:prod": [
       "composer run lint:css",
       "php minify.php",
       "composer install --no-dev --optimize-autoloader"
     ],
+    "docs": "php tools/phpDocumentor.phar -d app -t php_doc --title=\"CODI\" -s template.color=blue && php tools/apply_dark_mode.php",
     "lint:css": [
       "stylelint --quiet-deprecation-warnings \"public/css/lewe.css\"",
       "stylelint --quiet-deprecation-warnings \"public/css/styles.css\"",

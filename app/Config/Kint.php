@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Config;
 
 use Kint\Parser\ConstructablePluginInterface;
@@ -29,7 +31,7 @@ class Kint
    */
   public $plugins;
 
-  public int $maxDepth           = 6;
+  public int  $maxDepth          = 6;
   public bool $displayCalledFrom = true;
   public bool $expanded          = false;
 
@@ -38,8 +40,8 @@ class Kint
   | RichRenderer Settings
   |--------------------------------------------------------------------------
   */
-  public string $richTheme = 'aante-light.css';
-  public bool $richFolder  = false;
+  public string $richTheme  = 'aante-light.css';
+  public bool   $richFolder = false;
 
   /**
    * @var array<string, class-string<ValuePluginInterface>>|null
@@ -59,5 +61,5 @@ class Kint
   public bool $cliColors      = true;
   public bool $cliForceUTF8   = false;
   public bool $cliDetectWidth = true;
-  public int $cliMinWidth     = 40;
+  public int  $cliMinWidth    = 40;
 }

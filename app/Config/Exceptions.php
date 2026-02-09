@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Config;
 
 use CodeIgniter\Config\BaseConfig;
@@ -80,9 +82,8 @@ class Exceptions extends BaseConfig
    */
   public string $deprecationLogLevel = LogLevel::WARNING;
 
-  /*
-   * DEFINE THE HANDLERS USED
-   * --------------------------------------------------------------------------
+  //---------------------------------------------------------------------------
+  /**
    * Given the HTTP status code, returns exception handler that
    * should be used to deal with this error. By default, it will run CodeIgniter's
    * default handler and display the error information in the expected format
@@ -99,8 +100,7 @@ class Exceptions extends BaseConfig
    *          return new \App\Libraries\MyExceptionHandler();
    *      }
    */
-  public function handler(int $statusCode, Throwable $exception): ExceptionHandlerInterface
-  {
+  public function handler(int $statusCode, Throwable $exception): ExceptionHandlerInterface {
     return new ExceptionHandler($this);
   }
 }

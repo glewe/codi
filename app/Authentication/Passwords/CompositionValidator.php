@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Authentication\Passwords;
 
 use App\Exceptions\AuthException;
@@ -14,12 +16,10 @@ use CodeIgniter\Entity\Entity;
  * groups that you had to include, current NIST standards prefer to simply
  * set a minimum length and a long maximum (128+ chars).
  *
- * @see     https://pages.nist.gov/800-63-3/sp800-63b.html#sec5
- *
- *
- * @package App\Authentication\Passwords\Validators
+ * @see https://pages.nist.gov/800-63-3/sp800-63b.html#sec5
  */
-class CompositionValidator extends BaseValidator implements ValidatorInterface {
+class CompositionValidator extends BaseValidator implements ValidatorInterface
+{
   /**
    * @var string
    */
@@ -30,21 +30,18 @@ class CompositionValidator extends BaseValidator implements ValidatorInterface {
    */
   protected $suggestion = '';
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Check.
-   * --------------------------------------------------------------------------
-   *
    * Returns true when the password passes this test. The password will be
    * passed to any remaining validators.
-   * False will immediately stop validation process
+   * False will immediately stop validation process.
    *
-   * @param string $password
-   * @param Entity $user
+   * @param string      $password  Password to check
+   * @param Entity|null $user      User entity
    *
    * @return bool
    */
-  public function check(string $password, $user = null): bool {
+  public function check(string $password, ?Entity $user = null): bool {
     if (empty($this->config->minimumPasswordLength)) {
       throw AuthException::forUnsetPasswordLength();
     }
@@ -52,7 +49,7 @@ class CompositionValidator extends BaseValidator implements ValidatorInterface {
     $passed = strlen($password) >= $this->config->minimumPasswordLength;
 
     if (!$passed) {
-      $this->error = lang('Auth.password.error_length', [ $this->config->minimumPasswordLength ]);
+      $this->error = lang('Auth.password.error_length', [$this->config->minimumPasswordLength]);
       $this->suggestion = lang('Auth.password.suggest_length');
 
       return false;
@@ -61,11 +58,8 @@ class CompositionValidator extends BaseValidator implements ValidatorInterface {
     return true;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Error.
-   * --------------------------------------------------------------------------
-   *
    * Returns the error string that should be displayed to the user.
    *
    * @return string
@@ -74,11 +68,8 @@ class CompositionValidator extends BaseValidator implements ValidatorInterface {
     return $this->error;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Suggestion.
-   * --------------------------------------------------------------------------
-   *
    * Returns a suggestion that may be displayed to the user to help them choose
    * a better password. The method is required, but a suggestion is optional.
    * May return an empty string instead.

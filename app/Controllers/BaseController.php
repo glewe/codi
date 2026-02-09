@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controllers;
 
 use App\Libraries\Bootstrap;
 use App\Libraries\Gravatar;
+use App\Models\LogModel;
 use App\Models\SettingsModel;
 use App\Models\UserModel;
 use App\Models\UserOptionModel;
@@ -12,7 +15,10 @@ use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
+use CodeIgniter\Session\Session;
 use Config\App as AppConfig;
+use Config\AppInfo;
+use Config\Lic as LicConfig;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -22,41 +28,32 @@ use Psr\Log\LoggerInterface;
  * performing functions that are needed by all your controllers.
  *
  * Extend this class in any new controllers:
- *   class Home extends BaseController { ... }
+ *   class Home extends BaseController
  *
  * For security be sure to declare any new methods as protected or private.
- *
- * The following properties are available through the BaseController:
- *   $this->config (AppConfig)
- *   $this->helpers (array)
- *   $this->request (IncomingRequest)
- *   $this->session (Session)
- *   $this->settings (SettingsModel)
- *
- * The following methods are available through the BaseController:
- *   $this->_render(string $view, array $data = [], array $options = [])
  */
-abstract class BaseController extends Controller {
+abstract class BaseController extends Controller
+{
   /**
    * Instance of the App configuration.
    *
    * @var AppConfig
    */
-  protected $config;
+  protected AppConfig $config;
 
   /**
    * Instance of the License configuration.
    *
-   * @var AppConfig
+   * @var LicConfig
    */
-  protected $configLic;
+  protected LicConfig $configLic;
 
   /**
    * Instance of the AppInfo configuration.
    *
-   * @var AppConfig
+   * @var AppInfo
    */
-  protected $configAppInfo;
+  protected AppInfo $configAppInfo;
 
   /**
    * An array of helpers to be loaded automatically upon
@@ -65,19 +62,19 @@ abstract class BaseController extends Controller {
    *
    * @var list<string>
    */
-  protected $helpers = [ 'auth', 'session', 'url' ];
+  protected $helpers = ['auth', 'session', 'url'];
 
   /**
-   * @var \App\Models\LogModel
+   * @var LogModel
    */
-  protected $LOG;
+  protected LogModel $LOG;
 
   /**
    * Instance of the Bootstrap Library
    *
    * @var Bootstrap
    */
-  protected $bs;
+  protected Bootstrap $bs;
 
   /**
    * Instance of the main Request object.
@@ -88,115 +85,121 @@ abstract class BaseController extends Controller {
 
   /**
    * Instance of the Session service.
-   * Be sure to declare properties for any property fetch you initialized.
-   * The creation of dynamic property is deprecated in PHP 8.2.
+   *
+   * @var Session
    */
-  protected $session;
+  protected Session $session;
 
   /**
    * Instance of the Settings model.
    *
    * @var SettingsModel
    */
-  protected $settings;
+  protected SettingsModel $settings;
 
   /**
    * Holds the theme to use.
    *
    * @var string
    */
-  protected $theme;
+  protected string $theme;
 
   /**
    * Holds the menu to use.
    *
    * @var string
    */
-  protected $menu;
+  protected string $menu;
 
   /**
    * Holds the URL to the user's avatar.
    *
    * @var string
    */
-  protected $avatarUrl;
+  protected string $avatarUrl;
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Init Controller.
-   * --------------------------------------------------------------------------
-   *
    * Initializes the controller with the provided request, response, and logger.
    *
-   * This method is called automatically by CodeIgniter to initialize the controller.
-   * It sets up the session, language, theme, menu, and timezone settings.
-   *
-   * @param RequestInterface $request The request object.
-   * @param ResponseInterface $response The response object.
-   * @param LoggerInterface $logger The logger object.
+   * @param RequestInterface $request
+   * @param ResponseInterface $response
+   * @param LoggerInterface $logger
    *
    * @return void
    */
-  public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger): void {
+  public function initController(
+    RequestInterface $request,
+    ResponseInterface $response,
+    LoggerInterface $logger
+  ): void {
     // Do Not Edit This Line
     parent::initController($request, $response, $logger);
 
     // Preload any models, libraries, etc, here.
-    $session = \Config\Services::session();
+    $session  = \Config\Services::session();
     $language = \Config\Services::language();
 
-    $this->bs = new Bootstrap();
-    $this->config = config('App');
+    $this->bs            = new Bootstrap();
+    $this->config        = config('App');
     $this->configAppInfo = config('AppInfo');
-    $this->session = service('session');
-    $this->settings = model(SettingsModel::class);
-    $this->configLic = config('Lic');
+    $this->session       = service('session');
+    $this->settings      = model(SettingsModel::class);
+    $this->configLic     = config('Lic');
+    $this->LOG           = model(LogModel::class);
 
     //
     // Get language from session or set default language
     //
+
     if (!$session->has('lang')) {
+
       $session->set('lang', $this->settings->getSetting('defaultLanguage'));
     }
+
     $language->setLocale($session->get('lang'));
     //
     // Se theme, menu and avatar defaults
     //
     $this->theme = $this->settings->getSetting('defaultTheme') ?? 'light';
-    $this->menu = $this->settings->getSetting('defaultMenu') ?? 'navbar';
+    $this->menu  = $this->settings->getSetting('defaultMenu') ?? 'navbar';
+
     $this->avatarUrl = base_url() . '/upload/avatars/default_male.png';
     if (user_id()) {
       //
       // Someone is logged in
       //
-      $users = model(UserModel::class);
+      $users       = model(UserModel::class);
       $userOptions = model(UserOptionModel::class);
       if ($users->where('id', user_id())->first()) {
         //
         // Get the user's theme choice
         //
-        $t = $userOptions->getOption([ 'user_id' => user_id(), 'option' => 'theme' ]);
-        if ($t && in_array($t, [ 'dark', 'light' ])) {
+        $t = $userOptions->getOption(['user_id' => user_id(), 'option' => 'theme']);
+        if ($t && in_array($t, ['dark', 'light'])) {
           $this->theme = $t;
         }
         //
         // Get the user's menu choice
         //
-        $m = $userOptions->getOption([ 'user_id' => user_id(), 'option' => 'menu' ]);
-        if ($m && in_array($m, [ 'navbar', 'sidebar' ])) {
+        $m = $userOptions->getOption(['user_id' => user_id(), 'option' => 'menu']);
+        if ($m && in_array($m, ['navbar', 'sidebar'])) {
           $this->menu = $m;
         }
         //
         // Get the user's avatar
         //
-        $avatar = $userOptions->getOption([ 'user_id' => user_id(), 'option' => 'avatar' ]);
+        $avatar = $userOptions->getOption(['user_id' => user_id(), 'option' => 'avatar']);
 
         if ($avatar === 'gravatar') {
-          $gravatar = new Gravatar();
-          $gravatarUrl = $gravatar->get(user_email());
+          $gravatar        = new Gravatar();
+          $gravatarUrl     = $gravatar->get(user_email());
           $this->avatarUrl = $gravatarUrl;
-        } elseif ($avatar) {
-          $avatarBaseUrl = base_url() . '/upload/avatars/';
+
+        }
+        elseif ($avatar) {
+
+          $avatarBaseUrl   = base_url() . '/upload/avatars/';
           $this->avatarUrl = $avatarBaseUrl . $avatar;
         }
       }
@@ -207,17 +210,15 @@ abstract class BaseController extends Controller {
     $tz = $this->settings->getSetting("timezone");
     if (!strlen($tz) || !$tz || $tz === "default") {
       date_default_timezone_set('UTC');
-      $this->settings->saveSetting([ 'key' => 'timezone', 'value' => 'UTC' ]);
-    } else {
+      $this->settings->saveSetting(['key' => 'timezone', 'value' => 'UTC']);
+    }
+    else {
       date_default_timezone_set($tz);
     }
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Render.
-   * --------------------------------------------------------------------------
-   *
    * Render View.
    *
    * @param string $view
@@ -233,23 +234,27 @@ abstract class BaseController extends Controller {
     // It is assumed that have declared and set the variable $myConfig in
     // your BaseController.
     //
-    $data['bs'] = $this->bs;
-    $data['config'] = $this->config;
+    $data['bs']            = $this->bs;
+    $data['config']        = $this->config;
     $data['configAppInfo'] = $this->configAppInfo;
-    $data['configLic'] = $this->configLic;
-    $data['settings'] = $this->settings->getSettings();
-    $data['session'] = $this->session;
-    $data['theme'] = $this->theme;
-    $data['menu'] = $this->menu;
-    $data['avatarUrl'] = $this->avatarUrl;
+    $data['configLic']     = $this->configLic;
+    $data['settings']      = $this->settings->getSettings();
+    $data['session']       = $this->session;
+    $data['theme']         = $this->theme;
+    $data['menu']          = $this->menu;
+    $data['avatarUrl']     = $this->avatarUrl;
     //
     // Extract the route name from the view string
     //
+
     if ($pos = strrpos($view, '/')) {
       $page = substr($view, $pos + 1);
-    } elseif ($pos = strrpos($view, '\\')) {
+
+    }
+    elseif ($pos = strrpos($view, '\\')) {
       $page = substr($view, $pos + 1);
-    } else {
+    }
+    else {
       $page = $view;
     }
     //
@@ -257,7 +262,9 @@ abstract class BaseController extends Controller {
     // However, the login, logout and settings page must remain so the admin can log
     // back in to switch off the maintenance mode again.
     //
-    if ($this->settings->getSetting('undermaintenance') && !in_array($page, [ 'login', 'logout', 'settings' ])) {
+    if (
+      $this->settings->getSetting('undermaintenance') && !in_array($page, ['login', 'logout', 'settings'])
+    ) {
       $view = "undermaintenance";
     }
     return view($view, $data);

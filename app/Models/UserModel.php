@@ -1,21 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
-use CodeIgniter\Model;
-use App\Models\GroupModel;
-use App\Models\RoleModel;
 use App\Entities\User;
+use CodeIgniter\Model;
 
-class UserModel extends Model {
+/**
+ * UserModel
+ */
+class UserModel extends Model
+{
+  /** @var mixed */
   public $error;
-  protected $table = 'users';
-  protected $primaryKey = 'id';
 
-  protected $returnType = User::class;
-  protected $useSoftDeletes = false;
-
-  protected $allowedFields = [
+  protected $table              = 'users';
+  protected $primaryKey         = 'id';
+  protected $returnType         = User::class;
+  protected $useSoftDeletes     = false;
+  protected $allowedFields      = [
     'email',
     'username',
     'lastname',
@@ -35,143 +39,116 @@ class UserModel extends Model {
     'permissions',
     'deleted_at',
   ];
-
-  protected $useTimestamps = true;
-
-  protected $validationRules = [
-    'email' => 'required|valid_email|is_unique[users.email,id,{id}]',
-    'username' => 'required|alpha_numeric_punct|min_length[3]|max_length[30]|is_unique[users.username,id,{id}]',
-    'firstname' => 'max_length[120]',
-    'lastname' => 'max_length[120]',
-    'displayname' => 'max_length[120]',
+  protected $useTimestamps      = true;
+  protected $validationRules    = [
+    'email'         => 'required|valid_email|is_unique[users.email,id,{id}]',
+    'username'      => 'required|alpha_numeric_punct|min_length[3]|max_length[30]|is_unique[users.username,id,{id}]',
+    'firstname'     => 'max_length[120]',
+    'lastname'      => 'max_length[120]',
+    'displayname'   => 'max_length[120]',
     'password_hash' => 'required',
   ];
-
   protected $validationMessages = [
-    'email' => [
-      'required' => 'You must enter an email address.',
-      'valid_email' => 'Please enter a valid email address.',
+    'email'       => [
+      'required'                                     => 'You must enter an email address.',
+      'valid_email'                                  => 'Please enter a valid email address.',
       'is_unique[users.email,email,{$data["name"]}]' => 'This email address is already taken.',
     ],
-    'username' => [
-      'required' => 'You must enter a username.',
-      'max_length[80]' => 'The username cannot be longer than 80 characters.',
+    'username'    => [
+      'required'                                               => 'You must enter a username.',
+      'max_length[80]'                                         => 'The username cannot be longer than 80 characters.',
       'is_unique[users.username,username,{$data["username"]}]' => 'This username is already taken.',
     ],
-    'firstname' => [
+    'firstname'   => [
       'max_length[120]' => 'The first name cannot be longer than 120 characters.',
     ],
-    'lastname' => [
+    'lastname'    => [
       'max_length[120]' => 'The last name cannot be longer than 120 characters.',
     ],
     'displayname' => [
       'max_length[120]' => 'The display name cannot be longer than 120 characters.',
     ],
   ];
-
-  protected $skipValidation = false;
-
-  protected $afterInsert = [ 'addToRole' ];
+  protected $skipValidation     = false;
+  protected $afterInsert        = ['addToRole'];
 
   /**
    * The id of a group to assign.
    * Set internally by withRole.
-   *
-   * @var int|null
    */
-  protected $assignGroup;
+  protected ?int $assignGroup = null;
 
   /**
    * The id of a role to assign.
    * Set internally by withRole.
-   *
-   * @var int|null
    */
-  protected $assignRole;
+  protected ?int $assignRole = null;
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Add to Group.
-   * --------------------------------------------------------------------------
+   * Adds this user to a group if prescribed.
    *
-   * If a default role is assigned in Config\Auth, will add this user to that
-   * role. Will do nothing if the role cannot be found.
+   * @param array $data User record.
    *
-   * @param mixed $data
-   *
-   * @return mixed
+   * @return array The original data array.
    */
-  protected function addToGroup($data): mixed {
-    if (is_numeric($this->assignGroup)) {
+  protected function addToGroup(array $data): array {
+    if ($this->assignGroup !== null) {
       $groupModel = model(GroupModel::class);
-      $groupModel->addUserToGroup($data['id'], $this->assignGroup);
+      $groupModel->addUserToGroup((int) $data['id'], $this->assignGroup);
     }
 
     return $data;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Add to Role.
-   * --------------------------------------------------------------------------
+   * Adds this user to a role if prescribed.
    *
-   * If a default role is assigned in Config\Auth, will
-   * add this user to that role. Will do nothing
-   * if the role cannot be found.
+   * @param array $data User record.
    *
-   * @param mixed $data
-   *
-   * @return mixed
+   * @return array The original data array.
    */
-  protected function addToRole($data): mixed {
-    if (is_numeric($this->assignRole)) {
+  protected function addToRole(array $data): array {
+    if ($this->assignRole !== null) {
       $roleModel = model(RoleModel::class);
-      $roleModel->addUserToRole($data['id'], $this->assignRole);
+      $roleModel->addUserToRole((int) $data['id'], $this->assignRole);
     }
 
     return $data;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Clear Group.
-   * --------------------------------------------------------------------------
-   *
    * Clears the group to assign to newly created users.
    *
    * @return $this
    */
-  public function clearGroup(): UserModel {
+  public function clearGroup(): self {
     $this->assignGroup = null;
     return $this;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Clear Role.
-   * --------------------------------------------------------------------------
-   *
    * Clears the role to assign to newly created users.
    *
    * @return $this
    */
-  public function clearRole(): UserModel {
+  public function clearRole(): self {
     $this->assignRole = null;
     return $this;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Create User.
-   * --------------------------------------------------------------------------
-   *
    * Creates a user.
    *
-   * @param array $data User data
+   * @param array $data User data.
    *
-   * @return mixed
+   * @return int|bool Result ID or false on failure.
    */
-  public function createUser($data): mixed {
+  public function createUser(array $data): int|bool {
     $validation = service('validation', null, false);
     $validation->setRules($this->validationRules, $this->validationMessages);
 
@@ -183,7 +160,7 @@ class UserModel extends Model {
     $id = $this->skipValidation()->insert($data);
 
     if (is_numeric($id)) {
-      return (int)$id;
+      return (int) $id;
     }
 
     $this->error = $this->errors();
@@ -191,178 +168,168 @@ class UserModel extends Model {
     return false;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Delete User.
-   * --------------------------------------------------------------------------
-   *
    * Deletes a user.
    *
-   * @param int $id
+   * @param int $id User ID.
    *
-   * @return bool
+   * @return bool True if successful, false otherwise.
    */
   public function deleteUser(int $id): bool {
     if (!$this->delete($id)) {
       $this->error = $this->errors();
       return false;
     }
+
     return true;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get Basic Info.
-   * --------------------------------------------------------------------------
+   * Gets one user record's basic information.
    *
-   * Gets one user records basic information.
+   * @param int|string $id User ID.
    *
-   * @param int $id User ID
-   *
-   * @return mixed
+   * @return array|bool Array of basic info objects or false if not found.
    */
-  public function getBasicInfo($id): mixed {
-    if ($result = $this->db->table($this->table)
-      ->select('id, email, username, lastname, firstname, displayname, hidden')
-      ->where([ 'id' => $id ])
-      ->get()->getResult()) {
+  public function getBasicInfo(int|string $id): array|bool {
+    if (
+      $result = $this->db->table($this->table)
+        ->select('id, email, username, lastname, firstname, displayname, hidden')
+        ->where(['id' => $id])
+        ->get()->getResult()
+    ) {
       return $result;
     }
+
     return false;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get Basic Info All.
-   * --------------------------------------------------------------------------
+   * Gets all user record's basic information.
    *
-   * Gets all user records basic information.
-   *
-   * @return mixed
+   * @return array|bool Array of all basic info objects or false on failure.
    */
-  public function getBasicInfoAll(): mixed {
-    if ($result = $this->db->table($this->table)
-      ->select('id, email, username, lastname, firstname, displayname, hidden')
-      ->orderBy('lastname', 'ASC')
-      ->get()->getResult()) {
+  public function getBasicInfoAll(): array|bool {
+    if (
+      $result = $this->db->table($this->table)
+        ->select('id, email, username, lastname, firstname, displayname, hidden')
+        ->orderBy('lastname', 'ASC')
+        ->get()->getResult()
+    ) {
       return $result;
     }
+
     return false;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get Basic Info Like.
-   * --------------------------------------------------------------------------
+   * Gets user record's basic information matching a search string.
    *
-   * Gets like user records basic information.
+   * @param string $match String to match.
    *
-   * @param string $match String to match
-   *
-   * @return mixed
+   * @return array|bool Array of basic info objects or false.
    */
-  public function getBasicInfoLike($match): mixed {
-    if ($result = $this->db->table($this->table)
-      ->select('id, email, username, lastname, firstname, displayname, hidden')
-      ->like('username', $match)
-      ->orLike('lastname', $match)
-      ->orLike('firstname', $match)
-      ->orLike('displayname', $match)
-      ->orderBy('lastname', 'ASC')
-      ->get()->getResult()) {
+  public function getBasicInfoLike(string $match): array|bool {
+    if (
+      $result = $this->db->table($this->table)
+        ->select('id, email, username, lastname, firstname, displayname, hidden')
+        ->like('username', $match)
+        ->orLike('lastname', $match)
+        ->orLike('firstname', $match)
+        ->orLike('displayname', $match)
+        ->orderBy('lastname', 'ASC')
+        ->get()->getResult()
+    ) {
       return $result;
     }
+
     return false;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get by Email.
-   * --------------------------------------------------------------------------
+   * Gets one user record by email.
    *
-   * Gets one user record.
+   * @param string $email E-mail.
    *
-   * @param string $email E-mail
-   *
-   * @return mixed
+   * @return object|bool User object or false if not found.
    */
-  public function getByEmail($email): mixed {
-    if ($row = $this->db->table($this->table)->where([ 'email' => $email ])->get()->getRow()) {
+  public function getByEmail(string $email): object|bool {
+    if ($row = $this->db->table($this->table)->where(['email' => $email])->get()->getRow()) {
       return $row;
     }
+
     return false;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get by Username.
-   * --------------------------------------------------------------------------
+   * Gets one user record by username.
    *
-   * Gets one user record.
+   * @param string $username Username.
    *
-   * @param string $username Username
-   *
-   * @return mixed
+   * @return object|bool User object or false if not found.
    */
-  public function getByUsername($username): mixed {
-    if ($row = $this->db->table($this->table)->where([ 'username' => $username ])->get()->getRow()) {
+  public function getByUsername(string $username): object|bool {
+    if ($row = $this->db->table($this->table)->where(['username' => $username])->get()->getRow()) {
       return $row;
     }
+
     return false;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get by Displayname.
-   * --------------------------------------------------------------------------
-   *
    * Gets a user's display name.
    *
-   * @param int $id User ID
+   * @param int|string $id User ID.
    *
-   * @return mixed
+   * @return string|bool Display name or false if not found.
    */
-  public function getDisplayname($id): mixed {
-    if ($row = $this->db->table($this->table)->where([ 'id' => $id ])->get()->getRow()) {
+  public function getDisplayname(int|string $id): string|bool {
+    if ($row = $this->db->table($this->table)->where(['id' => $id])->get()->getRow()) {
+      /** @var object $row */
       if (!empty($row->displayname)) {
-        return $row->displayname;
-      } else {
-        $displayName = $row->lastname . ', ' . $row->firstname;
-        $this->db->table($this->table)->where([ 'id' => $id ])->set([ 'displayname' => $displayName ])->update();
+        return (string) $row->displayname;
       }
+
+      $displayName = (string) $row->lastname . ', ' . (string) $row->firstname;
+      $this->db->table($this->table)->where(['id' => $id])->set(['displayname' => $displayName])->update();
+
       return $displayName;
     }
+
     return false;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get Username.
-   * --------------------------------------------------------------------------
-   *
    * Gets a user's username.
    *
-   * @param int $id User ID
+   * @param int|string $id User ID.
    *
-   * @return mixed
+   * @return string|bool Username or false if not found.
    */
-  public function getUsername($id): mixed {
-    if ($row = $this->db->table($this->table)->where([ 'id' => $id ])->get()->getRow()) {
-      return $row->username;
+  public function getUsername(int|string $id): string|bool {
+    if ($row = $this->db->table($this->table)->where(['id' => $id])->get()->getRow()) {
+      /** @var object $row */
+      return (string) $row->username;
     }
+
     return false;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Log Activation Attempt.
-   * --------------------------------------------------------------------------
+   * Logs an activation attempt.
    *
-   * Logs an activation attempt for posterity sake.
-   *
-   * @param string|null $token
-   * @param string|null $ipAddress
-   * @param string|null $userAgent
+   * @param string|null $token     Activation token.
+   * @param string|null $ipAddress IP address.
+   * @param string|null $userAgent User agent.
    *
    * @return void
    */
@@ -370,72 +337,68 @@ class UserModel extends Model {
     $this->db->table('activation_attempts')->insert([
       'ip_address' => $ipAddress,
       'user_agent' => $userAgent,
-      'token' => $token,
-      'created_at' => date('Y-m-d H:i:s')
+      'token'      => $token,
+      'created_at' => date('Y-m-d H:i:s'),
     ]);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Log Reset Attempt.
-   * --------------------------------------------------------------------------
+   * Logs a password reset attempt.
    *
-   * Logs a password reset attempt for posterity sake.
-   *
-   * @param string      $email
-   * @param string|null $token
-   * @param string|null $ipAddress
-   * @param string|null $userAgent
+   * @param string      $email     User email.
+   * @param string|null $token     Reset token.
+   * @param string|null $ipAddress IP address.
+   * @param string|null $userAgent User agent.
    *
    * @return void
    */
   public function logResetAttempt(string $email, ?string $token = null, ?string $ipAddress = null, ?string $userAgent = null): void {
     $this->db->table('reset_attempts')->insert([
-      'email' => $email,
+      'email'      => $email,
       'ip_address' => $ipAddress,
       'user_agent' => $userAgent,
-      'token' => $token,
-      'created_at' => date('Y-m-d H:i:s')
+      'token'      => $token,
+      'created_at' => date('Y-m-d H:i:s'),
     ]);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * With Group.
-   * --------------------------------------------------------------------------
-   *
    * Sets the group to assign when a user is created.
    *
-   * @param string $groupName
+   * @param string $groupName Group name.
    *
    * @return $this
    */
-  public function withGroup(string $groupName): UserModel {
+  public function withGroup(string $groupName): self {
     $group = $this->db->table('groups')->where('name', $groupName)->get()->getFirstRow();
-    /** @var object|null $group */
+
     if ($group) {
-        $this->assignGroup = $group->id;
+      /** @var object $group */
+      $this->assignGroup = (int) $group->id;
     }
+
     return $this;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * With Role.
-   * --------------------------------------------------------------------------
-   *
    * Sets the role to assign when a user is created.
    *
-   * @param string $roleName
+   * @param string $roleName Role name.
    *
    * @return $this
    */
-  public function withRole(string $roleName): UserModel {
+  public function withRole(string $roleName): self {
     $role = $this->db->table('roles')->where('name', $roleName)->get()->getFirstRow();
+
     if ($role) {
       /** @var object $role */
-      $this->assignRole = $role->id;
+      $this->assignRole = (int) $role->id;
     }
+
     return $this;
   }
 }
+

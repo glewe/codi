@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Config;
 
 use CodeIgniter\Config\BaseConfig;
 
-class Honeypot extends BaseConfig {
+class Honeypot extends BaseConfig
+{
   /**
    * Makes Honeypot visible or not to human
    */

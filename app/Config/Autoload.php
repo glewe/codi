@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Config;
 
 use CodeIgniter\Config\AutoloadConfig;
@@ -19,7 +21,8 @@ use CodeIgniter\Config\AutoloadConfig;
  *       and does not extend BaseConfig.
  *
  */
-class Autoload extends AutoloadConfig {
+class Autoload extends AutoloadConfig
+{
   /**
    * -------------------------------------------------------------------
    * Namespaces
@@ -96,5 +99,5 @@ class Autoload extends AutoloadConfig {
    *
    * @var list<string>
    */
-  public $helpers = [ 'app', 'calendar', 'email', 'filesystem' ];
+  public $helpers = ['app', 'calendar', 'email', 'filesystem'];
 }

@@ -1,50 +1,52 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use CodeIgniter\Model;
 
-class GroupModel extends Model {
-  protected $table = 'groups';
-  protected $primaryKey = 'id';
-  protected $returnType = 'object';
-  protected $allowedFields = [ 'name', 'description' ];
-  protected $useTimestamps = false;
+/**
+ * GroupModel
+ */
+class GroupModel extends Model
+{
+  protected $table          = 'groups';
+  protected $primaryKey     = 'id';
+  protected $returnType     = 'object';
+  protected $allowedFields  = ['name', 'description'];
+  protected $useTimestamps  = false;
   protected $skipValidation = false;
+
+  /** @var mixed */
   public $error;
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Add Permission to Group.
-   * --------------------------------------------------------------------------
-   *
    * Add a single permission to a single group, by IDs.
    *
-   * @param int $permissionId
-   * @param int $groupId
+   * @param int $permissionId Permission ID.
+   * @param int $groupId      Group ID.
    *
-   * @return bool
+   * @return bool True if successful, false otherwise.
    */
   public function addPermissionToGroup(int $permissionId, int $groupId): bool {
     $data = [
-      'group_id' => (int)$groupId,
-      'permission_id' => (int)$permissionId,
+      'group_id'      => $groupId,
+      'permission_id' => $permissionId,
     ];
 
-    return $this->db->table('groups_permissions')->insert($data);
+    return (bool) $this->db->table('groups_permissions')->insert($data);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Add User to Group.
-   * --------------------------------------------------------------------------
-   *
    * Adds a single user to a single group.
    *
-   * @param int $userId
-   * @param int $groupId
+   * @param int $userId User ID.
+   * @param int $groupId Group ID.
    *
-   * @return bool
+   * @return bool True if successful, false otherwise.
    */
   public function addUserToGroup(int $userId, int $groupId): bool {
     cache()->delete("{$groupId}_users");
@@ -52,23 +54,20 @@ class GroupModel extends Model {
     cache()->delete("{$userId}_permissions");
 
     $data = [
-      'user_id' => (int)$userId,
-      'group_id' => (int)$groupId
+      'user_id'  => $userId,
+      'group_id' => $groupId,
     ];
 
-    return (bool)$this->db->table('groups_users')->insert($data);
+    return (bool) $this->db->table('groups_users')->insert($data);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Delete Group.
-   * --------------------------------------------------------------------------
-   *
    * Deletes a group.
    *
-   * @param int $id Group ID
+   * @param int $id Group ID.
    *
-   * @return bool
+   * @return bool True if successful, false otherwise.
    */
   public function deleteGroup(int $id): bool {
     if (!$this->delete($id)) {
@@ -79,19 +78,16 @@ class GroupModel extends Model {
     return true;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get Groups for User.
-   * --------------------------------------------------------------------------
-   *
    * Returns an array of all groups that a user is a member of.
    *
-   * @param int $userId
+   * @param int $userId User ID.
    *
-   * @return array
+   * @return array Array of groups.
    */
   public function getGroupsForUser(int $userId): array {
-    if (null === $found = cache("{$userId}_groups")) {
+    if (null === ($found = cache("{$userId}_groups"))) {
       $found = $this->builder()
         ->select('groups_users.*, groups.name, groups.description')
         ->join('groups_users', 'groups_users.group_id = groups.id', 'left')
@@ -104,26 +100,17 @@ class GroupModel extends Model {
     return $found;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get Permissions for Group.
-   * --------------------------------------------------------------------------
+   * Gets all permissions for a group.
    *
-   * Gets all permissions for a group in a way that can be easily used to
-   * check against:
+   * @param int $groupId Group ID.
    *
-   * [
-   *   id => name,
-   *   id => name
-   * ]
-   *
-   * @param int $groupId
-   *
-   * @return array
+   * @return array Array of permissions.
    */
   public function getPermissionsForGroup(int $groupId): array {
     $permissionModel = model(PermissionModel::class);
-    $fromGroup = $permissionModel
+    $fromGroup       = $permissionModel
       ->select('permissions.*')
       ->join('groups_permissions', 'groups_permissions.permission_id = permissions.id', 'inner')
       ->where('group_id', $groupId)
@@ -138,19 +125,16 @@ class GroupModel extends Model {
     return $found;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get Users for Group.
-   * --------------------------------------------------------------------------
-   *
    * Returns an array of all users that are members of a group.
    *
-   * @param int $groupId
+   * @param int $groupId Group ID.
    *
-   * @return array
+   * @return array Array of users.
    */
   public function getUsersForGroup(int $groupId): array {
-    if (null === $found = cache("{$groupId}_users")) {
+    if (null === ($found = cache("{$groupId}_users"))) {
       $found = $this->builder()
         ->select('groups_users.*, users.*')
         ->join('groups_users', 'groups_users.group_id = groups.id', 'left')
@@ -164,91 +148,77 @@ class GroupModel extends Model {
     return $found;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Remove Permission from Group.
-   * --------------------------------------------------------------------------
-   *
    * Removes a single permission from a single group.
    *
-   * @param int $permissionId
-   * @param int $groupId
+   * @param int $permissionId Permission ID.
+   * @param int $groupId      Group ID.
    *
-   * @return bool
+   * @return bool True if successful, false otherwise.
    */
   public function removePermissionFromGroup(int $permissionId, int $groupId): bool {
-    return $this->db->table('groups_permissions')
+    return (bool) $this->db->table('groups_permissions')
       ->where([
         'permission_id' => $permissionId,
-        'group_id' => $groupId
+        'group_id'      => $groupId,
       ])->delete();
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Remove all Permissions from Group.
-   * --------------------------------------------------------------------------
-   *
    * Removes all permissions from a single group.
    *
-   * @param int $groupId
+   * @param int $groupId Group ID.
    *
-   * @return bool
+   * @return bool True if successful, false otherwise.
    */
   public function removeAllPermissionsFromGroup(int $groupId): bool {
-    return $this->db->table('groups_permissions')->where([ 'group_id' => $groupId ])->delete();
+    return (bool) $this->db->table('groups_permissions')->where(['group_id' => $groupId])->delete();
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Remove Permission from all Groups.
-   * --------------------------------------------------------------------------
-   *
    * Removes a single permission from all groups.
    *
-   * @param int $permissionId
+   * @param int $permissionId Permission ID.
    *
-   * @return bool
+   * @return bool True if successful, false otherwise.
    */
   public function removePermissionFromAllGroups(int $permissionId): bool {
-    return $this->db->table('groups_permissions')->where('permission_id', $permissionId)->delete();
+    return (bool) $this->db->table('groups_permissions')->where('permission_id', $permissionId)->delete();
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Remove User from Group.
-   * --------------------------------------------------------------------------
-   *
    * Removes a single user from a single group.
    *
-   * @param int        $userId
-   * @param int|string $groupId
+   * @param int $userId  User ID.
+   * @param int $groupId Group ID.
    *
-   * @return bool
+   * @return bool True if successful, false otherwise.
    */
-  public function removeUserFromGroup(int $userId, $groupId): bool {
+  public function removeUserFromGroup(int $userId, int $groupId): bool {
     cache()->delete("{$groupId}_users");
     cache()->delete("{$userId}_groups");
     cache()->delete("{$userId}_permissions");
 
-    return $this->db->table('groups_users')->where([ 'user_id' => $userId, 'group_id' => (int)$groupId ])->delete();
+    return (bool) $this->db->table('groups_users')->where(['user_id' => $userId, 'group_id' => $groupId])->delete();
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Remove User from all Groups.
-   * --------------------------------------------------------------------------
-   *
    * Removes a single user from all groups.
    *
-   * @param int $userId
+   * @param int $userId User ID.
    *
-   * @return bool
+   * @return bool True if successful, false otherwise.
    */
   public function removeUserFromAllGroups(int $userId): bool {
     cache()->delete("{$userId}_groups");
     cache()->delete("{$userId}_permissions");
 
-    return $this->db->table('groups_users')->where('user_id', (int)$userId)->delete();
+    return (bool) $this->db->table('groups_users')->where('user_id', $userId)->delete();
   }
 }
+

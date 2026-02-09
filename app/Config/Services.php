@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Config;
 
 use CodeIgniter\Model;
@@ -20,12 +22,10 @@ use App\Authentication\Resetters\ResetterInterface;
 
 use CodeIgniter\Config\Services as BaseService;
 
-class Services extends BaseService {
+class Services extends BaseService
+{
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Authentication.
-   * --------------------------------------------------------------------------
-   *
    * This method is responsible for setting up the authentication service.
    * It takes four parameters as input: the library to use for authentication,
    * the user model, the login model, and a boolean indicating whether to get
@@ -49,22 +49,19 @@ class Services extends BaseService {
       return self::getSharedInstance('authentication', $lib, $userModel, $loginModel);
     }
 
-    $userModel = $userModel ?? model(UserModel::class);
+    $userModel  = $userModel ?? model(UserModel::class);
     $loginModel = $loginModel ?? model(LoginModel::class);
 
     /** @var AuthConfig $config */
-    $config = config('Auth');
-    $class = $config->authenticationLibs[$lib];
+    $config   = config('Auth');
+    $class    = $config->authenticationLibs[$lib];
     $instance = new $class($config);
 
     return $instance->setUserModel($userModel)->setLoginModel($loginModel);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Authorization.
-   * --------------------------------------------------------------------------
-   *
    * This method is responsible for setting up the authorization service.
    * It takes five parameters as input: the role model, the permission model,
    * the user model, a boolean indicating whether to get a shared instance,
@@ -91,20 +88,17 @@ class Services extends BaseService {
       return self::getSharedInstance('authorization', $roleModel, $permissionModel, $userModel);
     }
 
-    $groupModel = $groupModel ?? model(GroupModel::class);
-    $roleModel = $roleModel ?? model(RoleModel::class);
+    $groupModel      = $groupModel ?? model(GroupModel::class);
+    $roleModel       = $roleModel ?? model(RoleModel::class);
     $permissionModel = $permissionModel ?? model(PermissionModel::class);
-    $userModel = $userModel ?? model(UserModel::class);
-    $instance = new FlatAuthorization($groupModel, $roleModel, $permissionModel);
+    $userModel       = $userModel ?? model(UserModel::class);
+    $instance        = new FlatAuthorization($groupModel, $roleModel, $permissionModel);
 
     return $instance->setUserModel($userModel);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Passwords.
-   * --------------------------------------------------------------------------
-   *
    * Returns an instance of the PasswordValidator.
    *
    * @param AuthConfig|null $config
@@ -120,11 +114,8 @@ class Services extends BaseService {
     return new PasswordValidator($config ?? config(AuthConfig::class));
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Activator.
-   * --------------------------------------------------------------------------
-   *
    * Returns an instance of the Activator.
    *
    * @param AuthConfig|null $config
@@ -138,16 +129,13 @@ class Services extends BaseService {
     }
 
     $config = $config ?? config(AuthConfig::class);
-    $class = $config->requireActivation ?? UserActivator::class;
+    $class  = $config->requireActivation ?? UserActivator::class;
 
     return new $class($config);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Resetter.
-   * --------------------------------------------------------------------------
-   *
    * Returns an instance of the Resetter.
    *
    * @param AuthConfig|null $config
@@ -161,7 +149,7 @@ class Services extends BaseService {
     }
 
     $config = $config ?? config(AuthConfig::class);
-    $class = $config->activeResetter ?? EmailResetter::class;
+    $class  = $config->activeResetter ?? EmailResetter::class;
 
     return new $class($config);
   }

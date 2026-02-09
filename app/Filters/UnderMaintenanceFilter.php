@@ -1,13 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filters;
 
+use App\Models\SettingsModel;
+use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
-use CodeIgniter\Filters\FilterInterface;
-use App\Models\SettingsModel;
 
-class UnderMaintenanceFilter implements FilterInterface {
+class UnderMaintenanceFilter implements FilterInterface
+{
   //---------------------------------------------------------------------------
   /**
    * Verifies that a user is logged in, or redirects to login.
@@ -15,21 +18,25 @@ class UnderMaintenanceFilter implements FilterInterface {
    * @param RequestInterface $request
    * @param array|null       $arguments
    *
-   * @return mixed
+   * @return ResponseInterface|string|void
    */
   public function before(RequestInterface $request, $arguments = null) {
     $settingsModel = new SettingsModel();
+
     if (!$settingsModel->getSetting('underMaintenance')) {
-      return false;
+      return;
     }
-    return true;
+
+    return;
   }
 
   //---------------------------------------------------------------------------
   /**
-   * @param RequestInterface $request
+   * After stage.
+   *
+   * @param RequestInterface  $request
    * @param ResponseInterface $response
-   * @param array|null $arguments
+   * @param array|null        $arguments
    *
    * @return ResponseInterface|null
    */

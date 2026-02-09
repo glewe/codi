@@ -1,27 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Commands;
 
+use App\Entities\User;
+use App\Models\UserModel;
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
-use App\Models\UserModel;
 
-class SetPassword extends BaseCommand {
-  protected $role = 'Auth';
+class SetPassword extends BaseCommand
+{
+  protected $group = 'Auth';
   protected $name = 'auth:set_password';
   protected $description = 'Set password to user.';
 
   protected $usage = 'auth:set_password [identity] [password]';
+
+  /**
+   * @var array<string, string>
+   */
   protected $arguments = [
     'identity' => 'User identity.',
     'password' => 'Password value you want to set.',
   ];
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Run.
-   * --------------------------------------------------------------------------
-   *
    * This method is responsible for setting a new password for a user.
    * It takes an array of parameters as input, which should contain the user's identity and the new password.
    * If the identity is not provided, it prompts the user to enter it.
@@ -34,8 +39,10 @@ class SetPassword extends BaseCommand {
    * If the password setting fails, it outputs a failure message.
    *
    * @param array $params An array of parameters. The first element should be the user's identity and the second element should be the new password.
+   *
+   * @return void
    */
-  public function run(array $params = []) {
+  public function run(array $params = []): void {
     // Consume or prompt for password
     $identity = isset($params[0]) ? $params[0] : null;
     $password = isset($params[1]) ? $params[1] : null;
@@ -56,7 +63,7 @@ class SetPassword extends BaseCommand {
     if (!$user) {
       CLI::write('User with identity: ' . $identity . ' not found.', 'red');
     } else {
-      /** @var \App\Entities\User $user */
+      /** @var User $user */
       $user->password = $password;
 
       if ($userModel->save($user)) {

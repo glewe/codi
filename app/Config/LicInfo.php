@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Config;
 
 use CodeIgniter\Config\BaseConfig;
 
-class LicInfo extends BaseConfig {
+class LicInfo extends BaseConfig
+{
   /**
    * ------------------------------------------------------------------------
    * Product Name
@@ -107,8 +110,8 @@ class LicInfo extends BaseConfig {
    * ------------------------------------------------------------------------
    *
    */
-  public $siteName = 'MySite';
-  public $siteOwner = 'John Doe';
+  public $siteName       = 'MySite';
+  public $siteOwner      = 'John Doe';
   public $siteOwnerAddr1 = 'Street 123';
   public $siteOwnerAddr2 = '1235 Town';
   public $siteOwnerAddr3 = 'Country';

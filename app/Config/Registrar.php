@@ -1,6 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Config;
+
+use Closure;
 
 /**
  * Helper class that will register our bulk plugins and filters with the View
@@ -13,16 +17,27 @@ namespace Config;
  *   \Myth\Template\Registrar::class
  * ];
  */
-class Registrar {
-  public static function View() {
+class Registrar
+{
+  //---------------------------------------------------------------------------
+  /**
+   * Registers the View plugins.
+   *
+   * @return array<string, array<string, list<Closure>>> The view plugins to register.
+   */
+  public static function View(): array {
     return [
       'plugins' => [
-        'logged_in' => [ function ($str, array $params = []) {
-          return service('authentication')->check() ? $str : '';
-        } ],
-        'logged_out' => [ function ($str, array $params = []) {
-          return !service('authentication')->check() ? $str : '';
-        } ],
+        'logged_in'  => [
+          function ($str, array $params = []) {
+            return service('authentication')->check() ? $str : '';
+          }
+        ],
+        'logged_out' => [
+          function ($str, array $params = []) {
+            return !service('authentication')->check() ? $str : '';
+          }
+        ],
       ]
     ];
   }

@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Config;
 
 use CodeIgniter\Config\BaseConfig;
 
-class Icons extends BaseConfig {
+class Icons extends BaseConfig
+{
   /**
    * ------------------------------------------------------------------------
    * Font Awesome Icons 6.6.0

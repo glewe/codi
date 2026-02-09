@@ -4,7 +4,8 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CODITables extends Migration {
+class CODITables extends Migration
+{
   //---------------------------------------------------------------------------
   /**
    * Create Tables
@@ -14,26 +15,26 @@ class CODITables extends Migration {
     // Users Table
     //
     $this->forge->addField([
-      'id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
-      'email' => ['type' => 'varchar', 'constraint' => 255],
-      'username' => ['type' => 'varchar', 'constraint' => 80, 'null' => true],
-      'lastname' => ['type' => 'varchar', 'constraint' => 120],
-      'firstname' => ['type' => 'varchar', 'constraint' => 120],
-      'displayname' => ['type' => 'varchar', 'constraint' => 120],
-      'hidden' => ['type' => 'tinyint', 'constraint' => 1, 'null' => 0, 'default' => 0],
-      'password_hash' => ['type' => 'varchar', 'constraint' => 255],
-      'secret_hash' => ['type' => 'varchar', 'constraint' => 255],
-      'reset_hash' => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
-      'reset_at' => ['type' => 'datetime', 'null' => true],
-      'reset_expires' => ['type' => 'datetime', 'null' => true],
-      'activate_hash' => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
-      'status' => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
-      'status_message' => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
-      'active' => ['type' => 'tinyint', 'constraint' => 1, 'null' => 0, 'default' => 0],
+      'id'               => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
+      'email'            => ['type' => 'varchar', 'constraint' => 255],
+      'username'         => ['type' => 'varchar', 'constraint' => 80, 'null' => true],
+      'lastname'         => ['type' => 'varchar', 'constraint' => 120],
+      'firstname'        => ['type' => 'varchar', 'constraint' => 120],
+      'displayname'      => ['type' => 'varchar', 'constraint' => 120],
+      'hidden'           => ['type' => 'tinyint', 'constraint' => 1, 'null' => 0, 'default' => 0],
+      'password_hash'    => ['type' => 'varchar', 'constraint' => 255],
+      'secret_hash'      => ['type' => 'varchar', 'constraint' => 255],
+      'reset_hash'       => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
+      'reset_at'         => ['type' => 'datetime', 'null' => true],
+      'reset_expires'    => ['type' => 'datetime', 'null' => true],
+      'activate_hash'    => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
+      'status'           => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
+      'status_message'   => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
+      'active'           => ['type' => 'tinyint', 'constraint' => 1, 'null' => 0, 'default' => 0],
       'force_pass_reset' => ['type' => 'tinyint', 'constraint' => 1, 'null' => 0, 'default' => 0],
-      'created_at' => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
-      'updated_at' => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
-      'deleted_at' => ['type' => 'datetime', 'null' => true],
+      'created_at'       => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
+      'updated_at'       => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
+      'deleted_at'       => ['type' => 'datetime', 'null' => true],
     ]);
 
     $this->forge->addKey('id', true);
@@ -45,13 +46,13 @@ class CODITables extends Migration {
     // Logins Table
     //
     $this->forge->addField([
-      'id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
+      'id'         => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
       'ip_address' => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
-      'email' => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
-      'user_id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'null' => true],
-      'date' => ['type' => 'datetime'],
-      'success' => ['type' => 'tinyint', 'constraint' => 1],
-      'info' => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
+      'email'      => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
+      'user_id'    => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'null' => true],
+      'date'       => ['type' => 'datetime'],
+      'success'    => ['type' => 'tinyint', 'constraint' => 1],
+      'info'       => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
     ]);
     $this->forge->addKey('id', true);
     $this->forge->addKey('email');
@@ -64,13 +65,13 @@ class CODITables extends Migration {
     // @see https://paragonie.com/blog/2015/04/secure-authentication-php-with-long-term-persistence
     //
     $this->forge->addField([
-      'id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
-      'selector' => ['type' => 'varchar', 'constraint' => 255],
+      'id'              => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
+      'selector'        => ['type' => 'varchar', 'constraint' => 255],
       'hashedValidator' => ['type' => 'varchar', 'constraint' => 255],
-      'user_id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true],
-      'expires' => ['type' => 'datetime'],
-      'created_at' => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
-      'updated_at' => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
+      'user_id'         => ['type' => 'int', 'constraint' => 11, 'unsigned' => true],
+      'expires'         => ['type' => 'datetime'],
+      'created_at'      => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
+      'updated_at'      => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
     ]);
     $this->forge->addKey('id', true);
     $this->forge->addKey('selector');
@@ -81,11 +82,11 @@ class CODITables extends Migration {
     // Reset Attempts Table
     //
     $this->forge->addField([
-      'id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
-      'email' => ['type' => 'varchar', 'constraint' => 255],
+      'id'         => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
+      'email'      => ['type' => 'varchar', 'constraint' => 255],
       'ip_address' => ['type' => 'varchar', 'constraint' => 255],
       'user_agent' => ['type' => 'varchar', 'constraint' => 255],
-      'token' => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
+      'token'      => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
       'created_at' => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
       'updated_at' => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
     ]);
@@ -96,10 +97,10 @@ class CODITables extends Migration {
     // Activation Attempts Table
     //
     $this->forge->addField([
-      'id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
+      'id'         => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
       'ip_address' => ['type' => 'varchar', 'constraint' => 255],
       'user_agent' => ['type' => 'varchar', 'constraint' => 255],
-      'token' => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
+      'token'      => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
       'created_at' => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
       'updated_at' => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
     ]);
@@ -110,12 +111,12 @@ class CODITables extends Migration {
     // Roles Table
     //
     $this->forge->addField([
-      'id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
-      'name' => ['type' => 'varchar', 'constraint' => 255],
+      'id'          => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
+      'name'        => ['type' => 'varchar', 'constraint' => 255],
       'description' => ['type' => 'varchar', 'constraint' => 255],
-      'bscolor' => ['type' => 'varchar', 'constraint' => 16, 'default' => 'primary'],
-      'created_at' => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
-      'updated_at' => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
+      'bscolor'     => ['type' => 'varchar', 'constraint' => 16, 'default' => 'primary'],
+      'created_at'  => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
+      'updated_at'  => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
     ]);
 
     $this->forge->addKey('id', true);
@@ -125,11 +126,11 @@ class CODITables extends Migration {
     // Permissions Table
     //
     $this->forge->addField([
-      'id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
-      'name' => ['type' => 'varchar', 'constraint' => 255],
+      'id'          => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
+      'name'        => ['type' => 'varchar', 'constraint' => 255],
       'description' => ['type' => 'varchar', 'constraint' => 255],
-      'created_at' => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
-      'updated_at' => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
+      'created_at'  => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
+      'updated_at'  => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
     ]);
 
     $this->forge->addKey('id', true);
@@ -139,10 +140,10 @@ class CODITables extends Migration {
     // Roles_Permissions Table
     //
     $this->forge->addField([
-      'role_id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
+      'role_id'       => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
       'permission_id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
-      'created_at' => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
-      'updated_at' => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
+      'created_at'    => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
+      'updated_at'    => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
     ]);
 
     $this->forge->addKey(['role_id', 'permission_id']);
@@ -154,8 +155,8 @@ class CODITables extends Migration {
     // Roles_Users Table
     //
     $this->forge->addField([
-      'role_id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
-      'user_id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
+      'role_id'    => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
+      'user_id'    => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
       'created_at' => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
       'updated_at' => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
     ]);
@@ -169,10 +170,10 @@ class CODITables extends Migration {
     // Users_Permissions Table
     //
     $this->forge->addField([
-      'user_id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
+      'user_id'       => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
       'permission_id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
-      'created_at' => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
-      'updated_at' => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
+      'created_at'    => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
+      'updated_at'    => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
     ]);
 
     $this->forge->addKey(['user_id', 'permission_id']);
@@ -184,11 +185,11 @@ class CODITables extends Migration {
     // Groups Table
     //
     $this->forge->addField([
-      'id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
-      'name' => ['type' => 'varchar', 'constraint' => 255],
+      'id'          => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
+      'name'        => ['type' => 'varchar', 'constraint' => 255],
       'description' => ['type' => 'varchar', 'constraint' => 255],
-      'created_at' => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
-      'updated_at' => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
+      'created_at'  => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
+      'updated_at'  => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
     ]);
 
     $this->forge->addKey('id', true);
@@ -198,8 +199,8 @@ class CODITables extends Migration {
     // Groups_Users Table
     //
     $this->forge->addField([
-      'group_id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
-      'user_id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
+      'group_id'   => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
+      'user_id'    => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
       'created_at' => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
       'updated_at' => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
     ]);
@@ -213,10 +214,10 @@ class CODITables extends Migration {
     // Groups_Permissions Table
     //
     $this->forge->addField([
-      'group_id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
+      'group_id'      => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
       'permission_id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
-      'created_at' => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
-      'updated_at' => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
+      'created_at'    => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
+      'updated_at'    => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
     ]);
 
     $this->forge->addKey(['group_id', 'permission_id']);
@@ -228,9 +229,9 @@ class CODITables extends Migration {
     // Settings Table
     //
     $this->forge->addField([
-      'id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
-      'key' => ['type' => 'varchar', 'constraint' => 255],
-      'value' => ['type' => 'text'],
+      'id'         => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
+      'key'        => ['type' => 'varchar', 'constraint' => 255],
+      'value'      => ['type' => 'text'],
       'created_at' => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
       'updated_at' => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
     ]);
@@ -243,10 +244,10 @@ class CODITables extends Migration {
     // Users_Options Table
     //
     $this->forge->addField([
-      'id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
-      'user_id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
-      'option' => ['type' => 'varchar', 'constraint' => 255],
-      'value' => ['type' => 'varchar', 'constraint' => 255],
+      'id'         => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
+      'user_id'    => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
+      'option'     => ['type' => 'varchar', 'constraint' => 255],
+      'value'      => ['type' => 'varchar', 'constraint' => 255],
       'created_at' => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
       'updated_at' => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
     ]);
@@ -260,11 +261,11 @@ class CODITables extends Migration {
     // Log Table
     //
     $this->forge->addField([
-      'id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
-      'type' => ['type' => 'varchar', 'constraint' => 80],
-      'user' => ['type' => 'varchar', 'constraint' => 80],
-      'ip' => ['type' => 'varchar', 'constraint' => 80],
-      'event' => ['type' => 'varchar', 'constraint' => 255],
+      'id'         => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
+      'type'       => ['type' => 'varchar', 'constraint' => 80],
+      'user'       => ['type' => 'varchar', 'constraint' => 80],
+      'ip'         => ['type' => 'varchar', 'constraint' => 80],
+      'event'      => ['type' => 'varchar', 'constraint' => 255],
       'created_at' => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
       'updated_at' => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
     ]);

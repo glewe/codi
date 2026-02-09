@@ -1,33 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Authentication\Resetters;
 
 use App\Entities\User;
 
-/**
- * Interface ResetterInterface
- *
- * @package App\Authentication\Resetters
- */
-interface ResetterInterface {
+interface ResetterInterface
+{
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Send.
-   * --------------------------------------------------------------------------
+   * Send reset message to user.
    *
-   * Send reset message to user
-   *
-   * @param User $user
+   * @param User|null $user
    *
    * @return bool
    */
   public function send(?User $user = null): bool;
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Error.
-   * --------------------------------------------------------------------------
-   *
    * Returns the error string that should be displayed to the user.
    *
    * @return string

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of CodeIgniter 4 framework.
  *
@@ -16,7 +18,8 @@ use CodeIgniter\Config\Routing as BaseRouting;
 /**
  * Routing configuration
  */
-class Routing extends BaseRouting {
+class Routing extends BaseRouting
+{
   /**
    * An array of files that contain route definitions.
    * Route files are read in order, with the first match

@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Config;
 
 use CodeIgniter\Config\BaseConfig;
 
-class Auth extends BaseConfig {
+class Auth extends BaseConfig
+{
   /**
    * --------------------------------------------------------------------------
    * Default User Role
@@ -15,7 +18,7 @@ class Auth extends BaseConfig {
    *
    * @var string
    */
-  public $defaultUserRole = 'User';
+  public string $defaultUserRole = 'User';
 
   /**
    * --------------------------------------------------------------------------
@@ -24,7 +27,7 @@ class Auth extends BaseConfig {
    *
    * @var array
    */
-  public $authenticationLibs = [
+  public array $authenticationLibs = [
     'local' => 'App\Authentication\LocalAuthenticator',
   ];
 
@@ -35,7 +38,7 @@ class Auth extends BaseConfig {
    *
    * @var array
    */
-  public $views = [
+  public array $views = [
 
     // Welcome page
     'welcome' => 'welcome',
@@ -92,7 +95,7 @@ class Auth extends BaseConfig {
    *
    * @var string
    */
-  public $viewLayout = 'layout';
+  public string $viewLayout = 'layout';
 
   /**
    * --------------------------------------------------------------------------
@@ -103,7 +106,7 @@ class Auth extends BaseConfig {
    *
    * @var string[]
    */
-  public $validFields = [ 'email', 'username' ];
+  public array $validFields = ['email', 'username'];
 
   /**
    * --------------------------------------------------------------------------
@@ -123,7 +126,7 @@ class Auth extends BaseConfig {
    *
    * @var string[]
    */
-  public $personalFields = [];
+  public array $personalFields = [];
 
   /**
    * --------------------------------------------------------------------------
@@ -161,7 +164,7 @@ class Auth extends BaseConfig {
    *
    * @var int
    */
-  public $maxSimilarity = 50;
+  public int $maxSimilarity = 50;
 
   /**
    * --------------------------------------------------------------------------
@@ -174,7 +177,7 @@ class Auth extends BaseConfig {
    *
    * @var bool
    */
-  public $allowRegistration = false;
+  public bool $allowRegistration = false;
 
   /**
    * --------------------------------------------------------------------------
@@ -186,7 +189,7 @@ class Auth extends BaseConfig {
    *
    * @var string|null Name of the ActivatorInterface class
    */
-  public $requireActivation = 'App\Authentication\Activators\EmailActivator';
+  public ?string $requireActivation = 'App\Authentication\Activators\EmailActivator';
 
   /**
    * --------------------------------------------------------------------------
@@ -198,7 +201,7 @@ class Auth extends BaseConfig {
    *
    * @var string|null Name of the ResetterInterface class
    */
-  public $activeResetter = 'App\Authentication\Resetters\EmailResetter';
+  public ?string $activeResetter = 'App\Authentication\Resetters\EmailResetter';
 
   /**
    * --------------------------------------------------------------------------
@@ -213,7 +216,7 @@ class Auth extends BaseConfig {
    *
    * @var bool
    */
-  public $allowRemembering = true;
+  public bool $allowRemembering = true;
 
   /**
    * --------------------------------------------------------------------------
@@ -225,7 +228,7 @@ class Auth extends BaseConfig {
    *
    * @var int
    */
-  public $rememberLength = 14 * DAY;
+  public int $rememberLength = 14 * DAY;
 
   /**
    * --------------------------------------------------------------------------
@@ -236,7 +239,7 @@ class Auth extends BaseConfig {
    *
    * @var bool
    */
-  public $require2FA = false;
+  public bool $require2FA = false;
 
   /**
    * --------------------------------------------------------------------------
@@ -247,7 +250,7 @@ class Auth extends BaseConfig {
    *
    * @var string
    */
-  public $authenticatorTitle = 'CODI';
+  public string $authenticatorTitle = 'CODI';
 
   /**
    * --------------------------------------------------------------------------
@@ -258,7 +261,7 @@ class Auth extends BaseConfig {
    *
    * @var bool
    */
-  public $silent = false;
+  public bool $silent = false;
 
   /**
    * --------------------------------------------------------------------------
@@ -294,13 +297,13 @@ class Auth extends BaseConfig {
   */
 
   /** @var int */
-  public $hashMemoryCost = 2048; // PASSWORD_ARGON2_DEFAULT_MEMORY_COST
+  public int $hashMemoryCost = 2048; // PASSWORD_ARGON2_DEFAULT_MEMORY_COST
 
   /** @var int */
-  public $hashTimeCost = 4; // PASSWORD_ARGON2_DEFAULT_TIME_COST
+  public int $hashTimeCost = 4; // PASSWORD_ARGON2_DEFAULT_TIME_COST
 
   /** @var int */
-  public $hashThreads = 4; // PASSWORD_ARGON2_DEFAULT_THREADS
+  public int $hashThreads = 4; // PASSWORD_ARGON2_DEFAULT_THREADS
 
   /**
    * --------------------------------------------------------------------------
@@ -318,7 +321,7 @@ class Auth extends BaseConfig {
    *
    * @var int
    */
-  public $hashCost = 10;
+  public int $hashCost = 10;
 
   /**
    * --------------------------------------------------------------------------
@@ -330,7 +333,7 @@ class Auth extends BaseConfig {
    *
    * @var int
    */
-  public $minimumPasswordLength = 8;
+  public int $minimumPasswordLength = 8;
 
   /**
    * --------------------------------------------------------------------------
@@ -345,7 +348,7 @@ class Auth extends BaseConfig {
    *
    * @var string[]
    */
-  public $passwordValidators = [
+  public array $passwordValidators = [
     'App\Authentication\Passwords\CompositionValidator',
     'App\Authentication\Passwords\NothingPersonalValidator',
     'App\Authentication\Passwords\DictionaryValidator',
@@ -361,7 +364,7 @@ class Auth extends BaseConfig {
    *
    * @var array
    */
-  public $userActivators = [
+  public array $userActivators = [
     'App\Authentication\Activators\EmailActivator' => [
       'fromEmail' => null,
       'fromName' => null,
@@ -377,7 +380,7 @@ class Auth extends BaseConfig {
    *
    * @var array
    */
-  public $userResetters = [
+  public array $userResetters = [
     'App\Authentication\Resetters\EmailResetter' => [
       'fromEmail' => null,
       'fromName' => null,
@@ -394,7 +397,7 @@ class Auth extends BaseConfig {
    *
    * @var int
    */
-  public $resetTime = 3600;
+  public int $resetTime = 3600;
 
   /**
    * --------------------------------------------------------------------------
@@ -406,7 +409,7 @@ class Auth extends BaseConfig {
    *
    * @var bool
    */
-  public $showCredits = true;
+  public bool $showCredits = true;
 
   /**
    * --------------------------------------------------------------------------
@@ -418,5 +421,5 @@ class Auth extends BaseConfig {
    *
    * @var bool
    */
-  public $showReleaseInfo = true;
+  public bool $showReleaseInfo = true;
 }

@@ -1,19 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filters;
 
+use App\Exceptions\PermissionException;
+use CodeIgniter\Filters\FilterInterface;
+use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
-use CodeIgniter\Filters\FilterInterface;
-use App\Exceptions\PermissionException;
 
-class GroupFilter implements FilterInterface {
-
+class GroupFilter implements FilterInterface
+{
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Before.
-   * --------------------------------------------------------------------------
-   *
    * Handles the logic to be executed before the request is processed.
    *
    * This method checks if the user is logged in and belongs to the required groups.
@@ -24,19 +24,21 @@ class GroupFilter implements FilterInterface {
    * @param RequestInterface $request   The current request instance.
    * @param array|null       $arguments The groups required to access the resource.
    *
-   * @return \CodeIgniter\HTTP\RedirectResponse|bool
+   * @return RedirectResponse|void
    */
-  public function before(RequestInterface $request, $arguments = null): \CodeIgniter\HTTP\RedirectResponse|bool {
+  public function before(RequestInterface $request, $arguments = null) {
     //
     // Load the 'auth' helper if the 'logged_in' function does not exist
     //
-    if (!function_exists('logged_in')) helper('auth');
+    if (!function_exists('logged_in')) {
+      helper('auth');
+    }
 
     //
     // If no groups are specified, return false
     //
     if (empty($arguments)) {
-      return false;
+      return;
     }
 
     //
@@ -62,7 +64,7 @@ class GroupFilter implements FilterInterface {
     //
     foreach ($arguments as $group) {
       if ($authorize->inGroup($group, $authenticate->id())) {
-        return false;
+        return;
       }
     }
 
@@ -74,17 +76,14 @@ class GroupFilter implements FilterInterface {
       $redirectURL = '/error';
       unset($_SESSION['redirect_url']);
       return redirect()->to($redirectURL)->with('error', lang('Auth.exception.insufficient_permissions'));
-    } else {
-      // Throw a PermissionException
-      throw new PermissionException(lang('Auth.exception.insufficient_permissions'));
     }
+
+    // Throw a PermissionException
+    throw new PermissionException(lang('Auth.exception.insufficient_permissions'));
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * After.
-   * --------------------------------------------------------------------------
-   *
    * Allows After filters to inspect and modify the response object as needed.
    * This method does not allow any way to stop execution of other after filters,
    * short of throwing an Exception or Error.

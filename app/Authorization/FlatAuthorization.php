@@ -1,17 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Authorization;
 
-use CodeIgniter\Model;
-use CodeIgniter\Events\Events;
-
-use App\Models\GroupModel;
-use App\Models\RoleModel;
-use App\Models\PermissionModel;
 use App\Entities\User;
+use App\Models\GroupModel;
+use App\Models\PermissionModel;
+use App\Models\RoleModel;
 use App\Models\UserModel;
+use CodeIgniter\Events\Events;
+use CodeIgniter\Model;
 
-class FlatAuthorization implements AuthorizeInterface {
+class FlatAuthorization implements AuthorizeInterface
+{
   /**
    * @var array|string|null
    */
@@ -45,15 +47,12 @@ class FlatAuthorization implements AuthorizeInterface {
    * The user model to use. Usually the class noted below (or an extension
    * thereof) but can be any compatible CodeIgniter Model.
    *
-   * @var UserModel
+   * @var Model|null
    */
   protected $userModel = null;
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Constructor.
-   * --------------------------------------------------------------------------
-   *
    * Stores the models.
    *
    * @param GroupModel      $groupModel
@@ -66,11 +65,8 @@ class FlatAuthorization implements AuthorizeInterface {
     $this->permissionModel = $permissionModel;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Add Permission to Group.
-   * --------------------------------------------------------------------------
-   *
    * Adds a single permission to a single group.
    *
    * @param int|string $permission
@@ -98,11 +94,8 @@ class FlatAuthorization implements AuthorizeInterface {
     return true;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Add Permission to Role.
-   * --------------------------------------------------------------------------
-   *
    * Adds a single permission to a single role.
    *
    * @param int|string $permission
@@ -130,11 +123,8 @@ class FlatAuthorization implements AuthorizeInterface {
     return true;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Add Permission to User.
-   * --------------------------------------------------------------------------
-   *
    * Assigns a single permission to a user, irregardless of permissions
    * assigned by roles. This is saved to the user's meta information.
    *
@@ -143,7 +133,7 @@ class FlatAuthorization implements AuthorizeInterface {
    *
    * @return bool|null
    */
-  public function addPermissionToUser($permission, int $userId): bool|null {
+  public function addPermissionToUser($permission, int $userId): ?bool {
     $permissionId = $this->getPermissionID($permission);
 
     if (!is_numeric($permissionId)) {
@@ -157,7 +147,7 @@ class FlatAuthorization implements AuthorizeInterface {
     $user = $this->userModel->find($userId);
 
     if (!$user) {
-      $this->error = lang('Auth.user.not_found', [ $userId ]);
+      $this->error = lang('Auth.user.not_found', [$userId]);
       return false;
     }
 
@@ -173,25 +163,22 @@ class FlatAuthorization implements AuthorizeInterface {
     return true;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Add User to Group.
-   * --------------------------------------------------------------------------
-   *
    * Adds a user to group.
    *
    * @param int   $userid
-   * @param mixed $group Either ID or name, fails on anything else
+   * @param mixed $group   Either ID or name, fails on anything else
    *
-   * @return bool|null
+   * @return bool
    */
-  public function addUserToGroup(int $userid, $group): bool|null {
+  public function addUserToGroup(int $userid, $group): bool {
     if (empty($userid) || !is_numeric($userid)) {
-      return null;
+      return false;
     }
 
     if (empty($group) || (!is_numeric($group) && !is_string($group))) {
-      return null;
+      return false;
     }
 
     $groupId = $this->getGroupID($group);
@@ -201,7 +188,7 @@ class FlatAuthorization implements AuthorizeInterface {
     }
 
     if (!is_numeric($groupId)) {
-      return null;
+      return false;
     }
 
     if (!$this->groupModel->addUserToGroup($userid, (int)$groupId)) {
@@ -214,25 +201,22 @@ class FlatAuthorization implements AuthorizeInterface {
     return true;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Add User to Role.
-   * --------------------------------------------------------------------------
-   *
    * Adds a user to role.
    *
    * @param int   $userid
-   * @param mixed $role Either ID or name, fails on anything else
+   * @param mixed $role    Either ID or name, fails on anything else
    *
-   * @return bool|null
+   * @return bool
    */
-  public function addUserToRole(int $userid, $role): bool|null {
+  public function addUserToRole(int $userid, $role): bool {
     if (empty($userid) || !is_numeric($userid)) {
-      return null;
+      return false;
     }
 
     if (empty($role) || (!is_numeric($role) && !is_string($role))) {
-      return null;
+      return false;
     }
 
     $roleId = $this->getRoleID($role);
@@ -242,7 +226,7 @@ class FlatAuthorization implements AuthorizeInterface {
     }
 
     if (!is_numeric($roleId)) {
-      return null;
+      return false;
     }
 
     if (!$this->roleModel->addUserToRole($userid, (int)$roleId)) {
@@ -255,19 +239,16 @@ class FlatAuthorization implements AuthorizeInterface {
     return true;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Create Permission.
-   * --------------------------------------------------------------------------
-   *
    * Creates a single permission.
    *
    * @param string $name
    * @param string $description
    *
-   * @return mixed
+   * @return int|bool
    */
-  public function createPermission(string $name, string $description = ''): mixed {
+  public function createPermission(string $name, string $description = ''): int|bool {
     $data = [
       'name' => $name,
       'description' => $description,
@@ -295,17 +276,14 @@ class FlatAuthorization implements AuthorizeInterface {
     return false;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Create Group.
-   * --------------------------------------------------------------------------
-   *
    * @param string $name
    * @param string $description
    *
-   * @return mixed
+   * @return int|bool
    */
-  public function createGroup(string $name, string $description = ''): mixed {
+  public function createGroup(string $name, string $description = ''): int|bool {
     $data = [
       'name' => $name,
       'description' => $description,
@@ -345,20 +323,15 @@ class FlatAuthorization implements AuthorizeInterface {
     return false;
   }
 
-  //-------------------------------------------------------------------------
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Create Role.
-   * --------------------------------------------------------------------------
-   *
-   *
    * @param string $name
    * @param string $description
-   * @param string $bscolor *
+   * @param string $bscolor
    *
-* @return mixed
+   * @return int|bool
    */
-  public function createRole(string $name, string $description = '', string $bscolor = 'primary'): mixed {
+  public function createRole(string $name, string $description = '', string $bscolor = 'primary'): int|bool {
     $data = [
       'name' => $name,
       'description' => $description,
@@ -399,11 +372,8 @@ class FlatAuthorization implements AuthorizeInterface {
     return false;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Delete Group.
-   * --------------------------------------------------------------------------
-   *
    * Deletes a single group.
    *
    * @param int $groupId
@@ -418,11 +388,8 @@ class FlatAuthorization implements AuthorizeInterface {
     return true;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Delete Permission.
-   * --------------------------------------------------------------------------
-   *
    * Deletes a single permission and removes that permission from all roles.
    *
    * @param int $permissionId
@@ -440,11 +407,8 @@ class FlatAuthorization implements AuthorizeInterface {
     return true;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Delete Role.
-   * --------------------------------------------------------------------------
-   *
    * Deletes a single role.
    *
    * @param int $roleId
@@ -459,11 +423,8 @@ class FlatAuthorization implements AuthorizeInterface {
     return true;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Does User Have Permission.
-   * --------------------------------------------------------------------------
-   *
    * Checks to see if a user has personal permission assigned to it (not via
    * a group or role).
    *
@@ -472,7 +433,7 @@ class FlatAuthorization implements AuthorizeInterface {
    *
    * @return bool|null
    */
-  public function doesUserHavePermission($userId, $permission): bool|null {
+  public function doesUserHavePermission($userId, $permission): ?bool {
     $permissionId = $this->getPermissionID($permission);
 
     if (!is_numeric($permissionId)) {
@@ -483,27 +444,24 @@ class FlatAuthorization implements AuthorizeInterface {
       return null;
     }
 
-    return $this->permissionModel->doesUserHavePermission($userId, $permissionId);
+    return $this->permissionModel->doesUserHavePermission($userId, (int)$permissionId);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Error.
-   * --------------------------------------------------------------------------
-   *
    * Returns any error(s) from the last call.
    *
-   * @return array|string|null
+   * @return string|null
    */
-  public function error(): array|string|null {
+  public function error(): ?string {
+    if (is_array($this->error)) {
+      return implode(', ', $this->error);
+    }
     return $this->error;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get Group ID.
-   * --------------------------------------------------------------------------
-   *
    * Given a group, will return the group ID. The group can be either
    * the ID or the name of the group.
    *
@@ -519,7 +477,7 @@ class FlatAuthorization implements AuthorizeInterface {
     $g = $this->groupModel->where('name', $group)->first();
 
     if (!$g) {
-      $this->error = lang('Auth.group.not_found', [ $group ]);
+      $this->error = lang('Auth.group.not_found', [$group]);
       return false;
     }
 
@@ -527,11 +485,8 @@ class FlatAuthorization implements AuthorizeInterface {
     return (int)$g->id;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get Permission ID.
-   * --------------------------------------------------------------------------
-   *
    * Verifies that a permission (either ID or the name) exists and returns
    * the permission ID.
    *
@@ -549,7 +504,7 @@ class FlatAuthorization implements AuthorizeInterface {
     $p = $this->permissionModel->asObject()->where('name', $permission)->first();
 
     if (!$p) {
-      $this->error = lang('Auth.permission.not_found', [ $permission ]);
+      $this->error = lang('Auth.permission.not_found', [$permission]);
       return false;
     }
 
@@ -557,11 +512,8 @@ class FlatAuthorization implements AuthorizeInterface {
     return (int)$p->id;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get Role ID.
-   * --------------------------------------------------------------------------
-   *
    * Given a role, will return the role ID. The role can be either
    * the ID or the name of the role.
    *
@@ -575,59 +527,50 @@ class FlatAuthorization implements AuthorizeInterface {
     }
     $r = $this->roleModel->where('name', $role)->first();
     if (!$r) {
-      $this->error = lang('Auth.role.not_found', [ $role ]);
+      $this->error = lang('Auth.role.not_found', [$role]);
       return false;
     }
     /** @var object $r */
     return (int)$r->id;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Group.
-   * --------------------------------------------------------------------------
-   *
    * Grabs the details about a single group.
    *
    * @param int|string $group
    *
    * @return object|null
    */
-  public function group($group): object|null {
+  public function group($group): ?object {
     if (is_numeric($group)) {
       return $this->groupModel->find((int)$group);
     }
     return $this->groupModel->where('name', $group)->first();
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Groups.
-   * --------------------------------------------------------------------------
-   *
    * Grabs an array of all groups.
    *
-   * @return array of objects
+   * @return array
    */
   public function groups(): array {
     return $this->groupModel->orderBy('name', 'asc')->findAll();
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Group Permissions.
-   * --------------------------------------------------------------------------
-   *
    * Returns an array of all permissions in the system for a group.
    * The group can be either the ID or the name of the group.
    *
    * @param int|string $group
    *
-   * @return mixed
+   * @return array
    */
-  public function groupPermissions($group): mixed {
+  public function groupPermissions($group): array {
     if (is_numeric($group)) {
-      return $this->groupModel->getPermissionsForGroup($group);
+      return $this->groupModel->getPermissionsForGroup((int)$group);
     } else {
       $g = $this->groupModel->where('name', $group)->first();
       /** @var object $g */
@@ -635,25 +578,22 @@ class FlatAuthorization implements AuthorizeInterface {
     }
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Has Permission.
-   * --------------------------------------------------------------------------
-   *
    * Checks whether a user has a given permission.
    *
-   * @param int|string $permission Permission ID or name
+   * @param int|string $permission  Permission ID or name
    * @param int        $userId
    *
-   * @return mixed
+   * @return bool
    */
-  public function hasPermission($permission, int $userId): mixed {
+  public function hasPermission($permission, int $userId): bool {
     if (empty($permission) || (!is_string($permission) && !is_numeric($permission))) {
-      return null;
+      return false;
     }
 
     if (empty($userId) || !is_numeric($userId)) {
-      return null;
+      return false;
     }
 
     // Get the Permission ID
@@ -669,14 +609,11 @@ class FlatAuthorization implements AuthorizeInterface {
     }
 
     // Still here? Then we have one last check to make - any user private permissions.
-    return $this->doesUserHavePermission($userId, (int)$permissionId);
+    return (bool)$this->doesUserHavePermission($userId, (int)$permissionId);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Has Permissions.
-   * --------------------------------------------------------------------------
-   *
    * Checks whether a user has any of the given permissions.
    *
    * Permissions can be either a string, with the name of the permission, an
@@ -684,18 +621,18 @@ class FlatAuthorization implements AuthorizeInterface {
    * permissions that the user must have ONE of.
    * (It's an OR check not an AND check)
    *
-   * @param mixed $permissions Permission ID or name (or array of)
+   * @param mixed $permissions  Permission ID or name (or array of)
    * @param int   $userId
    *
    * @return bool|null
    */
-  public function hasPermissions($permissions, int $userId): bool|null {
+  public function hasPermissions($permissions, int $userId): ?bool {
     if (empty($userId) || !is_numeric($userId)) {
       return null;
     }
 
     if (!is_array($permissions)) {
-      $permissions = [ $permissions ];
+      $permissions = [$permissions];
     }
     if (empty($permissions)) {
       return false;
@@ -712,16 +649,13 @@ class FlatAuthorization implements AuthorizeInterface {
         return true;
       }
       // Still here? Then we have one last check to make - any user private permissions.
-      return $this->doesUserHavePermission($userId, (int)$permissionId);
+      return (bool)$this->doesUserHavePermission($userId, (int)$permissionId);
     }
     return false;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * In Group.
-   * --------------------------------------------------------------------------
-   *
    * Checks whether a user is in a group.
    *
    * Groups can be either a string, with the name of the group, an INT with the
@@ -739,7 +673,7 @@ class FlatAuthorization implements AuthorizeInterface {
     }
 
     if (!is_array($groups)) {
-      $groups = [ $groups ];
+      $groups = [$groups];
     }
 
     $userGroups = $this->groupModel->getGroupsForUser((int)$userId);
@@ -756,7 +690,7 @@ class FlatAuthorization implements AuthorizeInterface {
         }
       } elseif (is_string($group)) {
         $names = array_column($userGroups, 'name');
-        if (in_array($group, $names)) {
+        if (in_array((string)$group, $names)) {
           return true;
         }
       }
@@ -765,11 +699,8 @@ class FlatAuthorization implements AuthorizeInterface {
     return false;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * In Role.
-   * --------------------------------------------------------------------------
-   *
    * Checks whether a user is in a role.
    *
    * Roles can be either a string, with the name of the role, an INT
@@ -787,7 +718,7 @@ class FlatAuthorization implements AuthorizeInterface {
     }
 
     if (!is_array($roles)) {
-      $roles = [ $roles ];
+      $roles = [$roles];
     }
 
     $userRoles = $this->roleModel->getRolesForUser((int)$userId);
@@ -804,7 +735,7 @@ class FlatAuthorization implements AuthorizeInterface {
         }
       } elseif (is_string($role)) {
         $names = array_column($userRoles, 'name');
-        if (in_array($role, $names)) {
+        if (in_array((string)$role, $names)) {
           return true;
         }
       }
@@ -813,50 +744,41 @@ class FlatAuthorization implements AuthorizeInterface {
     return false;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Permission.
-   * --------------------------------------------------------------------------
-   *
    * Returns the details about a single permission.
    *
    * @param int|string $permission
    *
    * @return object|null
    */
-  public function permission($permission): object|null {
+  public function permission($permission): ?object {
     if (is_numeric($permission)) {
       return $this->permissionModel->find((int)$permission);
     }
     return $this->permissionModel->like('name', $permission, 'none', null, true)->first();
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Permissions.
-   * --------------------------------------------------------------------------
-   *
    * Returns an array of all permissions in the system.
    *
-   * @return mixed
+   * @return array
    */
-  public function permissions(): mixed {
+  public function permissions(): array {
     return $this->permissionModel->orderBy('name', 'asc')->findAll();
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Remove Permission from Group.
-   * --------------------------------------------------------------------------
-   *
    * Removes a single permission from a group.
    *
    * @param int|string $permission
    * @param int|string $group
    *
-   * @return mixed
+   * @return bool
    */
-  public function removePermissionFromGroup($permission, $group): mixed {
+  public function removePermissionFromGroup($permission, $group): bool {
     $permissionId = $this->getPermissionID($permission);
     $groupId = $this->getRoleID($group);
 
@@ -876,19 +798,16 @@ class FlatAuthorization implements AuthorizeInterface {
     return true;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Remove Permission from Role.
-   * --------------------------------------------------------------------------
-   *
    * Removes a single permission from a role.
    *
    * @param int|string $permission
    * @param int|string $role
    *
-   * @return mixed
+   * @return bool
    */
-  public function removePermissionFromRole($permission, $role): mixed {
+  public function removePermissionFromRole($permission, $role): bool {
     $permissionId = $this->getPermissionID($permission);
     $roleId = $this->getRoleID($role);
 
@@ -908,18 +827,15 @@ class FlatAuthorization implements AuthorizeInterface {
     return true;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Remove all Permissions from User.
-   * --------------------------------------------------------------------------
-   *
    * Removes all individual permissions from a user.
    *
    * @param int $userId
    *
    * @return bool|null
    */
-  public function removeAllPermissionsFromUser(int $userId): bool|null {
+  public function removeAllPermissionsFromUser(int $userId): ?bool {
     if (empty($userId) || !is_numeric($userId)) {
       return null;
     }
@@ -931,11 +847,8 @@ class FlatAuthorization implements AuthorizeInterface {
     return true;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Remove Permission from User.
-   * --------------------------------------------------------------------------
-   *
    * Removes a single permission from a user. Only applies to permissions
    * that have been assigned with addPermissionToUser, not to permissions
    * inherited based on roles they belong to.
@@ -945,7 +858,7 @@ class FlatAuthorization implements AuthorizeInterface {
    *
    * @return bool|null
    */
-  public function removePermissionFromUser($permission, int $userId): bool|null {
+  public function removePermissionFromUser($permission, int $userId): ?bool {
     $permissionId = $this->getPermissionID($permission);
     if (!is_numeric($permissionId)) {
       return false;
@@ -960,25 +873,22 @@ class FlatAuthorization implements AuthorizeInterface {
     return $this->permissionModel->removePermissionFromUser($permissionId, $userId);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Remove User from Group.
-   * --------------------------------------------------------------------------
-   *
    * Removes a single user from a group.
    *
    * @param int   $userId
    * @param mixed $group
    *
-   * @return mixed
+   * @return bool
    */
-  public function removeUserFromGroup(int $userId, $group): mixed {
+  public function removeUserFromGroup(int $userId, $group): bool {
     if (empty($userId) || !is_numeric($userId)) {
-      return null;
+      return false;
     }
 
     if (empty($group) || (!is_numeric($group) && !is_string($group))) {
-      return null;
+      return false;
     }
 
     $groupId = $this->getGroupID($group);
@@ -1001,25 +911,22 @@ class FlatAuthorization implements AuthorizeInterface {
     return true;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Remove User from Role.
-   * --------------------------------------------------------------------------
-   *
    * Removes a single user from a role.
    *
    * @param int   $userId
    * @param mixed $role
    *
-   * @return mixed
+   * @return bool
    */
-  public function removeUserFromRole(int $userId, $role): mixed {
+  public function removeUserFromRole(int $userId, $role): bool {
     if (empty($userId) || !is_numeric($userId)) {
-      return null;
+      return false;
     }
 
     if (empty($role) || (!is_numeric($role) && !is_string($role))) {
-      return null;
+      return false;
     }
 
     $roleId = $this->getRoleID($role);
@@ -1042,18 +949,15 @@ class FlatAuthorization implements AuthorizeInterface {
     return true;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Remove User from all Groups.
-   * --------------------------------------------------------------------------
-   *
    * Removes a user from all groups.
    *
    * @param int $userId
    *
    * @return bool|null
    */
-  public function removeUserFromAllGroups(int $userId): bool|null {
+  public function removeUserFromAllGroups(int $userId): ?bool {
     if (empty($userId) || !is_numeric($userId)) {
       return null;
     }
@@ -1067,18 +971,15 @@ class FlatAuthorization implements AuthorizeInterface {
     return $this->groupModel->removeUserFromAllGroups($userId);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * * Remove User from all Roles.
-   * * --------------------------------------------------------------------------
-   * *
    * Removes a user from all roles.
    *
    * @param int $userId
    *
    * @return bool|null
    */
-  public function removeUserFromAllRoles(int $userId): bool|null {
+  public function removeUserFromAllRoles(int $userId): ?bool {
     if (empty($userId) || !is_numeric($userId)) {
       return null;
     }
@@ -1092,52 +993,43 @@ class FlatAuthorization implements AuthorizeInterface {
     return $this->roleModel->removeUserFromAllRoles($userId);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Role.
-   * --------------------------------------------------------------------------
-   *
    * Grabs the details about a single role.
    *
    * @param int|string $role
    *
    * @return object|null
    */
-  public function role($role): object|null {
+  public function role($role): ?object {
     if (is_numeric($role)) {
       return $this->roleModel->find((int)$role);
     }
     return $this->roleModel->where('name', $role)->first();
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Roles.
-   * --------------------------------------------------------------------------
-   *
    * Grabs an array of all roles.
    *
-   * @return array of objects
+   * @return array
    */
   public function roles(): array {
     return $this->roleModel->orderBy('name', 'asc')->findAll();
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Role Permissions.
-   * --------------------------------------------------------------------------
-   *
-   * Returns an array of all permissions in the system for a role
+   * Returns an array of all permissions in the system for a role.
    * The role can be either the ID or the name of the role.
    *
    * @param int|string $role
    *
-   * @return mixed
+   * @return array
    */
-  public function rolePermissions($role): mixed {
+  public function rolePermissions($role): array {
     if (is_numeric($role)) {
-      return $this->roleModel->getPermissionsForRole($role);
+      return $this->roleModel->getPermissionsForRole((int)$role);
     } else {
       $r = $this->roleModel->where('name', $role)->first();
       /** @var object $r */
@@ -1145,37 +1037,31 @@ class FlatAuthorization implements AuthorizeInterface {
     }
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Set User Model.
-   * --------------------------------------------------------------------------
-   *
    * Allows the consuming application to pass in a reference to the
    * model that should be used.
    *
-   * @param UserModel $model
+   * @param Model $model
    *
-   * @return $this
+   * @return self
    */
   public function setUserModel(Model $model): self {
     $this->userModel = $model;
     return $this;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Update Group.
-   * --------------------------------------------------------------------------
-   *
    * Updates a single group's information.
    *
    * @param int    $id
    * @param string $name
    * @param string $description
    *
-   * @return mixed
+   * @return bool
    */
-  public function updateGroup(int $id, string $name, string $description = ''): mixed {
+  public function updateGroup(int $id, string $name, string $description = ''): bool {
     $data = [
       'name' => $name,
     ];
@@ -1192,11 +1078,8 @@ class FlatAuthorization implements AuthorizeInterface {
     return true;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Update Permission.
-   * --------------------------------------------------------------------------
-   *
    * Updates the details for a single permission.
    *
    * @param int    $id
@@ -1222,26 +1105,22 @@ class FlatAuthorization implements AuthorizeInterface {
     return true;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Update Role.
-   * --------------------------------------------------------------------------
-   *
    * Updates a single role's information.
-   *
    *
    * @param int    $id
    * @param string $name
    * @param string $description
    * @param string $bscolor
    *
-* @return mixed
+   * @return bool
    */
-  public function updateRole(int $id, string $name, string $description = '', string $bscolor = 'primary'): mixed {
+  public function updateRole(int $id, string $name, string $description = '', string $bscolor = 'primary'): bool {
     $data = [
       'name' => $name,
       'description' => $description,
-      'bscolor' => $bscolor
+      'bscolor' => $bscolor,
     ];
 
     if (!$this->roleModel->update($id, $data)) {
@@ -1252,21 +1131,18 @@ class FlatAuthorization implements AuthorizeInterface {
     return true;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Users in Group.
-   * --------------------------------------------------------------------------
-   *
    * Returns an array of all users in a group.
    * The group can be either the ID or the name of the group.
    *
    * @param int|string $group
    *
-   * @return mixed
+   * @return array
    */
-  public function usersInGroup($group): mixed {
+  public function usersInGroup($group): array {
     if (is_numeric($group)) {
-      return $this->groupModel->getUsersForGroup($group);
+      return $this->groupModel->getUsersForGroup((int)$group);
     } else {
       $g = $this->groupModel->where('name', $group)->first();
       /** @var object $g */
@@ -1274,21 +1150,18 @@ class FlatAuthorization implements AuthorizeInterface {
     }
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Users in Role.
-   * --------------------------------------------------------------------------
-   *
    * Returns an array of all users in a role.
    * The role can be either the ID or the name of the role.
    *
    * @param int|string $role
    *
-   * @return mixed
+   * @return array
    */
-  public function usersInRole($role): mixed {
+  public function usersInRole($role): array {
     if (is_numeric($role)) {
-      return $this->roleModel->getUsersForRole($role);
+      return $this->roleModel->getUsersForRole((int)$role);
     } else {
       $g = $this->roleModel->where('name', $role)->first();
       /** @var object $g */
@@ -1296,39 +1169,34 @@ class FlatAuthorization implements AuthorizeInterface {
     }
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * User Groups.
-   * --------------------------------------------------------------------------
-   *
    * Returns an array of all groups of a user.
    *
    * @param int $userId
    *
-   * @return mixed
+   * @return array|bool
    */
-  public function userGroups($userId): mixed {
+  public function userGroups($userId): array|bool {
     if (is_numeric($userId)) {
-      return $this->groupModel->getGroupsForUser($userId);
+      return $this->groupModel->getGroupsForUser((int)$userId);
     }
     return false;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * User Roles.
-   * --------------------------------------------------------------------------
-   *
    * Returns an array of all roles of a user.
    *
    * @param int $userId
    *
-   * @return mixed
+   * @return array|bool
    */
-  public function userRoles($userId): mixed {
+  public function userRoles($userId): array|bool {
     if (is_numeric($userId)) {
-      return $this->roleModel->getRolesForUser($userId);
+      return $this->roleModel->getRolesForUser((int)$userId);
     }
     return false;
   }
 }
+

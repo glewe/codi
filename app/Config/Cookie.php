@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Config;
 
 use CodeIgniter\Config\BaseConfig;
 use DateTimeInterface;
 
-class Cookie extends BaseConfig {
+class Cookie extends BaseConfig
+{
   /**
    * --------------------------------------------------------------------------
    * Cookie Prefix

@@ -1,25 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Authentication\Resetters;
 
-use Config\Email;
 use App\Entities\User;
+use Config\Email;
 
-/**
- * Class EmailResetter
- *
- * Sends a reset password email to user.
- *
- * @package App\Authentication\Resetters
- */
-class EmailResetter extends BaseResetter implements ResetterInterface {
+class EmailResetter extends BaseResetter implements ResetterInterface
+{
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Send.
-   * --------------------------------------------------------------------------
-   * Sends a reset email
+   * Sends a reset email.
    *
-   * @param User $user
+   * @param User|null $user
    *
    * @return bool
    */
@@ -32,12 +26,12 @@ class EmailResetter extends BaseResetter implements ResetterInterface {
     $sent = $email->setFrom($settings->fromEmail ?? $config->fromEmail, $settings->fromName ?? $config->fromName)
       ->setTo($user->email)
       ->setSubject(lang('Auth.forgot.subject'))
-      ->setMessage(view($this->config->views['emailForgot'], [ 'hash' => $user->reset_hash ]))
+      ->setMessage(view($this->config->views['emailForgot'], ['hash' => $user->reset_hash]))
       ->setMailType('html')
       ->send();
 
     if (!$sent) {
-      $this->error = lang('Auth.forgot.error_email', [ $user->email ]);
+      $this->error = lang('Auth.forgot.error_email', [$user->email]);
       return false;
     }
 

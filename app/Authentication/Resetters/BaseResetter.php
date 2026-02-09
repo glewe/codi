@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Authentication\Resetters;
 
-use Config\Auth as AuthConfig;
 use App\Entities\User;
+use Config\Auth as AuthConfig;
 
-abstract class BaseResetter {
+abstract class BaseResetter
+{
   /**
    * @var AuthConfig
    */
@@ -16,24 +19,8 @@ abstract class BaseResetter {
    */
   protected $error = '';
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Send.
-   * --------------------------------------------------------------------------
-   *
-   * Sends a reset message to user
-   *
-   * @param User $user
-   *
-   * @return bool
-   */
-  abstract public function send(?User $user = null): bool;
-
-  /**
-   * --------------------------------------------------------------------------
-   * Constructor.
-   * --------------------------------------------------------------------------
-   *
    * Sets the initial config file.
    *
    * @param AuthConfig|null $config
@@ -42,28 +29,31 @@ abstract class BaseResetter {
     $this->config = $config ?? config('Auth');
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Set Config.
-   * --------------------------------------------------------------------------
+   * Sends a reset message to user.
    *
+   * @param User|null $user
+   *
+   * @return bool
+   */
+  abstract public function send(?User $user = null): bool;
+
+  //---------------------------------------------------------------------------
+  /**
    * Allows for changing the config file on the Resetter.
    *
    * @param AuthConfig $config
    *
-   * @return $this
+   * @return self
    */
   public function setConfig(AuthConfig $config): self {
     $this->config = $config;
-
     return $this;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get Resetter Settings.
-   * --------------------------------------------------------------------------
-   *
    * Gets a config settings for current Resetter.
    *
    * @return object
@@ -72,11 +62,8 @@ abstract class BaseResetter {
     return (object)$this->config->userResetters[static::class];
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Error.
-   * --------------------------------------------------------------------------
-   *
    * Returns the current error.
    *
    * @return string

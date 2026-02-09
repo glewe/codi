@@ -1,87 +1,75 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controllers;
 
-use CodeIgniter\Session\Session;
-
-use Config\Auth as AuthConfig;
+use App\Authorization\FlatAuthorization;
 use App\Entities\User;
+use App\Libraries\Gravatar;
 use App\Models\UserModel;
 use App\Models\UserOptionModel;
+use CodeIgniter\Validation\Validation;
+use Config\Auth as AuthConfig;
 
-use App\Controllers\BaseController;
-use Config\Validation;
-use App\Libraries\Gravatar;
-use App\Models\SettingsModel;
-use App\Models\LogModel;
+/**
+ * Class UserController
+ */
+class UserController extends BaseController
+{
+  /**
+   * Check the BaseController for inherited properties and methods.
+   */
 
-class UserController extends BaseController {
   /**
    * @var string Log type used in log entries from this controller.
    */
-  protected $logType;
+  protected string $logType;
 
-  protected $authorize;
+  /**
+   * @var FlatAuthorization
+   */
+  protected FlatAuthorization $authorize;
 
   /**
    * @var AuthConfig
    */
-  protected $authConfig;
-
-  /**
-   * @var Session
-   */
-  protected $session;
-
-  /**
-   * @var SettingsModel
-   */
-  protected $settings;
+  protected AuthConfig $authConfig;
 
   /**
    * @var UserOptionModel
    */
-  protected $UOP;
+  protected UserOptionModel $UOP;
 
   /**
-   * @var \CodeIgniter\Validation\Validation
+   * @var Validation
    */
-  protected $validation;
+  protected Validation $validation;
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Constructor.
-   * --------------------------------------------------------------------------
    */
   public function __construct() {
-    //
-    // Most services in this controller require the session to be started
-    //
-    $this->LOG = model(LogModel::class);
-    $this->logType = 'User';
-    $this->settings = model(SettingsModel::class);
-    $this->session = service('session');
+    $this->logType    = 'User';
     $this->authConfig = config('Auth');
-    $this->authorize = service('authorization');
+    $this->authorize  = service('authorization');
     $this->validation = service('validation');
-    $this->UOP = model(UserOptionModel::class);
+    $this->UOP        = model(UserOptionModel::class);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Users.
-   * --------------------------------------------------------------------------
-   *
    * Shows all user records.
    *
-   * @return \CodeIgniter\HTTP\RedirectResponse | string
+   * @return \CodeIgniter\HTTP\RedirectResponse|string
    */
   public function users(): \CodeIgniter\HTTP\RedirectResponse|string {
     $users = model(UserModel::class);
 
     $data = [
       'config' => $this->authConfig,
-      'users' => $users->orderBy('username', 'asc')->findAll(),
+      'users'  => $users->orderBy('username', 'asc')->findAll(),
     ];
 
     if ($this->request->withMethod('POST')) {
@@ -93,57 +81,73 @@ class UserController extends BaseController {
         // [Delete]
         //
         $recId = $this->request->getPost('hidden_id');
-        $user = $users->where('id', $recId)->first();
+        $user  = $users->where('id', $recId)->first();
         /** @var User|null $user */
         if (!$user) {
-          return redirect()->route('users')->with('errors', lang('Auth.user.not_found', [ $recId ]));
-        } else {
+          return redirect()->route('users')->with('errors', lang('Auth.user.not_found', [$recId]));
+        }
+        else {
           if (!$users->deleteUser($recId)) {
             $this->session->set('errors', $users->errors());
             return $this->_render($this->authConfig->views['users'], $data);
           }
           logEvent(
             [
-              'type' => $this->logType,
-              'event' => lang('Auth.user.delete_success', [ $user->username, $user->email ]),
-              'user' => user_username(),
-              'ip' => $this->request->getIPAddress(),
+              'type'  => $this->logType,
+              'event' => lang('Auth.user.delete_success', [$user->username, $user->email]),
+              'user'  => user_username(),
+              'ip'    => $this->request->getIPAddress(),
             ]
           );
-          return redirect()->route('users')->with('success', lang('Auth.user.delete_success', [ $user->username, $user->email ]));
+          return redirect()->route('users')->with(
+            'success',
+            lang('Auth.user.delete_success', [$user->username, $user->email])
+          );
         }
-      } elseif (array_key_exists('btn_remove_secret', $this->request->getPost())) {
+      }
+      elseif (array_key_exists('btn_remove_secret', $this->request->getPost())) {
         //
         // [Remove Secret]
         //
         $recId = $this->request->getPost('hidden_id');
-        $user = $users->where('id', $recId)->first();
+        $user  = $users->where('id', $recId)->first();
         /** @var User|null $user */
         if (!$user) {
-          return redirect()->route('users')->with('errors', lang('Auth.user.not_found', [ $recId ]));
-        } else {
+          return redirect()->route('users')->with('errors', lang('Auth.user.not_found', [$recId]));
+        }
+        else {
           $user->removeSecret();
           if (!$users->update($recId, $user)) {
             return redirect()->back()->withInput()->with('errors', $users->errors());
-          } else {
+          }
+          else {
             logEvent(
               [
-                'type' => $this->logType,
-                'event' => lang('Auth.user.remove_secret_success', [ $user->username, $user->email ]),
-                'user' => user_username(),
-                'ip' => $this->request->getIPAddress(),
+                'type'  => $this->logType,
+                'event' => lang('Auth.user.remove_secret_success', [$user->username, $user->email]),
+                'user'  => user_username(),
+                'ip'    => $this->request->getIPAddress(),
               ]
             );
-            return redirect()->route('users')->with('success', lang('Auth.user.remove_secret_success', [ $user->username, $user->email ]));
+            return redirect()->route('users')->with(
+              'success',
+              lang('Auth.user.remove_secret_success', [$user->username, $user->email])
+            );
           }
         }
-      } elseif (array_key_exists('btn_search', $this->request->getPost()) && array_key_exists('search', $this->request->getPost())) {
+      }
+      elseif (
+        array_key_exists('btn_search', $this->request->getPost()) && array_key_exists(
+          'search',
+          $this->request->getPost()
+        )
+      ) {
         //
         // [Search]
         //
-        $search = $this->request->getPost('search');
-        $where = '`username` LIKE "%' . $search . '%" OR `email` LIKE "%' . $search . '%"';
-        $data['users'] = $users->where($where)->orderBy('username', 'asc')->findAll();
+        $search         = $this->request->getPost('search');
+        $where          = '`username` LIKE "%' . $search . '%" OR `email` LIKE "%' . $search . '%"';
+        $data['users']  = $users->where($where)->orderBy('username', 'asc')->findAll();
         $data['search'] = $search;
       }
     }
@@ -151,26 +155,20 @@ class UserController extends BaseController {
     return $this->_render($this->authConfig->views['users'], $data);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Users Create.
-   * --------------------------------------------------------------------------
-   *
    * Displays the user create page.
    *
-   * @param int $id User ID
+   * @param int|null $id User ID
    *
    * @return string
    */
   public function usersCreate($id = null): string {
-    return $this->_render($this->authConfig->views['usersCreate'], [ 'config' => $this->authConfig ]);
+    return $this->_render($this->authConfig->views['usersCreate'], ['config' => $this->authConfig]);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Users Create Do.
-   * --------------------------------------------------------------------------
-   *
    * Attempt to create a new user.
    * To be be used by administrators. User will be activated automatically.
    *
@@ -184,7 +182,7 @@ class UserController extends BaseController {
     //
     $rules = [
       'username' => 'required|alpha_numeric_space|min_length[3]|max_length[30]|is_unique[users.username]',
-      'email' => 'required|valid_email|is_unique[users.email]',
+      'email'    => 'required|valid_email|is_unique[users.email]',
     ];
 
     if (!$this->validate($rules)) {
@@ -195,11 +193,11 @@ class UserController extends BaseController {
     // Validate passwords since they can only be validated properly here
     //
     $rules = [
-      'password' => 'required|strong_password',
+      'password'     => 'required|strongPassword',
       'pass_confirm' => 'required|matches[password]',
-      'firstname' => 'max_length[80]',
-      'lastname' => 'max_length[80]',
-      'displayname' => 'max_length[80]',
+      'firstname'    => 'max_length[80]',
+      'lastname'     => 'max_length[80]',
+      'displayname'  => 'max_length[80]',
     ];
 
     if (!$this->validate($rules)) {
@@ -209,14 +207,22 @@ class UserController extends BaseController {
     //
     // Create the user entity
     //
-    $allowedPostFields = array_merge([ 'password' ], $this->authConfig->validFields, $this->authConfig->personalFields);
-    $user = new User($this->request->getPost($allowedPostFields));
+    $allowedPostFields = array_merge(
+      ['password'],
+      $this->authConfig->validFields,
+      $this->authConfig->personalFields
+    );
+    $user              = new User($this->request->getPost($allowedPostFields));
     $user->activate();
     $user->setAttribute('firstname', $this->request->getPost('firstname'));
     $user->setAttribute('lastname', $this->request->getPost('lastname'));
     if ($this->request->getPost('displayname') === '') {
-      $user->setAttribute('displayname', $this->request->getPost('lastname') . ', ' . $this->request->getPost('firstname'));
-    } else {
+      $user->setAttribute(
+        'displayname',
+        $this->request->getPost('lastname') . ', ' . $this->request->getPost('firstname')
+      );
+    }
+    else {
       $user->setAttribute('displayname', $this->request->getPost('displayname'));
     }
 
@@ -254,20 +260,23 @@ class UserController extends BaseController {
     //
     /** @var User|null $newUser */
     $newUser = $users->getByUsername($this->request->getPost('username'));
-    $this->UOP->saveOption([ 'user_id' => $newUser->id, 'option' => 'avatar', 'value' => 'default_male.png' ]);
-    $this->UOP->saveOption([ 'user_id' => $newUser->id, 'option' => 'theme', 'value' => 'default' ]);
-    $this->UOP->saveOption([ 'user_id' => $newUser->id, 'option' => 'menu', 'value' => 'navbar' ]);
-    $this->UOP->saveOption([ 'user_id' => $newUser->id, 'option' => 'language', 'value' => 'default' ]);
+    $this->UOP->saveOption(['user_id' => $newUser->id, 'option' => 'avatar', 'value' => 'default_male.png']);
+    $this->UOP->saveOption(['user_id' => $newUser->id, 'option' => 'theme', 'value' => 'default']);
+    $this->UOP->saveOption(['user_id' => $newUser->id, 'option' => 'menu', 'value' => 'navbar']);
+    $this->UOP->saveOption(['user_id' => $newUser->id, 'option' => 'language', 'value' => 'default']);
 
     //
     // Send password reset email to the created user
     //
     if ($this->request->getPost('pass_resetmail')) {
       $resetter = service('resetter');
-      $sent = $resetter->send($user);
-//      $sent = sendResetEmail($user); // TODO uncomment for PROD
+      $sent     = $resetter->send($user);
+      //      $sent = sendResetEmail($user); // TODO uncomment for PROD
       if (!$sent) {
-        return redirect()->back()->withInput()->with('error', $resetter->error() ?? lang('Auth.exception.unknown_error'));
+        return redirect()->back()->withInput()->with(
+          'error',
+          $resetter->error() ?? lang('Auth.exception.unknown_error')
+        );
       }
     }
 
@@ -276,25 +285,25 @@ class UserController extends BaseController {
     //
     logEvent(
       [
-        'type' => $this->logType,
-        'event' => lang('Auth.user.create_success', [ $user->username, $user->email ]),
-        'user' => user_username(),
-        'ip' => $this->request->getIPAddress(),
+        'type'  => $this->logType,
+        'event' => lang('Auth.user.create_success', [$user->username, $user->email]),
+        'user'  => user_username(),
+        'ip'    => $this->request->getIPAddress(),
       ]
     );
-    return redirect()->route('users')->with('success', lang('Auth.user.create_success', [ $user->username, $user->email ]));
+    return redirect()->route('users')->with(
+      'success',
+      lang('Auth.user.create_success', [$user->username, $user->email])
+    );
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Users Edit.
-   * --------------------------------------------------------------------------
-   *
    * Displays the user edit page.
    *
-   * @param int $id User ID
+   * @param int|null $id User ID
    *
-   * @return \CodeIgniter\HTTP\RedirectResponse | string
+   * @return \CodeIgniter\HTTP\RedirectResponse|string
    */
   public function usersEdit($id = null): \CodeIgniter\HTTP\RedirectResponse|string {
     $users = model(UserModel::class);
@@ -305,38 +314,38 @@ class UserController extends BaseController {
       return redirect()->to('users');
     }
 
-    $groups = $this->authorize->groups();
+    $groups      = $this->authorize->groups();
     $permissions = $this->authorize->permissions();
-    $roles = $this->authorize->roles();
+    $roles       = $this->authorize->roles();
 
-    $userGroups = $this->authorize->userGroups($id);
-    $userAllPermissions = $user->getPermissions();
+    $userGroups              = $this->authorize->userGroups($id);
+    $userAllPermissions      = $user->getPermissions();
     $userPersonalPermissions = $user->getPersonalPermissions();
-    $userRoles = $this->authorize->userRoles($id);
+    $userRoles               = $this->authorize->userRoles($id);
 
-    return $this->_render($this->authConfig->views['usersEdit'], [
-      'auth' => $this->authorize,
-      'config' => $this->authConfig,
-      'user' => $user,
-      'groups' => $groups,
-      'permissions' => $permissions,
-      'roles' => $roles,
-      'userGroups' => $userGroups,
-      'userAllPermissions' => $userAllPermissions,
-      'userPersonalPermissions' => $userPersonalPermissions,
-      'userRoles' => $userRoles,
-    ]);
+    return $this->_render(
+      $this->authConfig->views['usersEdit'],
+      [
+        'auth'                    => $this->authorize,
+        'config'                  => $this->authConfig,
+        'user'                    => $user,
+        'groups'                  => $groups,
+        'permissions'             => $permissions,
+        'roles'                   => $roles,
+        'userGroups'              => $userGroups,
+        'userAllPermissions'      => $userAllPermissions,
+        'userPersonalPermissions' => $userPersonalPermissions,
+        'userRoles'               => $userRoles,
+      ]
+    );
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Users Edit Do.
-   * --------------------------------------------------------------------------
-   *
    * Attempt to create a new user.
    * To be be used by administrators. User will be activated automatically.
    *
-   * @param int $id User ID
+   * @param int|null $id User ID
    *
    * @return \CodeIgniter\HTTP\RedirectResponse
    */
@@ -356,10 +365,10 @@ class UserController extends BaseController {
     // Validate basics first since some password rules rely on these fields
     //
     $rules = [
-      'email' => 'required|valid_email|is_unique[users.email]',
-      'username' => 'required|alpha_numeric_space|min_length[3]|max_length[30]|is_unique[users.username]',
-      'firstname' => 'max_length[80]',
-      'lastname' => 'max_length[80]',
+      'email'       => 'required|valid_email|is_unique[users.email]',
+      'username'    => 'required|alpha_numeric_space|min_length[3]|max_length[30]|is_unique[users.username]',
+      'firstname'   => 'max_length[80]',
+      'lastname'    => 'max_length[80]',
       'displayname' => 'max_length[80]',
     ];
 
@@ -369,13 +378,13 @@ class UserController extends BaseController {
     $emailChange = true;
     if ($this->request->getPost('email') == $user->email) {
       $rules['email'] = 'required|valid_email';
-      $emailChange = false;
+      $emailChange    = false;
     }
 
     $usernameChange = true;
     if ($this->request->getPost('username') == $user->username) {
       $rules['username'] = 'required|alpha_numeric_space|min_length[3]|max_length[30]';
-      $usernameChange = false;
+      $usernameChange    = false;
     }
 
     $lastnameChange = true;
@@ -427,7 +436,7 @@ class UserController extends BaseController {
         // Password change detected. Add it to the post fields and set it.
         //
         $rules = [
-          'password' => 'required|strong_password',
+          'password'     => 'required|strongPassword',
           'pass_confirm' => 'required|matches[password]',
         ];
 
@@ -435,9 +444,9 @@ class UserController extends BaseController {
           return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-//        $allowedPostFields = array_merge([ 'password' ], $this->authConfig->validFields, $this->authConfig->personalFields)
+        //        $allowedPostFields = array_merge([ 'password' ], $this->authConfig->validFields, $this->authConfig->personalFields)
         $user->setPassword($this->request->getPost('password'));
-//      } else {
+        //      } else {
         //
         // Do not add Password to the post fields
         //
@@ -457,7 +466,8 @@ class UserController extends BaseController {
     //
     if ($this->request->getPost('active')) {
       $user->setAttribute('active', 1);
-    } else {
+    }
+    else {
       $user->setAttribute('active', 0);
     }
 
@@ -466,7 +476,8 @@ class UserController extends BaseController {
     //
     if ($this->request->getPost('banned')) {
       $user->setAttribute('status', 'banned');
-    } else {
+    }
+    else {
       $user->setAttribute('status', null);
     }
 
@@ -475,7 +486,8 @@ class UserController extends BaseController {
     //
     if ($this->request->getPost('hidden')) {
       $user->setAttribute('hidden', 1);
-    } else {
+    }
+    else {
       $user->setAttribute('hidden', null);
     }
 
@@ -497,10 +509,9 @@ class UserController extends BaseController {
       //
       // Delete all existing groups for this user first. Then add the posted ones.
       //
-      $this->authorize->removeUserFromAllGroups((int)$id);
+      $this->authorize->removeUserFromAllGroups((int) $id);
 
       foreach ($this->request->getPost('sel_groups') as $group) {
-
         $this->authorize->addUserToGroup($id, $group);
       }
     }
@@ -512,7 +523,7 @@ class UserController extends BaseController {
       //
       // Delete all existing permissions for this user first. Then add the posted ones.
       //
-      $this->authorize->removeAllPermissionsFromUser((int)$id);
+      $this->authorize->removeAllPermissionsFromUser((int) $id);
       foreach ($this->request->getPost('sel_permissions') as $perm) {
         $this->authorize->addPermissionToUser($perm, $id);
       }
@@ -525,10 +536,9 @@ class UserController extends BaseController {
       //
       // Delete all existing groups for this user first. Then add the posted ones.
       //
-      $this->authorize->removeUserFromAllRoles((int)$id);
+      $this->authorize->removeUserFromAllRoles((int) $id);
 
       foreach ($this->request->getPost('sel_roles') as $role) {
-
         $this->authorize->addUserToRole($id, $role);
       }
     }
@@ -538,31 +548,31 @@ class UserController extends BaseController {
     //
     logEvent(
       [
-        'type' => $this->logType,
-        'event' => lang('Auth.user.update_success', [ $user->username, $user->email ]),
-        'user' => user_username(),
-        'ip' => $this->request->getIPAddress(),
+        'type'  => $this->logType,
+        'event' => lang('Auth.user.update_success', [$user->username, $user->email]),
+        'user'  => user_username(),
+        'ip'    => $this->request->getIPAddress(),
       ]
     );
-    return redirect()->back()->withInput()->with('success', lang('Auth.user.update_success', [ $user->username, $user->email ]));
+    return redirect()->back()->withInput()->with(
+      'success',
+      lang('Auth.user.update_success', [$user->username, $user->email])
+    );
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Profile Edit.
-   * --------------------------------------------------------------------------
-   *
    * Displays the profile edit page.
    *
-   * @param int $id User ID
+   * @param int|null $id User ID
    *
-   * @return \CodeIgniter\HTTP\RedirectResponse | string
+   * @return \CodeIgniter\HTTP\RedirectResponse|string
    */
   public function profileEdit($id = null): \CodeIgniter\HTTP\RedirectResponse|string {
-    $users = model(UserModel::class);
+    $users       = model(UserModel::class);
     $userOptions = model(UserOptionModel::class);
 
-    if ((int)$id !== user_id() && !has_permission('user.edit')) {
+    if ((int) $id !== user_id() && !has_permission('user.edit')) {
       //
       // Someone's trying to edit someone else profile without permission.
       //
@@ -577,7 +587,7 @@ class UserController extends BaseController {
     $user = $users->where('id', $id)->first();
     /** @var User|null $user */
     if (!$user) {
-      return redirect()->back()->with('errors', lang('Auth.user.not_found', [ $id ]));
+      return redirect()->back()->with('errors', lang('Auth.user.not_found', [$id]));
     }
     $profile = $userOptions->getOptionsForUser($id);
 
@@ -601,53 +611,62 @@ class UserController extends BaseController {
     // Get languages
     //
     $supportedLanguages = config('App')->supportedLocales;
-    $languageOptions = [];
-    $languageOptions[] = [ 'title' => lang('App.locales.default'), 'value' => 'default', 'selected' => (array_key_exists('language', $profile) && $profile['language'] === 'default' ? true : false) ];
+    $languageOptions    = [];
+    $languageOptions[]  = [
+      'title'    => lang('App.locales.default'),
+      'value'    => 'default',
+      'selected' => (array_key_exists('language', $profile) && $profile['language'] === 'default'),
+    ];
     foreach ($supportedLanguages as $lang) {
-      $languageOptions[] = [ 'title' => lang('App.locales.' . $lang), 'value' => $lang, 'selected' => (array_key_exists('language', $profile) && $profile['language'] === $lang ? true : false) ];
+      $languageOptions[] = [
+        'title'    => lang('App.locales.' . $lang),
+        'value'    => $lang,
+        'selected' => (array_key_exists('language', $profile) && $profile['language'] === $lang),
+      ];
     }
 
     //
     // Get avatars
     //
-    $avatars = directory_map('./upload/avatars/', 1);
-    $avatarUrl = base_url() . 'upload/avatars/';
-    $gravatar = new Gravatar();
+    $avatars     = directory_map('./upload/avatars/', 1);
+    $avatarUrl   = base_url() . 'upload/avatars/';
+    $gravatar    = new Gravatar();
     $gravatarUrl = $gravatar->get($user->email);
     if ($profile['avatar'] === 'gravatar') {
       $profileAvatar = $gravatarUrl;
-    } else {
+    }
+    else {
       $profileAvatar = $profile['avatar'];
     }
 
-    return $this->_render($this->authConfig->views['profilesEdit'], [
-      'auth' => $this->authorize,
-      'config' => $this->authConfig,
-      'user' => $user,
-      'profile' => $profile,
-      'languageOptions' => $languageOptions,
-      'gravatarUrl' => $gravatarUrl,
-      'profileAvatar' => $profileAvatar ?? '',
-      'avaUrl' => $avatarUrl,
-      'avatars' => $avatars,
-    ]);
+    return $this->_render(
+      $this->authConfig->views['profilesEdit'],
+      [
+        'auth'            => $this->authorize,
+        'config'          => $this->authConfig,
+        'user'            => $user,
+        'profile'         => $profile,
+        'languageOptions' => $languageOptions,
+        'gravatarUrl'     => $gravatarUrl,
+        'profileAvatar'   => $profileAvatar ?? '',
+        'avaUrl'          => $avatarUrl,
+        'avatars'         => $avatars,
+      ]
+    );
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Profile Edit Do.
-   * --------------------------------------------------------------------------
-   *
    * Attempt to edit a profile.
    *
-   * @param int $id Group ID
+   * @param int|null $id Group ID
    *
    * @return \CodeIgniter\HTTP\RedirectResponse
    */
   public function profileEditDo($id = null): \CodeIgniter\HTTP\RedirectResponse {
-    $users = model(UserModel::class);
+    $users       = model(UserModel::class);
     $userOptions = model(UserOptionModel::class);
-    $form = array();
+    $form        = [];
 
     //
     // Get the user for this profile. If not found, return to groups list page.
@@ -655,44 +674,44 @@ class UserController extends BaseController {
     $user = $users->where('id', $id)->first();
     /** @var User|null $user */
     if (!$user) {
-      return redirect()->back()->with('errors', lang('Auth.user.not_found', [ $id ]));
+      return redirect()->back()->with('errors', lang('Auth.user.not_found', [$id]));
     }
 
     //
     // Set basic validation rules
     //
     $validationRules = [
-      'lastname' => 'max_length[80]',
-      'firstname' => 'max_length[80]',
+      'lastname'     => 'max_length[80]',
+      'firstname'    => 'max_length[80]',
       'organization' => 'max_length[80]',
-      'position' => 'max_length[80]',
-      'id' => 'max_length[40]',
-      'phone' => [
+      'position'     => 'max_length[80]',
+      'id'           => 'max_length[40]',
+      'phone'        => [
         'label' => lang('Profile.phone'),
-        'rules' => 'permit_empty|valid_phone'
+        'rules' => 'permit_empty|valid_phone',
       ],
-      'mobile' => [
+      'mobile'       => [
         'label' => lang('Profile.mobile'),
-        'rules' => 'permit_empty|valid_phone'
-      ]
+        'rules' => 'permit_empty|valid_phone',
+      ],
     ];
 
     //
     // Get form fields for validation
     //
-    $form['avatar'] = $this->request->getPost('opt_avatar');
-    $form['facebook'] = $this->request->getPost('facebook');
-    $form['id'] = $this->request->getPost('id');
-    $form['instagram'] = $this->request->getPost('instagram');
-    $form['language'] = $this->request->getPost('language');
-    $form['linkedin'] = $this->request->getPost('linkedin');
-    $form['mobile'] = $this->request->getPost('mobile');
+    $form['avatar']       = $this->request->getPost('opt_avatar');
+    $form['facebook']     = $this->request->getPost('facebook');
+    $form['id']           = $this->request->getPost('id');
+    $form['instagram']    = $this->request->getPost('instagram');
+    $form['language']     = $this->request->getPost('language');
+    $form['linkedin']     = $this->request->getPost('linkedin');
+    $form['mobile']       = $this->request->getPost('mobile');
     $form['organization'] = $this->request->getPost('organization');
-    $form['phone'] = $this->request->getPost('phone');
-    $form['position'] = $this->request->getPost('position');
-    $form['theme'] = $this->request->getPost('theme');
-    $form['menu'] = $this->request->getPost('menu');
-    $form['xing'] = $this->request->getPost('xing');
+    $form['phone']        = $this->request->getPost('phone');
+    $form['position']     = $this->request->getPost('position');
+    $form['theme']        = $this->request->getPost('theme');
+    $form['menu']         = $this->request->getPost('menu');
+    $form['xing']         = $this->request->getPost('xing');
 
     //
     // Validate input
@@ -703,42 +722,48 @@ class UserController extends BaseController {
       // Return validation error
       //
       return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
-    } else {
+    }
+    else {
       //
       // Save Personal
       //
-      $userOptions->saveOption([ 'user_id' => $id, 'option' => 'organization', 'value' => $form['organization'] ]);
-      $userOptions->saveOption([ 'user_id' => $id, 'option' => 'position', 'value' => $form['position'] ]);
-      $userOptions->saveOption([ 'user_id' => $id, 'option' => 'id', 'value' => $form['id'] ]);
+      $userOptions->saveOption(['user_id' => $id, 'option' => 'organization', 'value' => $form['organization']]);
+      $userOptions->saveOption(['user_id' => $id, 'option' => 'position', 'value' => $form['position']]);
+      $userOptions->saveOption(['user_id' => $id, 'option' => 'id', 'value' => $form['id']]);
       //
       // Save Contact
       //
-      $userOptions->saveOption([ 'user_id' => $id, 'option' => 'phone', 'value' => $form['phone'] ]);
-      $userOptions->saveOption([ 'user_id' => $id, 'option' => 'mobile', 'value' => $form['mobile'] ]);
-      $userOptions->saveOption([ 'user_id' => $id, 'option' => 'facebook', 'value' => $form['facebook'] ]);
-      $userOptions->saveOption([ 'user_id' => $id, 'option' => 'instagram', 'value' => $form['facebook'] ]);
-      $userOptions->saveOption([ 'user_id' => $id, 'option' => 'linkedin', 'value' => $form['linkedin'] ]);
-      $userOptions->saveOption([ 'user_id' => $id, 'option' => 'xing', 'value' => $form['xing'] ]);
+      $userOptions->saveOption(['user_id' => $id, 'option' => 'phone', 'value' => $form['phone']]);
+      $userOptions->saveOption(['user_id' => $id, 'option' => 'mobile', 'value' => $form['mobile']]);
+      $userOptions->saveOption(['user_id' => $id, 'option' => 'facebook', 'value' => $form['facebook']]);
+      $userOptions->saveOption(['user_id' => $id, 'option' => 'instagram', 'value' => $form['facebook']]);
+      $userOptions->saveOption(['user_id' => $id, 'option' => 'linkedin', 'value' => $form['linkedin']]);
+      $userOptions->saveOption(['user_id' => $id, 'option' => 'xing', 'value' => $form['xing']]);
       //
       // Save Options
       //
-      $userOptions->saveOption([ 'user_id' => $id, 'option' => 'theme', 'value' => $form['theme'] ]);
-      $userOptions->saveOption([ 'user_id' => $id, 'option' => 'menu', 'value' => $form['menu'] ]);
-      $userOptions->saveOption([ 'user_id' => $id, 'option' => 'language', 'value' => $form['language'] ]);
+      $userOptions->saveOption(['user_id' => $id, 'option' => 'theme', 'value' => $form['theme']]);
+      $userOptions->saveOption(['user_id' => $id, 'option' => 'menu', 'value' => $form['menu']]);
+      $userOptions->saveOption(['user_id' => $id, 'option' => 'language', 'value' => $form['language']]);
       //
       // Switch language if the user is editing his own profile
       //
-      if ($this->session->get('lang') !== $form['language'] && $id === user_id() && in_array($form['language'], config('App')->supportedLocales)) {
+      if (
+        $this->session->get('lang') !== $form['language'] && $id === user_id() && in_array(
+          $form['language'],
+          config('App')->supportedLocales
+        )
+      ) {
         $this->session->set('lang', $form['language']);
       }
       //
       // Save Avatar
       //
-      $userOptions->saveOption([ 'user_id' => $id, 'option' => 'avatar', 'value' => $form['avatar'] ]);
+      $userOptions->saveOption(['user_id' => $id, 'option' => 'avatar', 'value' => $form['avatar']]);
       //
       // Remove Secret
       //
-      if (array_key_exists('btn_remove_secret',$this->request->getPost())) {
+      if (array_key_exists('btn_remove_secret', $this->request->getPost())) {
         $users = model(UserModel::class);
         /** @var User|null $user */
         if ($user = $users->where('id', $id)->first()) {
@@ -751,13 +776,16 @@ class UserController extends BaseController {
       //
       logEvent(
         [
-          'type' => $this->logType,
-          'event' => lang('Auth.profile.update_success', [ $user->username, $user->email ]),
-          'user' => user_username(),
-          'ip' => $this->request->getIPAddress(),
+          'type'  => $this->logType,
+          'event' => lang('Auth.profile.update_success', [$user->username, $user->email]),
+          'user'  => user_username(),
+          'ip'    => $this->request->getIPAddress(),
         ]
       );
-      return redirect()->back()->withInput()->with('success', lang('Auth.profile.update_success', [ $user->username, $user->email ]));
+      return redirect()->back()->withInput()->with(
+        'success',
+        lang('Auth.profile.update_success', [$user->username, $user->email])
+      );
     }
   }
 }

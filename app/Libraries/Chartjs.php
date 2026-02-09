@@ -1,62 +1,70 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Libraries;
 
-use App\Libraries\Bootstrap;
-
-class Chartjs {
-
+/**
+ * ============================================================================
+ * Chartjs Library
+ * ============================================================================
+ */
+class Chartjs
+{
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
    * Constructor.
-   * --------------------------------------------------------------------------
    */
-  public function __construct() {}
+  public function __construct()
+  {
+  }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Line Chart.
-   * --------------------------------------------------------------------------
-   *
    * This method creates a line chart using Chart.js.
    *
-   *   $chart = array (
-   *      'label' => 'My first Dataset',
+   *   $chart = [
+   *      'label'           => 'My first Dataset',
    *      'backgroundColor' => '#ff99cc',
-   *      'borderColor' => '#aa0000',
-   *      'labels' => array ('January', 'February', 'March', 'April', 'May', 'June', 'July'),
-   *      'data' => array (0, 10, 5, 2, 20, 30, 45),
-   *      'height' => 200
-   *   );
+   *      'borderColor'     => '#aa0000',
+   *      'labels'          => ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+   *      'data'            => [0, 10, 5, 2, 20, 30, 45],
+   *      'height'          => 200
+   *   ];
    *
-   * @param array $chart
+   * @param array $chart Array with chart data.
    *
-   * @return string
+   * @return string HTML for the chart.
    */
-  public function lineChart($chart): string {
-    $alphanum = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    $randid = substr(str_shuffle($alphanum), 0, 32);
+  public function lineChart(array $chart): string
+  {
+    $alphanum = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    $randid   = substr(str_shuffle($alphanum), 0, 32);
 
     //
     // Build labels
     //
     $labels = '';
+
     foreach ($chart['labels'] as $label) {
-      $labels .= "'" . $label . "',";
+      $labels .= "'" . (string)$label . "',";
     }
+
     $labels = rtrim($labels, ',');
 
     //
     // Build data
     //
     $vals = '';
+
     foreach ($chart['data'] as $val) {
-      $vals .= $val . ",";
+      $vals .= (string)$val . ',';
     }
+
     $vals = rtrim($vals, ',');
 
     return "
-      <div style=\"height:" . $chart['height'] . "px;\">
+      <div style=\"height:" . (string)$chart['height'] . "px;\">
         <canvas id=\"" . $randid . "\"></canvas>
       </div>
       <script>
@@ -69,9 +77,9 @@ class Chartjs {
           data: {
             labels: [" . $labels . "],
             datasets: [{
-              label: '" . $chart['label'] . "',
-              backgroundColor: '" . $chart['backgroundColor'] . "',
-              borderColor: '" . $chart['borderColor'] . "',
+              label: '" . (string)$chart['label'] . "',
+              backgroundColor: '" . (string)$chart['backgroundColor'] . "',
+              borderColor: '" . (string)$chart['borderColor'] . "',
               data: [" . $vals . "]
             }]
           },
@@ -85,3 +93,4 @@ class Chartjs {
       </script>";
   }
 }
+

@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Config;
 
 use CodeIgniter\Config\BaseConfig;
 
-class Email extends BaseConfig {
+class Email extends BaseConfig
+{
   /**
    * The from email address
    *

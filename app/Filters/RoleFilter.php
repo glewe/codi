@@ -1,19 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filters;
 
+use App\Exceptions\PermissionException;
+use CodeIgniter\Filters\FilterInterface;
+use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
-use CodeIgniter\Filters\FilterInterface;
-use App\Exceptions\PermissionException;
 
-class RoleFilter implements FilterInterface {
-
+class RoleFilter implements FilterInterface
+{
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Before.
-   * --------------------------------------------------------------------------
-   *
    * Handles the logic to be executed before the request is processed.
    *
    * This method checks if the user is logged in and has the required roles.
@@ -24,9 +24,9 @@ class RoleFilter implements FilterInterface {
    * @param RequestInterface $request   The current request instance.
    * @param array|null       $arguments The roles required to access the resource.
    *
-   * @return \CodeIgniter\HTTP\RedirectResponse|bool
+   * @return RedirectResponse|void
    */
-  public function before(RequestInterface $request, $arguments = null): \CodeIgniter\HTTP\RedirectResponse|bool {
+  public function before(RequestInterface $request, $arguments = null) {
     //
     // Load the 'auth' helper if the 'logged_in' function does not exist
     //
@@ -38,7 +38,7 @@ class RoleFilter implements FilterInterface {
     // If no roles are specified, return without doing anything
     //
     if (empty($arguments)) {
-      return false;
+      return;
     }
 
     //
@@ -64,7 +64,7 @@ class RoleFilter implements FilterInterface {
     //
     foreach ($arguments as $role) {
       if ($authorize->inRole($role, $authenticate->id())) {
-        return false;
+        return;
       }
     }
 
@@ -76,17 +76,14 @@ class RoleFilter implements FilterInterface {
       $redirectURL = '/error';
       unset($_SESSION['redirect_url']);
       return redirect()->to($redirectURL)->with('error', lang('Auth.exception.insufficient_permissions'));
-    } else {
-      // Throw a PermissionException
-      throw new PermissionException(lang('Auth.exception.insufficient_permissions'));
     }
+
+    // Throw a PermissionException
+    throw new PermissionException(lang('Auth.exception.insufficient_permissions'));
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * After.
-   * --------------------------------------------------------------------------
-   *
    * Allows After filters to inspect and modify the response object as needed.
    * This method does not allow any way to stop execution of other after filters,
    * short of throwing an Exception or Error.

@@ -1,50 +1,52 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use CodeIgniter\Model;
 
-class RoleModel extends Model {
-  protected $table = 'roles';
-  protected $primaryKey = 'id';
-  protected $returnType = 'object';
-  protected $allowedFields = [ 'name', 'description', 'bscolor' ];
-  protected $useTimestamps = false;
+/**
+ * RoleModel
+ */
+class RoleModel extends Model
+{
+  protected $table          = 'roles';
+  protected $primaryKey     = 'id';
+  protected $returnType     = 'object';
+  protected $allowedFields  = ['name', 'description', 'bscolor'];
+  protected $useTimestamps  = false;
   protected $skipValidation = false;
+
+  /** @var mixed */
   public $error;
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Add Permission to Role.
-   * --------------------------------------------------------------------------
-   *
    * Add a single permission to a single role, by IDs.
    *
-   * @param int $permissionId
-   * @param int $roleId
+   * @param int $permissionId Permission ID.
+   * @param int $roleId       Role ID.
    *
-   * @return bool
+   * @return bool True if successful, false otherwise.
    */
   public function addPermissionToRole(int $permissionId, int $roleId): bool {
     $data = [
-      'role_id' => (int)$roleId,
-      'permission_id' => (int)$permissionId,
+      'role_id'       => $roleId,
+      'permission_id' => $permissionId,
     ];
 
-    return $this->db->table('roles_permissions')->insert($data);
+    return (bool) $this->db->table('roles_permissions')->insert($data);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Add User to Role.
-   * --------------------------------------------------------------------------
-   *
    * Adds a single user to a single role.
    *
-   * @param int $userId
-   * @param int $roleId
+   * @param int $userId User ID.
+   * @param int $roleId Role ID.
    *
-   * @return bool
+   * @return bool True if successful, false otherwise.
    */
   public function addUserToRole(int $userId, int $roleId): bool {
     cache()->delete("{$roleId}_users");
@@ -52,23 +54,20 @@ class RoleModel extends Model {
     cache()->delete("{$userId}_permissions");
 
     $data = [
-      'user_id' => (int)$userId,
-      'role_id' => (int)$roleId
+      'user_id' => $userId,
+      'role_id' => $roleId,
     ];
 
-    return (bool)$this->db->table('roles_users')->insert($data);
+    return (bool) $this->db->table('roles_users')->insert($data);
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Delete Role.
-   * --------------------------------------------------------------------------
-   *
    * Deletes a role.
    *
-   * @param int $id Role ID
+   * @param int $id Role ID.
    *
-   * @return bool
+   * @return bool True if successful, false otherwise.
    */
   public function deleteRole(int $id): bool {
     if (!$this->delete($id)) {
@@ -79,26 +78,17 @@ class RoleModel extends Model {
     return true;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get Permissions for Role.
-   * --------------------------------------------------------------------------
+   * Gets all permissions for a role.
    *
-   * Gets all permissions for a role in a way that can be easily used to check
-   * against:
+   * @param int $roleId Role ID.
    *
-   * [
-   *   id => name,
-   *   id => name
-   * ]
-   *
-   * @param int $roleId
-   *
-   * @return array
+   * @return array Array of permissions.
    */
   public function getPermissionsForRole(int $roleId): array {
     $permissionModel = model(PermissionModel::class);
-    $fromRole = $permissionModel
+    $fromRole        = $permissionModel
       ->select('permissions.*')
       ->join('roles_permissions', 'roles_permissions.permission_id = permissions.id', 'inner')
       ->where('role_id', $roleId)
@@ -113,19 +103,16 @@ class RoleModel extends Model {
     return $found;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get Roles for User.
-   * --------------------------------------------------------------------------
-   *
    * Returns an array of all roles that a user is a member of.
    *
-   * @param int $userId
+   * @param int $userId User ID.
    *
-   * @return array
+   * @return array Array of roles.
    */
   public function getRolesForUser(int $userId): array {
-    if (null === $found = cache("{$userId}_roles")) {
+    if (null === ($found = cache("{$userId}_roles"))) {
       $found = $this->builder()
         ->select('roles_users.*, roles.name, roles.description')
         ->join('roles_users', 'roles_users.role_id = roles.id', 'left')
@@ -138,19 +125,16 @@ class RoleModel extends Model {
     return $found;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Get Users for Role.
-   * --------------------------------------------------------------------------
+   * Returns an array of all users that are members of a role.
    *
-   * Returns an array of all users that are member of a role.
+   * @param int $roleId Role ID.
    *
-   * @param int $roleId
-   *
-   * @return array
+   * @return array Array of users.
    */
   public function getUsersForRole(int $roleId): array {
-    if (null === $found = cache("{$roleId}_users")) {
+    if (null === ($found = cache("{$roleId}_users"))) {
       $found = $this->builder()
         ->select('roles_users.*, users.*')
         ->join('roles_users', 'roles_users.role_id = roles.id', 'left')
@@ -164,91 +148,77 @@ class RoleModel extends Model {
     return $found;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Remove all Permissions from Role.
-   * --------------------------------------------------------------------------
+   * Removes all permissions from a single role.
    *
-   * Removes all permission from a single role.
+   * @param int $roleId Role ID.
    *
-   * @param int $roleId
-   *
-   * @return bool
+   * @return bool True if successful, false otherwise.
    */
   public function removeAllPermissionsFromRole(int $roleId): bool {
-    return $this->db->table('roles_permissions')->where([ 'role_id' => $roleId ])->delete();
+    return (bool) $this->db->table('roles_permissions')->where(['role_id' => $roleId])->delete();
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Remove Permission from Role.
-   * --------------------------------------------------------------------------
-   *
    * Removes a single permission from a single role.
    *
-   * @param int $permissionId
-   * @param int $roleId
+   * @param int $permissionId Permission ID.
+   * @param int $roleId       Role ID.
    *
-   * @return bool
+   * @return bool True if successful, false otherwise.
    */
   public function removePermissionFromRole(int $permissionId, int $roleId): bool {
-    return $this->db->table('roles_permissions')
+    return (bool) $this->db->table('roles_permissions')
       ->where([
         'permission_id' => $permissionId,
-        'role_id' => $roleId
+        'role_id'       => $roleId,
       ])->delete();
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Remove Permission from all Roles.
-   * --------------------------------------------------------------------------
-   *
    * Removes a single permission from all roles.
    *
-   * @param int $permissionId
+   * @param int $permissionId Permission ID.
    *
-   * @return bool
+   * @return bool True if successful, false otherwise.
    */
   public function removePermissionFromAllRoles(int $permissionId): bool {
-    return $this->db->table('roles_permissions')->where('permission_id', $permissionId)->delete();
+    return (bool) $this->db->table('roles_permissions')->where('permission_id', $permissionId)->delete();
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Remove User from Role.
-   * --------------------------------------------------------------------------
-   *
    * Removes a single user from a single role.
    *
-   * @param int        $userId
-   * @param int|string $roleId
+   * @param int $userId User ID.
+   * @param int $roleId Role ID.
    *
-   * @return bool
+   * @return bool True if successful, false otherwise.
    */
-  public function removeUserFromRole(int $userId, $roleId): bool {
+  public function removeUserFromRole(int $userId, int $roleId): bool {
     cache()->delete("{$roleId}_users");
     cache()->delete("{$userId}_roles");
     cache()->delete("{$userId}_permissions");
 
-    return $this->db->table('roles_users')->where([ 'user_id' => $userId, 'role_id' => (int)$roleId ])->delete();
+    return (bool) $this->db->table('roles_users')->where(['user_id' => $userId, 'role_id' => $roleId])->delete();
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Remove User from all Roles.
-   * --------------------------------------------------------------------------
-   *
    * Removes a single user from all roles.
    *
-   * @param int $userId
+   * @param int $userId User ID.
    *
-   * @return bool
+   * @return bool True if successful, false otherwise.
    */
   public function removeUserFromAllRoles(int $userId): bool {
     cache()->delete("{$userId}_roles");
     cache()->delete("{$userId}_permissions");
 
-    return $this->db->table('roles_users')->where('user_id', (int)$userId)->delete();
+    return (bool) $this->db->table('roles_users')->where('user_id', $userId)->delete();
   }
 }
+

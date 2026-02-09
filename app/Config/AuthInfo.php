@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Config;
 
 use CodeIgniter\Config\BaseConfig;
 
-class AuthInfo extends BaseConfig {
+class AuthInfo extends BaseConfig
+{
   /**
    * --------------------------------------------------------------------------
    * Product Name
@@ -12,7 +15,7 @@ class AuthInfo extends BaseConfig {
    *
    * @var string
    */
-  public $name = 'Lewe CI4 Auth';
+  public string $name = 'Lewe CI4 Auth';
 
   /**
    * --------------------------------------------------------------------------
@@ -21,7 +24,7 @@ class AuthInfo extends BaseConfig {
    *
    * @var string
    */
-  public $version = '3.7.0';
+  public string $version = '3.7.0';
 
   /**
    * --------------------------------------------------------------------------
@@ -30,7 +33,7 @@ class AuthInfo extends BaseConfig {
    *
    * @var string
    */
-  public $author = 'George Lewe';
+  public string $author = 'George Lewe';
 
   /**
    * --------------------------------------------------------------------------
@@ -39,7 +42,7 @@ class AuthInfo extends BaseConfig {
    *
    * @var string
    */
-  public $authorUrl = 'https://www.lewe.com';
+  public string $authorUrl = 'https://www.lewe.com';
 
   /**
    * --------------------------------------------------------------------------
@@ -48,7 +51,7 @@ class AuthInfo extends BaseConfig {
    *
    * @var string
    */
-  public $authorEmail = 'george@lewe.com';
+  public string $authorEmail = 'george@lewe.com';
 
   /**
    * --------------------------------------------------------------------------
@@ -57,7 +60,7 @@ class AuthInfo extends BaseConfig {
    *
    * @var string
    */
-  public $copyrightBy = 'Lewe';
+  public string $copyrightBy = 'Lewe';
 
   /**
    * --------------------------------------------------------------------------
@@ -66,7 +69,7 @@ class AuthInfo extends BaseConfig {
    *
    * @var string
    */
-  public $copyrightUrl = 'https://www.lewe.com';
+  public string $copyrightUrl = 'https://www.lewe.com';
 
   /**
    * --------------------------------------------------------------------------
@@ -75,7 +78,7 @@ class AuthInfo extends BaseConfig {
    *
    * @var string
    */
-  public $supportUrl = 'https://github.com/glewe/ci4-auth/issues';
+  public string $supportUrl = 'https://github.com/glewe/ci4-auth/issues';
 
   /**
    * --------------------------------------------------------------------------
@@ -86,7 +89,7 @@ class AuthInfo extends BaseConfig {
    *
    * @var string
    */
-  public $firstYear = '2022';
+  public string $firstYear = '2022';
 
   /**
    * --------------------------------------------------------------------------
@@ -97,7 +100,7 @@ class AuthInfo extends BaseConfig {
    *
    * @var string
    */
-  public $keyWords = 'lewe codeigniter 2fa authentication authorization two factor';
+  public string $keyWords = 'lewe codeigniter 2fa authentication authorization two factor';
 
   /**
    * --------------------------------------------------------------------------
@@ -108,18 +111,17 @@ class AuthInfo extends BaseConfig {
    *
    * @var string
    */
-  public $description = 'A Codeigniter 4 web based application including user, group, role and permission management, plus 2FA.';
+  public string $description = 'A Codeigniter 4 web based application including user, group, role and permission management, plus 2FA.';
 
   /**
    * --------------------------------------------------------------------------
    * Data Privacy Site Information
    * --------------------------------------------------------------------------
-   *
    */
-  public $siteName = 'MySite';
-  public $siteOwner = 'John Doe';
-  public $siteOwnerAddr1 = 'Street 123';
-  public $siteOwnerAddr2 = '1235 Town';
-  public $siteOwnerAddr3 = 'Country';
-  public $siteOwnerEmail = 'john@doe.com';
+  public string $siteName = 'MySite';
+  public string $siteOwner = 'John Doe';
+  public string $siteOwnerAddr1 = 'Street 123';
+  public string $siteOwnerAddr2 = '1235 Town';
+  public string $siteOwnerAddr3 = 'Country';
+  public string $siteOwnerEmail = 'john@doe.com';
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Exceptions;
 
 /**
@@ -8,5 +10,6 @@ namespace App\Exceptions;
  *
  * @package App\Exceptions
  */
-interface ExceptionInterface {
+interface ExceptionInterface
+{
 }

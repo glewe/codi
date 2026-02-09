@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Authentication\Passwords;
 
 use CodeIgniter\Entity\Entity;
@@ -9,37 +11,35 @@ use CodeIgniter\Entity\Entity;
  *
  * Checks passwords against a list of 65k commonly used passwords
  * that was compiled by InfoSec.
- *
- * @package App\Authentication\Passwords\Validators
  */
-class DictionaryValidator extends BaseValidator implements ValidatorInterface {
+class DictionaryValidator extends BaseValidator implements ValidatorInterface
+{
   /**
    * @var string
    */
   protected $error;
+
   /**
    * @var string
    */
   protected $suggestion;
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Check.
-   * --------------------------------------------------------------------------
-   *
    * Checks the password against the words in the file and returns false
    * if a match is found. Returns true if no match is found.
    * If true is returned the password will be passed to next validator.
    * If false is returned the validation process will be immediately stopped.
    *
-   * @param string $password
-   * @param Entity $user
+   * @param string      $password  Password to check
+   * @param Entity|null $user      User entity
    *
    * @return bool
    */
-  public function check(string $password, $user = null): bool {
+  public function check(string $password, ?Entity $user = null): bool {
     // Loop over our file
     $fp = fopen(__DIR__ . '/_dictionary.txt', 'r');
+
     if ($fp) {
       while (($line = fgets($fp, 4096)) !== false) {
         if ($password == trim($line)) {
@@ -50,18 +50,14 @@ class DictionaryValidator extends BaseValidator implements ValidatorInterface {
           return false;
         }
       }
+      fclose($fp);
     }
-
-    fclose($fp);
 
     return true;
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Error.
-   * --------------------------------------------------------------------------
-   *
    * Returns the error string that should be displayed to the user.
    *
    * @return string
@@ -70,11 +66,8 @@ class DictionaryValidator extends BaseValidator implements ValidatorInterface {
     return $this->error ?? '';
   }
 
+  //---------------------------------------------------------------------------
   /**
-   * --------------------------------------------------------------------------
-   * Suggestion.
-   * --------------------------------------------------------------------------
-   *
    * Returns a suggestion that may be displayed to the user to help them choose
    * a better password. The method is required, but a suggestion is optional.
    * May return an empty string instead.
