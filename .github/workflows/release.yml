@@ -1,0 +1,55 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, intl, gd, json, curl
+
+      - name: Install dependencies
+        run: composer install --no-dev --optimize-autoloader
+
+      - name: Build assets
+        run: |
+          # Use the build:prod script defined in composer.json
+          # Note: this requires tools/update_version.php and tools/minify.php to be present
+          composer run build:prod
+
+      - name: Extract release notes
+        id: release_notes
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          NOTES=$(php tools/extract_release_notes.php $VERSION)
+          # Handle multi-line output for GITHUB_OUTPUT
+          echo "notes<<EOF" >> $GITHUB_OUTPUT
+          echo "$NOTES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          body: ${{ steps.release_notes.outputs.notes }}
+          draft: false
+          prerelease: false
+          files: |
+            # If you want to attach a zip file of the release:
+            # Add steps to create a zip here if needed.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
