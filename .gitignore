@@ -144,6 +144,9 @@ nb-configuration.xml
 .scannerwork/*
 sonar-project.properties
 
+# PHPDoc
+.phpdoc/
+
 # Development files and folders
 _*.*
 _files/
