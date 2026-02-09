@@ -433,7 +433,7 @@ If a shared instance is not requested, it creates a new instance of the specifie
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">authorization</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type"><abbr title="\CodeIgniter\Model">Model</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$roleModel</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\CodeIgniter\Model">Model</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$permissionModel</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\CodeIgniter\Model">Model</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userModel</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$getShared</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">true</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\CodeIgniter\Model">Model</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$groupModel</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">object</span></code>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">authorization</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type"><a href="classes/App-Models-RoleModel.html"><abbr title="\App\Models\RoleModel">RoleModel</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$roleModel</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/App-Models-PermissionModel.html"><abbr title="\App\Models\PermissionModel">PermissionModel</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$permissionModel</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/App-Models-UserModel.html"><abbr title="\App\Models\UserModel">UserModel</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userModel</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$getShared</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">true</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/App-Models-GroupModel.html"><abbr title="\App\Models\GroupModel">GroupModel</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$groupModel</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">object</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -455,7 +455,7 @@ The user model is then set to the created instance.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$roleModel</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\CodeIgniter\Model">Model</abbr></span>
+                : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/App-Models-RoleModel.html"><abbr title="\App\Models\RoleModel">RoleModel</abbr></a>|null</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>The role model to use. Defaults to RoleModel.</p>
@@ -464,7 +464,7 @@ The user model is then set to the created instance.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$permissionModel</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\CodeIgniter\Model">Model</abbr></span>
+                : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/App-Models-PermissionModel.html"><abbr title="\App\Models\PermissionModel">PermissionModel</abbr></a>|null</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>The permission model to use. Defaults to PermissionModel.</p>
@@ -473,7 +473,7 @@ The user model is then set to the created instance.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$userModel</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\CodeIgniter\Model">Model</abbr></span>
+                : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/App-Models-UserModel.html"><abbr title="\App\Models\UserModel">UserModel</abbr></a>|null</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>The user model to use. Defaults to UserModel.</p>
@@ -491,7 +491,7 @@ The user model is then set to the created instance.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$groupModel</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\CodeIgniter\Model">Model</abbr></span>
+                : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/App-Models-GroupModel.html"><abbr title="\App\Models\GroupModel">GroupModel</abbr></a>|null</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>The group model to use. Defaults to GroupModel.</p>
