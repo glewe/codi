@@ -41,7 +41,7 @@
           <div class="row">
             <div class="col text-center">
               <img src="<?= $qrcode ?>" alt="" style="max-width:300px;"><br>
-              <span class="fw-bold text-primary"><?= $secret ?></span>
+              <span class="fw-bold text-primary"><?= esc($secret) ?></span>
             </div>
           </div>
 
@@ -50,8 +50,8 @@
           <form action="<?= base_url() ?>/setup2fa" method="post">
             <?= csrf_field() ?>
 
-            <input name="hidden_secret" type="hidden" value="<?= $secret ?>">
-            <input name="hidden_email" type="hidden" value="<?= $user->email ?>">
+            <input name="hidden_secret" type="hidden" value="<?= esc($secret) ?>">
+            <input name="hidden_email" type="hidden" value="<?= esc($user->email) ?>">
 
             <div class="mb-3">
               <label for="authenticator_code"><?= lang('Auth.2fa.setup.authenticator_code') ?></label>

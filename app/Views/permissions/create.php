@@ -21,7 +21,7 @@
           'title' => lang('Auth.permission.name'),
           'desc' => lang('Auth.permission.name_desc'),
           'errors' => session('errors.name'),
-          'value' => old('name')
+          'value' => esc(old('name'))
         ]);
         echo $bs->formRow([
           'type' => 'text',
@@ -30,7 +30,7 @@
           'title' => lang('Auth.permission.description'),
           'desc' => lang('Auth.permission.description_desc'),
           'errors' => session('errors.description'),
-          'value' => old('description')
+          'value' => esc(old('description'))
         ]);
         ?>
       </div>

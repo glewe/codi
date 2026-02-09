@@ -21,7 +21,7 @@
           'title' => lang('Auth.group.name'),
           'desc' => lang('Auth.group.name_desc'),
           'errors' => session('errors.name'),
-          'value' => old('name')
+          'value' => esc(old('name'))
         ]);
 
         echo $bs->formRow([
@@ -31,7 +31,7 @@
           'title' => lang('Auth.group.description'),
           'desc' => lang('Auth.group.description_desc'),
           'errors' => session('errors.description'),
-          'value' => old('description')
+          'value' => esc(old('description'))
         ]);
         ?>
       </div>

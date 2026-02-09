@@ -22,13 +22,13 @@
 
             <div class="mb-3">
               <label for="email"><?= lang('Auth.login.email') ?></label>
-              <input type="email" class="form-control <?php if (session('errors.email')) : ?>is-invalid<?php endif ?>" name="email" id="email" aria-describedby="emailHelp" placeholder="<?= lang('Auth.login.email') ?>" value="<?= old('email') ?>">
+              <input type="email" class="form-control <?php if (session('errors.email')) : ?>is-invalid<?php endif ?>" name="email" id="email" aria-describedby="emailHelp" placeholder="<?= lang('Auth.login.email') ?>" value="<?= esc(old('email')) ?>">
               <small id="emailHelp" class="form-text text-muted text-italic"><?= lang('Auth.login.we_never_share') ?></small>
             </div>
 
             <div class="mb-3">
               <label for="username"><?= lang('Auth.login.username') ?></label>
-              <input type="text" class="form-control <?php if (session('errors.username')) : ?>is-invalid<?php endif ?>" name="username" id="username" placeholder="<?= lang('Auth.login.username') ?>" value="<?= old('username') ?>">
+              <input type="text" class="form-control <?php if (session('errors.username')) : ?>is-invalid<?php endif ?>" name="username" id="username" placeholder="<?= lang('Auth.login.username') ?>" value="<?= esc(old('username')) ?>">
             </div>
 
             <div class="mb-3">

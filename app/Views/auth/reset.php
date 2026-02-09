@@ -23,7 +23,7 @@
 
             <div class="mb-3">
               <label for="token"><?= lang('Auth.login.token') ?></label>
-              <input type="text" class="form-control <?php if (session('errors.token')) : ?>is-invalid<?php endif ?>" name="token" id="token" placeholder="<?= lang('Auth.login.token') ?>" value="<?= old('token', $token ?? '') ?>">
+              <input type="text" class="form-control <?php if (session('errors.token')) : ?>is-invalid<?php endif ?>" name="token" id="token" placeholder="<?= lang('Auth.login.token') ?>" value="<?= esc(old('token', $token ?? '')) ?>">
               <div class="invalid-feedback">
                 <?= session('errors.token') ?>
               </div>
@@ -31,7 +31,7 @@
 
             <div class="mb-3">
               <label for="email"><?= lang('Auth.login.email') ?></label>
-              <input type="email" class="form-control <?php if (session('errors.email')) : ?>is-invalid<?php endif ?>" name="email" id="email" aria-describedby="emailHelp" placeholder="<?= lang('Auth.login.email') ?>" value="<?= old('email') ?>">
+              <input type="email" class="form-control <?php if (session('errors.email')) : ?>is-invalid<?php endif ?>" name="email" id="email" aria-describedby="emailHelp" placeholder="<?= lang('Auth.login.email') ?>" value="<?= esc(old('email')) ?>">
               <div class="invalid-feedback">
                 <?= session('errors.email') ?>
               </div>

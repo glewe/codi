@@ -19,10 +19,10 @@
 
           <form action="<?= base_url() ?>/login2fa" method="post">
             <?= csrf_field() ?>
-            <input name="hidden_username" type="hidden" value="<?= $user->username ?>">
+            <input name="hidden_username" type="hidden" value="<?= esc($user->username) ?>">
 
             <div class="mb-3">
-              <label for="pin"><?= lang('Auth.2fa.login.pin') . ' (' . $user->username . ')' ?></label>
+                <label for="pin"><?= lang('Auth.2fa.login.pin') . ' (' . esc($user->username) . ')' ?></label>
               <input id="pin" class="form-control text-center mt-2" name="pin" type="text" minlength="6" maxlength="6" required pattern="^[0-9]{1,6}$" autofocus>
               <div class="invalid-feedback">
                 <?= session('errors.pin') ?>

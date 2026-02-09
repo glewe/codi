@@ -22,7 +22,7 @@
           'title' => lang('Auth.user.email'),
           'desc' => lang('Auth.user.email_desc'),
           'errors' => session('errors.email'),
-          'value' => old('email')
+          'value' => esc(old('email'))
         ]);
 
         echo $bs->formRow([
@@ -32,7 +32,7 @@
           'title' => lang('Auth.user.username'),
           'desc' => lang('Auth.user.username_desc'),
           'errors' => session('errors.username'),
-          'value' => old('username')
+          'value' => esc(old('username'))
         ]);
 
         echo $bs->formRow([
@@ -42,7 +42,7 @@
           'title' => lang('Auth.user.firstname'),
           'desc' => lang('Auth.user.firstname_desc'),
           'errors' => session('errors.firstname'),
-          'value' => old('firstname')
+          'value' => esc(old('firstname'))
         ]);
 
         echo $bs->formRow([
@@ -52,7 +52,7 @@
           'title' => lang('Auth.user.lastname'),
           'desc' => lang('Auth.user.lastname_desc'),
           'errors' => session('errors.lastname'),
-          'value' => old('lastname')
+          'value' => esc(old('lastname'))
         ]);
 
         echo $bs->formRow([
@@ -62,7 +62,7 @@
           'title' => lang('Auth.user.displayname'),
           'desc' => lang('Auth.user.displayname_desc'),
           'errors' => session('errors.displayname'),
-          'value' => old('displayname')
+          'value' => esc(old('displayname'))
         ]);
 
         echo $bs->formRow([
