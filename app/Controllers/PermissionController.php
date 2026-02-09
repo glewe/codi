@@ -75,7 +75,7 @@ class PermissionController extends BaseController
         $permission = $permissions->where('id', $recId)->first();
         /** @var object|null $permission */
         if (!$permission) {
-          return redirect()->route('permissions')->with('errors', lang('Auth.permission.not_found', [$recId]));
+          return redirect()->route('permissions')->with('errors', str_replace('{0}', (string)$recId, lang('Auth.permission.not_found')));
         } else {
           if (!$permissions->deletePermission($recId)) {
             $this->session->set('errors', $permissions->errors());
@@ -84,14 +84,14 @@ class PermissionController extends BaseController
           logEvent(
             [
               'type'  => $this->logType,
-              'event' => lang('Auth.permission.delete_success', [$permission->name]),
+              'event' => str_replace('{0}', $permission->name, lang('Auth.permission.delete_success')),
               'user'  => user_username(),
               'ip'    => $this->request->getIPAddress(),
             ]
           );
           return redirect()->route('permissions')->with(
             'success',
-            lang('Auth.permission.delete_success', [$permission->name])
+            str_replace('{0}', $permission->name, lang('Auth.permission.delete_success'))
           );
         }
       } elseif (
@@ -153,7 +153,7 @@ class PermissionController extends BaseController
         'label'  => lang('Auth.permission.name'),
         'rules'  => 'required|trim|max_length[255]|lowerAlphaDashDot|is_unique[permissions.name]',
         'errors' => [
-          'is_unique' => lang('Auth.permission.not_unique', [$form['name']]),
+          'is_unique' => str_replace('{0}', $form['name'], lang('Auth.permission.not_unique')),
         ],
       ],
       'description' => [
@@ -190,14 +190,14 @@ class PermissionController extends BaseController
       logEvent(
         [
           'type'  => $this->logType,
-          'event' => lang('Auth.permission.create_success', [$this->request->getPost('name')]),
+          'event' => str_replace('{0}', $this->request->getPost('name'), lang('Auth.permission.create_success')),
           'user'  => user_username(),
           'ip'    => $this->request->getIPAddress(),
         ]
       );
       return redirect()->route('permissions')->with(
         'success',
-        lang('Auth.permission.create_success', [$this->request->getPost('name')])
+        str_replace('{0}', $this->request->getPost('name'), lang('Auth.permission.create_success'))
       );
     }
   }
@@ -283,7 +283,7 @@ class PermissionController extends BaseController
         'label'  => lang('Auth.permission.name'),
         'rules'  => 'required|trim|max_length[255]|lowerAlphaDashDot|is_unique[permissions.name]',
         'errors' => [
-          'is_unique' => lang('Auth.permission.not_unique', [$form['name']]),
+          'is_unique' => str_replace('{0}', $form['name'], lang('Auth.permission.not_unique')),
         ],
       ];
     }
@@ -312,14 +312,14 @@ class PermissionController extends BaseController
       logEvent(
         [
           'type'  => $this->logType,
-          'event' => lang('Auth.permission.update_success', [$permission->name]),
+          'event' => str_replace('{0}', $permission->name, lang('Auth.permission.update_success')),
           'user'  => user_username(),
           'ip'    => $this->request->getIPAddress(),
         ]
       );
       return redirect()->back()->withInput()->with(
         'success',
-        lang('Auth.permission.update_success', [$permission->name])
+        str_replace('{0}', $permission->name, lang('Auth.permission.update_success'))
       );
     }
   }

@@ -84,7 +84,7 @@ class RoleController extends BaseController
         $role  = $roles->where('id', $recId)->first();
         /** @var object|null $role */
         if (!$role) {
-          return redirect()->route('roles')->with('errors', lang('Auth.role.not_found', [$recId]));
+          return redirect()->route('roles')->with('errors', str_replace('{0}', (string)$recId, lang('Auth.role.not_found')));
         } else {
           if (!$roles->deleteRole($recId)) {
             $this->session->set('errors', $roles->errors());
@@ -93,12 +93,12 @@ class RoleController extends BaseController
           logEvent(
             [
               'type'  => $this->logType,
-              'event' => lang('Auth.role.delete_success', [$role->name]),
+              'event' => str_replace('{0}', $role->name, lang('Auth.role.delete_success')),
               'user'  => user_username(),
               'ip'    => $this->request->getIPAddress(),
             ]
           );
-          return redirect()->route('roles')->with('success', lang('Auth.role.delete_success', [$role->name]));
+          return redirect()->route('roles')->with('success', str_replace('{0}', $role->name, lang('Auth.role.delete_success')));
         }
       } elseif (
         array_key_exists('btn_search', $this->request->getPost()) && array_key_exists(
@@ -156,7 +156,7 @@ class RoleController extends BaseController
         'label'  => lang('Auth.role.name'),
         'rules'  => 'required|trim|max_length[255]|is_unique[roles.name]',
         'errors' => [
-          'is_unique' => lang('Auth.role.not_unique', [$form['name']]),
+          'is_unique' => str_replace('{0}', $form['name'], lang('Auth.role.not_unique')),
         ],
       ],
       'description' => [
@@ -194,14 +194,14 @@ class RoleController extends BaseController
       logEvent(
         [
           'type'  => $this->logType,
-          'event' => lang('Auth.role.create_success', [$this->request->getPost('name')]),
+          'event' => str_replace('{0}', $this->request->getPost('name'), lang('Auth.role.create_success')),
           'user'  => user_username(),
           'ip'    => $this->request->getIPAddress(),
         ]
       );
       return redirect()->route('roles')->with(
         'success',
-        lang('Auth.role.create_success', [$this->request->getPost('name')])
+        str_replace('{0}', $this->request->getPost('name'), lang('Auth.role.create_success'))
       );
     }
   }
@@ -287,7 +287,7 @@ class RoleController extends BaseController
         'label'  => lang('Auth.role.name'),
         'rules'  => 'required|trim|max_length[255]|is_unique[roles.name]',
         'errors' => [
-          'is_unique' => lang('Auth.role.not_unique', [$form['name']]),
+          'is_unique' => str_replace('{0}', $form['name'], lang('Auth.role.not_unique')),
         ],
       ];
     }
@@ -327,12 +327,12 @@ class RoleController extends BaseController
       logEvent(
         [
           'type'  => $this->logType,
-          'event' => lang('Auth.role.update_success', [$role->name]),
+          'event' => str_replace('{0}', $role->name, lang('Auth.role.update_success')),
           'user'  => user_username(),
           'ip'    => $this->request->getIPAddress(),
         ]
       );
-      return redirect()->back()->withInput()->with('success', lang('Auth.role.update_success', [$role->name]));
+      return redirect()->back()->withInput()->with('success', str_replace('{0}', $role->name, lang('Auth.role.update_success')));
     }
   }
 }

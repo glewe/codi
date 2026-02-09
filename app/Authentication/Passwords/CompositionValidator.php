@@ -49,7 +49,7 @@ class CompositionValidator extends BaseValidator implements ValidatorInterface
     $passed = strlen($password) >= $this->config->minimumPasswordLength;
 
     if (!$passed) {
-      $this->error = lang('Auth.password.error_length', [$this->config->minimumPasswordLength]);
+      $this->error = str_replace('{0, number}', (string)$this->config->minimumPasswordLength, lang('Auth.password.error_length'));
       $this->suggestion = lang('Auth.password.suggest_length');
 
       return false;

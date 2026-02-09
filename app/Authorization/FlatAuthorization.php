@@ -147,7 +147,7 @@ class FlatAuthorization implements AuthorizeInterface
     $user = $this->userModel->find($userId);
 
     if (!$user) {
-      $this->error = lang('Auth.user.not_found', [$userId]);
+      $this->error = str_replace('{0}', (string)$userId, lang('Auth.user.not_found'));
       return false;
     }
 
@@ -477,7 +477,7 @@ class FlatAuthorization implements AuthorizeInterface
     $g = $this->groupModel->where('name', $group)->first();
 
     if (!$g) {
-      $this->error = lang('Auth.group.not_found', [$group]);
+      $this->error = str_replace('{0}', (string)$group, lang('Auth.group.not_found'));
       return false;
     }
 
@@ -504,7 +504,7 @@ class FlatAuthorization implements AuthorizeInterface
     $p = $this->permissionModel->asObject()->where('name', $permission)->first();
 
     if (!$p) {
-      $this->error = lang('Auth.permission.not_found', [$permission]);
+      $this->error = str_replace('{0}', (string)$permission, lang('Auth.permission.not_found'));
       return false;
     }
 
@@ -527,7 +527,7 @@ class FlatAuthorization implements AuthorizeInterface
     }
     $r = $this->roleModel->where('name', $role)->first();
     if (!$r) {
-      $this->error = lang('Auth.role.not_found', [$role]);
+      $this->error = str_replace('{0}', (string)$role, lang('Auth.role.not_found'));
       return false;
     }
     /** @var object $r */

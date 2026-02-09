@@ -61,7 +61,7 @@ if (!function_exists('sendEmail')) {
       'greeting'       => lang('General.hello'),
       'recipient'      => $recipient,
       'message'        => $message,
-      'signature'      => lang('General.your_team', [$settings->getSetting('applicationName')]),
+      'signature'      => str_replace('{0}', $settings->getSetting('applicationName'), lang('General.your_team')),
       'button'         => false,
       'button_url'     => '',
       'button_message' => '',
@@ -112,7 +112,7 @@ if (!function_exists('sendActivationEmail')) {
       'greeting'       => lang('General.hello'),
       'recipient'      => $user->username,
       'message'        => $message,
-      'signature'      => lang('General.your_team', [$settings->getSetting('applicationName')]),
+      'signature'      => str_replace('{0}', $settings->getSetting('applicationName'), lang('General.your_team')),
       'footer_message' => 'Powered by ' . config('AppInfo')->name . ' ' . config('AppInfo')->version,
     ];
 
@@ -159,7 +159,7 @@ if (!function_exists('sendResetEmail')) {
       'greeting'       => lang('General.hello'),
       'recipient'      => $user->username,
       'message'        => $message,
-      'signature'      => lang('General.your_team', [$settings->getSetting('applicationName')]),
+      'signature'      => str_replace('{0}', $settings->getSetting('applicationName'), lang('General.your_team')),
       'footer_message' => 'Powered by ' . config('AppInfo')->name . ' ' . config('AppInfo')->version,
     ];
 

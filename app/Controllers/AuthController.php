@@ -111,7 +111,7 @@ class AuthController extends BaseController
     );
 
     if ($this->throttler->check(md5($this->request->getIPAddress()), 2, MINUTE) === false) {
-      return service('response')->setStatusCode(429)->setBody(lang('Auth.login.too_many_requests', [$this->throttler->getTokentime()]));
+      return service('response')->setStatusCode(429)->setBody(str_replace('{0, number}', (string)$this->throttler->getTokentime(), lang('Auth.login.too_many_requests')));
     }
 
     /** @var User|null $user */
@@ -147,7 +147,7 @@ class AuthController extends BaseController
     }
 
     if ($this->throttler->check(md5($this->request->getIPAddress()), 2, MINUTE) === false) {
-      return service('response')->setStatusCode(429)->setBody(lang('Auth.login.too_many_requests', [$this->throttler->getTokentime()]));
+      return service('response')->setStatusCode(429)->setBody(str_replace('{0, number}', (string)$this->throttler->getTokentime(), lang('Auth.login.too_many_requests')));
     }
 
     $login = urldecode($this->request->getGet('login'));
@@ -235,7 +235,7 @@ class AuthController extends BaseController
 
     $sent = sendResetEmail($user);
     if (!$sent) {
-      return redirect()->back()->withInput()->with('error', lang('Auth.forgot.error_email', [$user->email]));
+      return redirect()->back()->withInput()->with('error', str_replace('{0}', $user->email, lang('Auth.forgot.error_email')));
     }
     logEvent(
       [
@@ -634,7 +634,7 @@ class AuthController extends BaseController
       //      if (!$sent) return redirect()->back()->withInput()->with('error', $activator->error() ?? lang('Auth.exception.unknown_error'))
       $sent = sendActivationEmail($user);
       if (!$sent) {
-        return redirect()->back()->withInput()->with('error', lang('Auth.activation.error_sending', [$user->email]));
+        return redirect()->back()->withInput()->with('error', str_replace('{0}', $user->email, lang('Auth.activation.error_sending')));
       }
 
       //

@@ -71,7 +71,7 @@ class CustomRules
       return true;
     }
 
-    $error = (string)lang('Validation.exact_value', [$exact]);
+    $error = (string)str_replace('{0}', $exact, lang('Validation.exact_value'));
 
     return false;
   }

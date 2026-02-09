@@ -26,6 +26,6 @@ class UserNotFoundException extends \RuntimeException implements ExceptionInterf
    * @return UserNotFoundException The newly created exception.
    */
   public static function forUserID(int $id): self {
-    return new self(lang('Auth.user.not_found', [$id]), 404);
+    return new self(str_replace('{0}', (string)$id, lang('Auth.user.not_found')), 404);
   }
 }

@@ -17,7 +17,7 @@ class AuthException extends \DomainException implements ExceptionInterface
    * @return AuthException
    */
   public static function forInvalidModel(string $model): self {
-    return new self(lang('Auth.exception.invalid_model', [$model]), 500);
+    return new self(str_replace('{0}', $model, lang('Auth.exception.invalid_model')), 500);
   }
 
   //---------------------------------------------------------------------------
@@ -44,7 +44,7 @@ class AuthException extends \DomainException implements ExceptionInterface
    * @return AuthException
    */
   public static function forInvalidFields(string $key): self {
-    return new self(lang('Auth.exception.invalid_fields', [$key]), 500);
+    return new self(str_replace('{0}', $key, lang('Auth.exception.invalid_fields')), 500);
   }
 
   //---------------------------------------------------------------------------

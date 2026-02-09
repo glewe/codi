@@ -31,7 +31,7 @@ class EmailResetter extends BaseResetter implements ResetterInterface
       ->send();
 
     if (!$sent) {
-      $this->error = lang('Auth.forgot.error_email', [$user->email]);
+      $this->error = str_replace('{0}', $user->email, lang('Auth.forgot.error_email'));
       return false;
     }
 

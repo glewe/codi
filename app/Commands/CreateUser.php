@@ -65,7 +65,7 @@ class CreateUser extends BaseCommand
 
     $users = model(UserModel::class);
     if ($userId = $users->insert($user)) {
-      CLI::write(lang('Auth.register.create_success', [$row['username'], $userId]), 'green');
+      CLI::write(str_replace(['{0}', '{1}'], [(string)$row['username'], (string)$userId], lang('Auth.register.create_success')), 'green');
     } else {
       foreach ($users->errors() as $message) {
         CLI::write($message, 'red');

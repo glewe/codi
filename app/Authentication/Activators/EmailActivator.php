@@ -31,7 +31,7 @@ class EmailActivator extends BaseActivator implements ActivatorInterface
       ->send();
 
     if (!$sent) {
-      $this->error = lang('Auth.activation.error_sending', [$user->email]);
+      $this->error = str_replace('{0}', $user->email, lang('Auth.activation.error_sending'));
       return false;
     }
 

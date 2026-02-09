@@ -85,8 +85,8 @@ class PwnedValidator extends BaseValidator implements ValidatorInterface
     }
 
     $wording = $hits > 1 ? lang('Auth.password.error_pwned_databases') : lang('Auth.password.error_pwned_database');
-    $this->error = lang('Auth.password.error_pwned', [$password, $hits, $wording]);
-    $this->suggestion = lang('Auth.password.suggest_pwned', [$password]);
+    $this->error = str_replace(['{0}', '{1, number}', '{2}'], [$password, (string)$hits, $wording], lang('Auth.password.error_pwned'));
+    $this->suggestion = str_replace('{0}', $password, lang('Auth.password.suggest_pwned'));
 
     return false;
   }

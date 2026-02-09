@@ -84,7 +84,7 @@ class UserController extends BaseController
         $user  = $users->where('id', $recId)->first();
         /** @var User|null $user */
         if (!$user) {
-          return redirect()->route('users')->with('errors', lang('Auth.user.not_found', [$recId]));
+          return redirect()->route('users')->with('errors', str_replace('{0}', (string)$recId, lang('Auth.user.not_found')));
         }
         else {
           if (!$users->deleteUser($recId)) {
@@ -94,14 +94,14 @@ class UserController extends BaseController
           logEvent(
             [
               'type'  => $this->logType,
-              'event' => lang('Auth.user.delete_success', [$user->username, $user->email]),
+              'event' => str_replace(['{0}', '{1}'], [$user->username, $user->email], lang('Auth.user.delete_success')),
               'user'  => user_username(),
               'ip'    => $this->request->getIPAddress(),
             ]
           );
           return redirect()->route('users')->with(
             'success',
-            lang('Auth.user.delete_success', [$user->username, $user->email])
+            str_replace(['{0}', '{1}'], [$user->username, $user->email], lang('Auth.user.delete_success'))
           );
         }
       }
@@ -113,7 +113,7 @@ class UserController extends BaseController
         $user  = $users->where('id', $recId)->first();
         /** @var User|null $user */
         if (!$user) {
-          return redirect()->route('users')->with('errors', lang('Auth.user.not_found', [$recId]));
+          return redirect()->route('users')->with('errors', str_replace('{0}', (string)$recId, lang('Auth.user.not_found')));
         }
         else {
           $user->removeSecret();
@@ -124,14 +124,14 @@ class UserController extends BaseController
             logEvent(
               [
                 'type'  => $this->logType,
-                'event' => lang('Auth.user.remove_secret_success', [$user->username, $user->email]),
+                'event' => str_replace(['{0}', '{1}'], [$user->username, $user->email], lang('Auth.user.remove_secret_success')),
                 'user'  => user_username(),
                 'ip'    => $this->request->getIPAddress(),
               ]
             );
             return redirect()->route('users')->with(
               'success',
-              lang('Auth.user.remove_secret_success', [$user->username, $user->email])
+              str_replace(['{0}', '{1}'], [$user->username, $user->email], lang('Auth.user.remove_secret_success'))
             );
           }
         }
@@ -286,14 +286,14 @@ class UserController extends BaseController
     logEvent(
       [
         'type'  => $this->logType,
-        'event' => lang('Auth.user.create_success', [$user->username, $user->email]),
+        'event' => str_replace(['{0}', '{1}'], [$user->username, $user->email], lang('Auth.user.create_success')),
         'user'  => user_username(),
         'ip'    => $this->request->getIPAddress(),
       ]
     );
     return redirect()->route('users')->with(
       'success',
-      lang('Auth.user.create_success', [$user->username, $user->email])
+      str_replace(['{0}', '{1}'], [$user->username, $user->email], lang('Auth.user.create_success'))
     );
   }
 
@@ -549,14 +549,14 @@ class UserController extends BaseController
     logEvent(
       [
         'type'  => $this->logType,
-        'event' => lang('Auth.user.update_success', [$user->username, $user->email]),
+        'event' => str_replace(['{0}', '{1}'], [$user->username, $user->email], lang('Auth.user.update_success')),
         'user'  => user_username(),
         'ip'    => $this->request->getIPAddress(),
       ]
     );
     return redirect()->back()->withInput()->with(
       'success',
-      lang('Auth.user.update_success', [$user->username, $user->email])
+      str_replace(['{0}', '{1}'], [$user->username, $user->email], lang('Auth.user.update_success'))
     );
   }
 
@@ -587,7 +587,7 @@ class UserController extends BaseController
     $user = $users->where('id', $id)->first();
     /** @var User|null $user */
     if (!$user) {
-      return redirect()->back()->with('errors', lang('Auth.user.not_found', [$id]));
+      return redirect()->back()->with('errors', str_replace('{0}', (string)$id, lang('Auth.user.not_found')));
     }
     $profile = $userOptions->getOptionsForUser($id);
 
@@ -674,7 +674,7 @@ class UserController extends BaseController
     $user = $users->where('id', $id)->first();
     /** @var User|null $user */
     if (!$user) {
-      return redirect()->back()->with('errors', lang('Auth.user.not_found', [$id]));
+      return redirect()->back()->with('errors', str_replace('{0}', (string)$id, lang('Auth.user.not_found')));
     }
 
     //
@@ -777,14 +777,14 @@ class UserController extends BaseController
       logEvent(
         [
           'type'  => $this->logType,
-          'event' => lang('Auth.profile.update_success', [$user->username, $user->email]),
+          'event' => str_replace(['{0}', '{1}'], [$user->username, $user->email], lang('Auth.profile.update_success')),
           'user'  => user_username(),
           'ip'    => $this->request->getIPAddress(),
         ]
       );
       return redirect()->back()->withInput()->with(
         'success',
-        lang('Auth.profile.update_success', [$user->username, $user->email])
+        str_replace(['{0}', '{1}'], [$user->username, $user->email], lang('Auth.profile.update_success'))
       );
     }
   }

@@ -97,7 +97,7 @@ class DatabaseController extends BaseController
           'label'  => lang('Database.resetConfirm'),
           'rules'  => 'exact_value[YesIAmSure]',
           'errors' => [
-            'exact_value' => lang('Validation.exact_value', ['YesIAmSure']),
+            'exact_value' => str_replace('{0}', 'YesIAmSure', lang('Validation.exact_value')),
           ],
         ],
       ];

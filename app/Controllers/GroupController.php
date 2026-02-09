@@ -86,7 +86,7 @@ class GroupController extends BaseController
         $recId = $this->request->getPost('hidden_id');
         /** @var object|null $group */
         if (!$group = $groups->where('id', $recId)->first()) {
-          return redirect()->route('groups')->with('errors', lang('Auth.group.not_found', [$recId]));
+          return redirect()->route('groups')->with('errors', str_replace('{0}', (string)$recId, lang('Auth.group.not_found')));
         } else {
           if (!$groups->deleteGroup((int) $recId)) {
             $this->session->set('errors', $groups->errors());
@@ -95,12 +95,12 @@ class GroupController extends BaseController
           logEvent(
             [
               'type'  => $this->logType,
-              'event' => lang('Auth.group.delete_success', [$group->name]),
+              'event' => str_replace('{0}', $group->name, lang('Auth.group.delete_success')),
               'user'  => user_username(),
               'ip'    => $this->request->getIPAddress(),
             ]
           );
-          return redirect()->route('groups')->with('success', lang('Auth.group.delete_success', [$group->name]));
+          return redirect()->route('groups')->with('success', str_replace('{0}', $group->name, lang('Auth.group.delete_success')));
         }
       } elseif (
         array_key_exists('btn_search', $this->request->getPost()) && array_key_exists(
@@ -158,7 +158,7 @@ class GroupController extends BaseController
         'label'  => lang('Auth.group.name'),
         'rules'  => 'required|trim|max_length[255]|is_unique[groups.name]',
         'errors' => [
-          'is_unique' => lang('Auth.group.not_unique', [$form['name']]),
+          'is_unique' => str_replace('{0}', $form['name'], lang('Auth.group.not_unique')),
         ],
       ],
       'description' => [
@@ -192,14 +192,14 @@ class GroupController extends BaseController
       logEvent(
         [
           'type'  => $this->logType,
-          'event' => lang('Auth.group.create_success', [$this->request->getPost('name')]),
+          'event' => str_replace('{0}', $this->request->getPost('name'), lang('Auth.group.create_success')),
           'user'  => user_username(),
           'ip'    => $this->request->getIPAddress(),
         ]
       );
       return redirect()->route('groups')->with(
         'success',
-        lang('Auth.group.create_success', [$this->request->getPost('name')])
+        str_replace('{0}', $this->request->getPost('name'), lang('Auth.group.create_success'))
       );
     }
   }
@@ -284,7 +284,7 @@ class GroupController extends BaseController
         'label'  => lang('Auth.group.name'),
         'rules'  => 'required|trim|max_length[255]|is_unique[groups.name]',
         'errors' => [
-          'is_unique' => lang('Auth.group.not_unique', [$form['name']]),
+          'is_unique' => str_replace('{0}', $form['name'], lang('Auth.group.not_unique')),
         ],
       ];
     }
@@ -319,12 +319,12 @@ class GroupController extends BaseController
       logEvent(
         [
           'type'  => $this->logType,
-          'event' => lang('Auth.group.update_success', [$group->name]),
+          'event' => str_replace('{0}', $group->name, lang('Auth.group.update_success')),
           'user'  => user_username(),
           'ip'    => $this->request->getIPAddress(),
         ]
       );
-      return redirect()->back()->withInput()->with('success', lang('Auth.group.update_success', [$group->name]));
+      return redirect()->back()->withInput()->with('success', str_replace('{0}', $group->name, lang('Auth.group.update_success')));
     }
   }
 }

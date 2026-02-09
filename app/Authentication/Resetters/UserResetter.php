@@ -28,7 +28,7 @@ class UserResetter extends BaseResetter implements ResetterInterface
     $class->setConfig($this->config);
 
     if ($class->send($user) === false) {
-      log_message('error', lang('Auth.forgot.error_reset', [$user->username]));
+      log_message('error', str_replace('{0}', $user->username, lang('Auth.forgot.error_reset')));
       $this->error = $class->error();
 
       return false;

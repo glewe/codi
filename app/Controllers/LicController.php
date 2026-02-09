@@ -272,7 +272,7 @@ class LicController extends BaseController
         'title'        => lang('Lic.expiringsoon'),
         'time'         => date('Y-m-d H:i'),
         'style'        => 'warning',
-        'body'         => lang('Lic.expiringsoon_subject', [$this->daysToExpiry()]) . '<br>' . lang(
+        'body'         => str_replace('{0}', (string)$this->daysToExpiry(), lang('Lic.expiringsoon_subject')) . '<br>' . lang(
           'Lic.expiringsoon_help'
         ),
         'delay'        => 5000,
