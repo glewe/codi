@@ -140,7 +140,7 @@ if (!function_exists("getWeekday")) {
    */
   function getWeekday($year, $month, $day): int {
     $myts = strtotime($year . '-' . $month . '-' . $day);
-    return date("N", $myts);
+    return (int)date("N", $myts);
   }
 }
 
@@ -158,9 +158,9 @@ if (!function_exists("getWeeknumber")) {
    *
    * @return int Calendar week number
    */
-  function getWeeknumber($year, $month, $day) {
+  function getWeeknumber($year, $month, $day): int {
     $myts = strtotime($year . '-' . $month . '-' . $day);
-    return date("W", $myts);
+    return (int)date("W", $myts);
   }
 }
 

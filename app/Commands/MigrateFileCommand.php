@@ -38,7 +38,7 @@ class MigrateFileCommand extends BaseCommand {
   /**
    * The Command's Arguments
    *
-   * @var array
+   * @var array<string, string>
    */
   protected $arguments = [
     'name' => 'The valid migration file path beginning from the ROOTPATH. For example: php spark migrate:file "app\Database\Migrations\2022-02-16-101819_AddBlogMigration.php"'
@@ -47,7 +47,7 @@ class MigrateFileCommand extends BaseCommand {
   /**
    * The Command's Options
    *
-   * @var array
+   * @var array<string, string>
    */
   protected $options = [
     '--namespace' => 'Set migration namespace. Default: "App".',

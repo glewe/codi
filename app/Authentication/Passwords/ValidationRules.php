@@ -75,7 +75,7 @@ class ValidationRules {
     }
 
     if (!preg_match('/\A[a-z.]+\z/', $str)) {
-      $error = lang('Auth.permission.error_name');
+      $error = (string)lang('Auth.permission.error_name');
       return false;
     }
 

@@ -763,7 +763,7 @@ class AuthController extends BaseController {
     //
     $user->password = $this->request->getPost('password');
     $user->reset_hash = null;
-    $user->reset_at = date('Y-m-d H:i:s');
+    $user->reset_at = \CodeIgniter\I18n\Time::now();
     $user->reset_expires = null;
     $user->force_pass_reset = false;
     $this->users->save($user);

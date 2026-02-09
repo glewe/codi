@@ -12,6 +12,7 @@ class ActivateUser extends BaseCommand {
   protected $description = 'Activate Existing User.';
 
   protected $usage = 'auth:activate_user [identity]';
+  /** @var array<string, string> */
   protected $arguments = [
     'identity' => 'User identity.',
   ];
@@ -52,7 +53,7 @@ class ActivateUser extends BaseCommand {
       CLI::write('User with identity: ' . $identity . ' not found.', 'red');
     } else {
       /** @var \App\Entities\User $user */
-      $user->active = 1;
+      $user->active = true;
 
       if ($userModel->save($user)) {
         CLI::write('Sucessfuly activated the user with identity: ' . $identity, 'green');

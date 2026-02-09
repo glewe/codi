@@ -27,7 +27,7 @@ class LogModel extends Model {
     if ($result) {
       return $this->db->insertID();
     }
-    return $result;
+    return 0;
   }
 
   /**

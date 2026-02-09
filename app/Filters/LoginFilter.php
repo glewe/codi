@@ -73,7 +73,9 @@ class LoginFilter implements FilterInterface {
    * @param ResponseInterface $response
    * @param array|null        $arguments
    *
-   * @return void
+   * @return ResponseInterface|null
    */
-  public function after(RequestInterface $request, ResponseInterface $response, $arguments = null) {}
+  public function after(RequestInterface $request, ResponseInterface $response, $arguments = null): ?ResponseInterface {
+    return null;
+  }
 }

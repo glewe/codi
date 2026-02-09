@@ -151,7 +151,7 @@ class App extends BaseConfig {
    * The id needs to match the name of the corresponding css file in the public/css
    * folder. The name is use in the list box.
    *
-   * @var string[]
+   * @var array<int, array<string, string>>
    */
   public array $supportedFonts = [
     [ 'id' => 'lato', 'name' => 'Lato' ],

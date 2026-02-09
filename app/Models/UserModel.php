@@ -39,8 +39,8 @@ class UserModel extends Model {
   protected $useTimestamps = true;
 
   protected $validationRules = [
-    'email' => [ 'required', 'valid_email', 'is_unique[users.email,id,{id}]' ],
-    'username' => [ 'required', 'alpha_numeric_punct', 'min_length[3]', 'max_length[30]', 'is_unique[users.username,id,{id}]' ],
+    'email' => 'required|valid_email|is_unique[users.email,id,{id}]',
+    'username' => 'required|alpha_numeric_punct|min_length[3]|max_length[30]|is_unique[users.username,id,{id}]',
     'firstname' => 'max_length[120]',
     'lastname' => 'max_length[120]',
     'displayname' => 'max_length[120]',
