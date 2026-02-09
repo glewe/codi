@@ -2,16 +2,18 @@
 
 # CODI - Application boilerplate based on CodeIgniter 4
 
+[![PHP](https://img.shields.io/badge/PHP-8.4-8892BF.svg)](https://www.php.net/)
+[![JS](https://img.shields.io/badge/JS-ES6-f1e05a.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![HTML](https://img.shields.io/badge/HTML-5-e34c26.svg)](https://developer.mozilla.org/en-US/docs/Web/HTML)
+[![CSS](https://img.shields.io/badge/CSS-3-563d7c.svg)](https://developer.mozilla.org/en-US/docs/Web/CSS)
+
 [![CodeIgniter](https://img.shields.io/badge/Framework-CodeIgniter_4-c9340a.svg)](https://codeigniter.com/)
 [![Bootstrap](https://img.shields.io/badge/Design-Bootstrap_5-563d7c.svg)](https://getbootstrap.com/)
 [![Bootstrap Icons](https://img.shields.io/badge/Design-Bootstrap_Icons-563d7c.svg)](https://icons.getbootstrap.com/)
 [![FontAwesome](https://img.shields.io/badge/Design-FontAwesome_6-339af0.svg)](https://fontawesome.com/)
 
-[![PHP](https://img.shields.io/badge/PHP-8.4-8892BF.svg)](https://www.php.net/)
-[![JS](https://img.shields.io/badge/JS-ES6-f1e05a.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-[![HTML](https://img.shields.io/badge/HTML-5-e34c26.svg)](https://developer.mozilla.org/en-US/docs/Web/HTML)
-[![CSS](https://img.shields.io/badge/CSS-3-563d7c.svg)](https://developer.mozilla.org/en-US/docs/Web/CSS)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=glewe_codi&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=glewe_codi)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=glewe_codi&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=glewe_codi)
+[![PHPStAn](https://img.shields.io/badge/phpstan-Level_5-green.svg)](https://phpstan.org/)
 
 ## What is CODI?
 
