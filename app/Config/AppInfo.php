@@ -114,7 +114,7 @@ class AppInfo extends BaseConfig
    *
    * @var string
    */
-  public string $documentationUrl = 'https://lewe.gitbook.io';
+  public string $documentationUrl = '';
 
   /**
    * ------------------------------------------------------------------------

@@ -22,7 +22,7 @@
           <strong><?= lang('Auth.about.version') ?>:</strong>&nbsp;&nbsp;<?= config('AppInfo')->version ?><span id="versioncompare"></span><br>
           <strong><?= lang('Auth.about.copyright') ?>:</strong>&nbsp;&nbsp;&copy;&nbsp;<?= config('AppInfo')->firstYear . '-' . date('Y') ?> by <a class="about" href="<?= config('AppInfo')->authorUrl ?>" target="_blank" rel="noopener"><?= config('AppInfo')->author ?></a><br>
           <strong><?= lang('Auth.about.support') ?>:</strong>&nbsp;&nbsp;<a href="<?= config('AppInfo')->supportUrl ?>" target="_blank" rel="noopener">GitHub Issues</a><br>
-          <strong><?= lang('Auth.about.documentation') ?>:</strong>&nbsp;&nbsp;<a class="about" href="<?= config('AppInfo')->documentationUrl ?>" target="_blank" rel="noopener">CODI GitBook</a><br>
+          <strong><?= lang('Auth.about.documentation') ?>:</strong>&nbsp;&nbsp;<a class="about" href="<?= config('AppInfo')->documentationUrl ?>" target="_blank" rel="noopener">n/a</a><br>
           <strong><?= lang('App.about.source_code') ?>:</strong>&nbsp;&nbsp;<a class="about" href="<?= config('AppInfo')->repoUrl ?>" target="_blank" rel="noopener">CODI on GitHub</a><br>
           <strong><?= lang('App.about.download') ?>:</strong>&nbsp;&nbsp;<a class="about" href="<?= config('AppInfo')->downloadUrl ?>" target="_blank" rel="noopener">Releases</a><br>
         </p>
